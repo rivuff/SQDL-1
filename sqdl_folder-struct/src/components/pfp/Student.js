@@ -10,9 +10,10 @@ import {
 } from "@material-tailwind/react";
 import { useState } from 'react';
 import axios from 'axios';
+import {check, set} from './../Cookies'
 
 const Student = () => {
-  const userData = JSON.parse(localStorage.getItem('userInfo'));
+  const userData = check();
   const [state, setState] = useState({
     editing: false,
     name: userData.name,
@@ -38,7 +39,7 @@ const Student = () => {
         console.log(response.data.data)
         setState({ ...state, name: response.data.data.name, email: response.data.data.email, enrollmentNumber: response.data.data.enrollmentNumber, rollNumber:response.data.data.rollNumber,  editing: false })//update other fields with returned response data
         //update cookie
-        localStorage.setItem('userInfo', JSON.stringify(response.data.data));
+        set(response.data.data);
       })
       .catch((error) => {
         setState({ ...state, errmsg: error.message })
