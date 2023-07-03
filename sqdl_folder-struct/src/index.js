@@ -11,11 +11,21 @@ import Register from './components/lr/Register';
 import LandingPage from './components/dashboards/LandingPage.js'
 import Profile from './components/Profile.js'
 import About from './components/About.js'
+
+//global context provider
 import ContextProvider from './context/contextProvider';
+
+//teacher invitation acceptance
 import Accept from './components/invite/Accept.js'
 
+//subject page tree
 import SubjectPage from './components/subject/Subject';
-import New from './components/subject/New';
+import NewSubject from './components/subject/NewSubject';
+import Module from './components/subject/module/Module';
+import NewModule from './components/subject/module/NewModule';
+import Session from './components/subject/module/session/Session';
+import NewSession from './components/subject/module/session/NewSession';
+
 
 
 const AppLayout = ()=>{
@@ -73,7 +83,38 @@ const router = createBrowserRouter([
           children:[
             {
               path:'/subject/new',
-              element:<New/>
+              element:<NewSubject/>
+            },
+            {
+              path:'/subject/:subjectid',
+              children:[
+                {
+                  path: '/subject/:subjectid',
+                  element: <SubjectPage/>
+                },
+                {
+                  path: '/subject/:subjectid/new',
+                  element: <NewModule/>
+                },
+                {
+                  path: '/subject/:subjectid/:moduleid',
+                  children:[
+                    {
+                      path: '/subject/:subjectid/:moduleid',
+                      element: <Module/>
+                    },
+                    {
+                      path: '/subject/:subjectid/:moduleid/new',
+                      element: <NewSession/>
+                    },
+                    {
+                      path: '/subject/:subjectid/:moduleid/:sessionid',
+                      element: <Session/>
+                    },
+                  ]
+                },
+
+              ]
             }
           ]
         }
