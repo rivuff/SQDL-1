@@ -13,28 +13,24 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from 'react-router-dom';
 import {UserState} from '../../context/contextProvider'
-import EditContent from "./EditContent";
+
 import { useNavigate } from "react-router-dom";
+import { type, check } from './../Cookies'
 
 
 
 
 function NavList(props) {
     var navList = props.navList;
-    const {logged,setLogged, user} = UserState();
     const navigate = useNavigate();
-
-    const name = user?.data?.data?.name //gets data from userState
-    console.log("use",user?.data?.data);
 
     const LogoutHandler = ()=>{      
         localStorage.removeItem('userInfo');
-        setLogged(false)
         navigate('/');
     }
 
 
-    if (!logged) {
+    if (check() == null) {
         // Render navigation list for non-logged-in users
         return (
             <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -58,7 +54,7 @@ function NavList(props) {
                 }
             </ul>
         )
-      } else if (user?.data?.data?.type === 'student') {
+      } else if (check().type === 'student') {
         // Render navigation list for student users
         return (
             <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -154,7 +150,7 @@ function NavList(props) {
                             color="red"
                             className="p-1 font-medium "
                         >
-                            <Link to={'/logout'} className=" text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg">
+                            <Link onClick={LogoutHandler} className=" text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg">
                                 Log out
                             </Link>
                         </Typography>

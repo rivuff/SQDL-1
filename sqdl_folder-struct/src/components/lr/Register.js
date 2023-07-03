@@ -9,7 +9,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import React from "react";
 import axios from "axios";
 import {useState, useEffect} from 'react'
-
+import { set, check } from './../Cookies'
 import { useNavigate } from "react-router-dom";
 
 // function registerhandler(formData){
@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
     //check if user is logged in
-    if (localStorage.getItem('userInfo') != null) {
+    if (check() != null) {
         window.location.href = '/dashboard'
     }
     //defining statehook
@@ -32,9 +32,6 @@ export default function Register() {
         errmsg: ''
      })
      //defining errorhook
-    useEffect(()=>{
-
-    })
 
 
     const registerhandler = async(e)=>{
@@ -52,7 +49,7 @@ export default function Register() {
             axios.post(`http://localhost:5000/api/v1/user/signup`, {email, name, password, enrollment, rollno}, res)
             .then((response)=>{
                 //setting data in local storage
-                localStorage.setItem('userInfo', JSON.stringify(response.data.data));
+                set(response.data.data);
                 window.location.href = '/dashboard'
             })
             .catch((error)=>{

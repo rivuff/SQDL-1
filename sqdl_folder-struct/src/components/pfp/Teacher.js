@@ -83,7 +83,9 @@ const Teacher = () => {
                          Subjects
                       </Typography>
                       <div>
-
+                        <link to = '/subject/new'>
+                              <Button >New Subject</Button>
+                        </link>
                       </div>
                   </CardBody>
             </Card>

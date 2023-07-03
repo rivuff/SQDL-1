@@ -9,7 +9,7 @@ import React from "react";
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { UserState } from "../../context/contextProvider.js";
-
+import {check, set} from './../Cookies.js'
 
 export default function Login() {
 
@@ -65,15 +65,15 @@ export default function Login() {
                 );
               }
             
-            console.log(formData)
             data = await axios.post(`http://localhost:5000/api/v1/user/login`, {email: formData.email, password:formData.password},res)
             setLogged(true)
-            localStorage.setItem('userInfo', JSON.stringify(data));
+            set(data.data.data);
             console.log('Logged In')
+            window.location.href = '/dashboard'
             // props.set(true);
         } catch (error) {
             console.log(error);
-            throw error
+            setFormData({...formData, errmsg: error.response.data.message})
         }
     }
 
@@ -152,28 +152,6 @@ export default function Login() {
                   Login
                 </Button>
               </form>
-              <div>
-                <label className="mr-2">
-                  <input
-                    type="radio"
-                    name="loginType"
-                    value="email"
-                    checked={useEmail}
-                    onChange={() => setUseEmail(true)}
-                  />
-                  Email
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="loginType"
-                    value="studentId"
-                    checked={!useEmail}
-                    onChange={() => setUseEmail(false)}
-                  />
-                  Student ID
-                </label>
-              </div>
             </Card>
           </div>
         </div>

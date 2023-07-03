@@ -1,5 +1,6 @@
 import{ createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { type, check } from './../components/Cookies'
 
 
 const LoginContext = createContext();
@@ -13,8 +14,8 @@ const ContextProvider = ({children}) =>{
 
 
     useEffect(()=>{
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        console.log(userInfo?.data?.data);
+        const userInfo = check()
+        
         setUser(userInfo);
         
        // const nested = userInfo?data?.data?.type;

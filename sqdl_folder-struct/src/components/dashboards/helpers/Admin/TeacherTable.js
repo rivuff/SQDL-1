@@ -44,7 +44,6 @@ const TeacherTable = () => {
     return (
 
     <div>
-        <TeacherInvite></TeacherInvite>
         <TeacherInvite handler = {fetchTeacherData}></TeacherInvite>
         <Card className="h-full w-full items-center overflow-x-auto">
             <table className="w-full min-w-max table-auto text-left border-spacing-2 border-slate-500 p-2">

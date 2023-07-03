@@ -10,13 +10,12 @@ import reportWebVitals from './reportWebVitals';
 import Register from './components/lr/Register';
 import LandingPage from './components/dashboards/LandingPage.js'
 import Profile from './components/Profile.js'
+import About from './components/About.js'
 import ContextProvider from './context/contextProvider';
-
 import Accept from './components/invite/Accept.js'
-import StudentLandingPage from './components/dashboards/studentLanding.js';
-import Admin from './components/dashboards/Admin';
-//import { useParams } from 'react-router';
-import SubjectPage from './components/dashboards/Subject';
+
+import SubjectPage from './components/subject/Subject';
+import New from './components/subject/New';
 
 
 const AppLayout = ()=>{
@@ -50,11 +49,7 @@ const router = createBrowserRouter([
         },
         {
           path:'/dashboard',
-          element: <Admin/>
-        },
-        {
-          path: '/student/dashboard',
-          element: <StudentLandingPage/>
+          element: <LandingPage/>
         },
         {
           path: '/teacher/accept/:token',
@@ -68,12 +63,20 @@ const router = createBrowserRouter([
         {
           path:'/profile',
           element: <Profile/>
+        },
+        {
+          path:'/about',
+          element: <About/>
+        },
+        {
+          path:'/subject',
+          children:[
+            {
+              path:'/subject/new',
+              element:<New/>
+            }
+          ]
         }
-        // {
-        //   path:'/about',
-        //   element: <About/>
-
-        // }
         // },
         // {
         //   path:'/about',

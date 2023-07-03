@@ -1,5 +1,6 @@
 import React from 'react';
 import { UserState } from '../../context/contextProvider';
+import { type, check } from './../Cookies'
 
 const sessions = [
   { id: 1, courseName: 'DBMS', sessionName: 'Session 1' },
@@ -45,10 +46,12 @@ const JoinSessionCard = ({ courseName, sessionName }) => {
 const StudentLandingPage = () => {
 
     const {user} = UserState();
-    const name = user?.data?.data?.name;
+    
+    const userData = check()
+
   return (
     <div>
-    <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Welcome, <span className='text-deep-orange-400'> {name}</span></h2>
+    <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Welcome, &nbsp;<span className='text-deep-orange-400'> {userData.name}</span></h2>
     <div className="card-container ml-5 m-2 p-2">
     {sessions.map((session) => (
         <JoinSessionCard
