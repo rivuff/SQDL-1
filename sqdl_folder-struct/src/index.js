@@ -20,6 +20,7 @@ import Accept from './components/invite/Accept.js'
 
 //subject page tree
 import SubjectPage from './components/subject/Subject';
+import SingleSubject from './components/subject/Subject';
 import NewSubject from './components/subject/NewSubject';
 import Module from './components/subject/module/Module';
 import NewModule from './components/subject/module/NewModule';
@@ -79,44 +80,26 @@ const router = createBrowserRouter([
           element: <About/>
         },
         {
-          path:'/subject',
-          children:[
-            {
-              path:'/subject/new',
-              element:<NewSubject/>
-            },
-            {
-              path:'/subject/:subjectid',
-              children:[
-                {
-                  path: '/subject/:subjectid',
-                  element: <SubjectPage/>
-                },
-                {
-                  path: '/subject/:subjectid/new',
-                  element: <NewModule/>
-                },
-                {
-                  path: '/subject/:subjectid/:moduleid',
-                  children:[
-                    {
-                      path: '/subject/:subjectid/:moduleid',
-                      element: <Module/>
-                    },
-                    {
-                      path: '/subject/:subjectid/:moduleid/new',
-                      element: <NewSession/>
-                    },
-                    {
-                      path: '/subject/:subjectid/:moduleid/:sessionid',
-                      element: <Session/>
-                    },
-                  ]
-                },
-
-              ]
-            }
-          ]
+          path: '/subject',
+          element: <SubjectPage />
+        }, {
+          path: '/subject/new',
+          element: <NewSubject />
+        }, {
+          path: '/subject/:subjectid',
+          element: <SingleSubject />
+        }, {
+          path: '/subject/:subjectid/new',
+          element: <NewModule />
+        }, {
+          path: '/subject/:subjectid/:moduleid',
+          element: <Module />
+        }, {
+          path: '/subject/:subjectid/:moduleid/new',
+          element: <NewSession />
+        }, {
+          path: '/subject/:subjectid/:moduleid/:sessionid',
+          element: <Session />
         }
         // },
         // {

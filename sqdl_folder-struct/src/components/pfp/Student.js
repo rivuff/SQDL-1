@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import axios from 'axios';
 import {check, set} from './../Cookies'
+import StudentSubjects from './StudentSubjects';
 
 const Student = () => {
   const userData = check();
@@ -23,11 +24,11 @@ const Student = () => {
     type: userData.type,
     errmsg: ''
   })
+  
 
   async function updateHandler() {
     let submissionData = userData
     submissionData = { ...submissionData, name: state.name, email: state.email, rollNumber: state.rollNumber, enrollmentNumber: state.enrollmentNumber }
-    console.log(submissionData)
     const res = {
       headers: {
         "Content-type": "application/json",
@@ -91,7 +92,7 @@ const Student = () => {
               Enrolled Subjects
             </Typography>
             <div>
-
+            <StudentSubjects array = {userData.subjects}/>
             </div>
           </CardBody>
         </Card>
