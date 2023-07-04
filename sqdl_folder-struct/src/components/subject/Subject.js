@@ -1,4 +1,5 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 const data = [
     {
@@ -67,18 +68,21 @@ const SubjectCard = ({name, description, createdBy})=>{
 const SubjectPage = () => {
 
   return (
-    <div>
-    <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Choose Subjects</h2>
-    <div className="card-container ml-5 m-2 p-2 flex flex-wrap -mx-2">
-    {data.map((data) => (
-        <SubjectCard
-        name={data.name}
-        description={data.description}
-        createdBy={data.createdBy}
-        />
-    ))}
-</div>
-</div>
+    <>
+      <Outlet/>
+      <div>
+        <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Choose Subjects</h2>
+        <div className="card-container ml-5 m-2 p-2 flex flex-wrap -mx-2">
+          {data.map((data) => (
+            <SubjectCard
+              name={data.name}
+              description={data.description}
+              createdBy={data.createdBy}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

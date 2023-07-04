@@ -67,11 +67,6 @@ const router = createBrowserRouter([
           element: <Accept />
         },
         {
-
-          path:'/subject',
-          element: <SubjectPage/>
-        },
-        {
           path:'/profile',
           element: <Profile/>
         },
@@ -80,33 +75,41 @@ const router = createBrowserRouter([
           element: <About/>
         },
         {
-          path: '/subject',
-          element: <SubjectPage />
-        }, {
-          path: '/subject/new',
-          element: <NewSubject />
-        }, {
-          path: '/subject/:subjectid',
-          element: <SingleSubject />
-        }, {
-          path: '/subject/:subjectid/new',
-          element: <NewModule />
-        }, {
-          path: '/subject/:subjectid/:moduleid',
-          element: <Module />
-        }, {
-          path: '/subject/:subjectid/:moduleid/new',
-          element: <NewSession />
-        }, {
-          path: '/subject/:subjectid/:moduleid/:sessionid',
-          element: <Session />
+          path: '/course',
+          element: <SubjectPage/>,
+          children:[
+            {
+              path: 'new',
+              element: <NewSubject />
+            }, 
+            {
+              path: ':subjectid',
+              element: <SingleSubject />,
+             children:[
+               {
+                 path: 'new',
+                 element: <NewModule />
+               }, {
+                 path: ':subjectid/:moduleid',
+                 element: <Module />,
+                 children:[
+
+                   {
+                     path: ':subjectid/:moduleid/new',
+                     element: <NewSession />
+                   }, {
+                     path: ':subjectid/:moduleid/:sessionid',
+                     element: <Session />
+                   }
+                 ]
+                }
+             ]
+            }
+          ]
+
         }
-        // },
-        // {
-        //   path:'/about',
-        //   element: <About/>
-        // }
       ]
+      
   }
 ])
 

@@ -10,6 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from 'react';
 import axios from 'axios';
+import StudentSubjects from './StudentSubjects';
 
 const Teacher = () => {
     const userData = JSON.parse(localStorage.getItem('userInfo'));
@@ -81,6 +82,9 @@ const Teacher = () => {
                   <CardBody className="text-center">
                       <Typography variant="h4" color="blue-gray" className="mb-2">
                          Subjects
+                          <div>
+                              <StudentSubjects array={userData.subjects} />
+                          </div>
                       </Typography>
                       <div>
                         <link to = '/subject/new'>
