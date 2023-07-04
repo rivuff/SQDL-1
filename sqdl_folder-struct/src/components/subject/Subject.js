@@ -70,7 +70,8 @@ const SubjectPage = () => {
   return (
     <>
       <Outlet/>
-      <div>
+      All Subjects
+      {/* <div>
         <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Choose Subjects</h2>
         <div className="card-container ml-5 m-2 p-2 flex flex-wrap -mx-2">
           {data.map((data) => (
@@ -81,7 +82,7 @@ const SubjectPage = () => {
             />
           ))}
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

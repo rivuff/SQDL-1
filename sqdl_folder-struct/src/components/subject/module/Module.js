@@ -19,8 +19,8 @@ const Module = () => {
   }
   return (
    <>
+      <Outlet />
       <div>Module</div>
-      <Outlet/>
    </>
   )
 }
