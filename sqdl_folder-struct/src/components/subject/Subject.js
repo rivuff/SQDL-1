@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-
+import axios from 'axios'
 
 
 const SubjectCard = ({name, description, createdBy})=>{
@@ -23,8 +23,10 @@ const SubjectCard = ({name, description, createdBy})=>{
     )
 }
 
-const SubjectPage = () => {
-
+const SubjectPage = ({user}) => {
+  async function getUserSubjects (){
+    // axios.post('http://localhost:5000/api/v1/')
+  }
   return (
     <>
       <Outlet/>

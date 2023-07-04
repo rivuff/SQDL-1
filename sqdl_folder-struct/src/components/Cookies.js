@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import COOKIE_KEY from './.env'
+
 export function check(){
     const signed = localStorage.getItem('userInfo');
     try{

@@ -5,7 +5,6 @@ const SingleSubject = () => {
   console.log('Outlet working')
   return (
     <>
-      <Outlet />
       <div>SingleSubject</div>
     </>
   )
