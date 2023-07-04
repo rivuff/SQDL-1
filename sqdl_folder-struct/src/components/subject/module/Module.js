@@ -4,8 +4,10 @@ import {Outlet, useParams} from 'react-router-dom'
 import axios from 'axios'
 
 const Module = () => {
-  //fetching data
+  //get params
   const params = useParams()
+  console.log(params)
+  //fetching data
   const [moduleData, setModule] = useState({
     name:'',
     createdBy: '',
@@ -16,6 +18,18 @@ const Module = () => {
   if (!moduleData.fetched){
     //fetch moduleData
 
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      }
+    }
+    axios.post('http://localhost:5000/api/v1/module/getModuleById',{_id: params.moduleid} )
+    .then((response)=>{
+      console.log(response)
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
   }
   return (
    <>
