@@ -1,10 +1,10 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const SubjectRouter = () => {
+const CourseRouter = () => {
   return (
-    <Outlet/>
-    )
+  <Outlet/>  
+)
 }
 
-export default SubjectRouter
+export default CourseRouter

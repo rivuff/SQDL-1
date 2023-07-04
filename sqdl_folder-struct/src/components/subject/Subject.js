@@ -1,48 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-const data = [
-    {
-        _id: "649ed88026d3408b3bb558e5",
-        name: "Database Management System",
-        description: "teaches about how datas are managed inside database",
-        createdBy: "Rivu Naskar",
-        createdAt: "2023-06-30T13:28:32.219Z",
-        updatedAt: "2023-06-30T13:28:32.219Z",
-        subjectId: "SUB115",
-        __v: 0
-    },
-    {
-        _id: "649ed8b826d3408b3bb558e8",
-        name: "Computer Networks",
-        description: "Computer networking refers to interconnected computing devices that can exchange data and share resources with each other.",
-        createdBy: "Rivu Naskar",
-        createdAt: "2023-06-30T13:29:28.467Z",
-        updatedAt: "2023-06-30T13:29:28.467Z",
-        subjectId: "SUB063",
-        __v: 0
-    },
-    {
-        _id: "649eddce7640c026e1f9ba88",
-        name: "Object Oriented Programming",
-        description: "Object-oriented programming is based on the concept of objects. In object-oriented programming data structures, or objects are defined, each with its own properties or attributes. ",
-        createdBy: "Rivu Naskar",
-        createdAt: "2023-06-30T13:51:10.113Z",
-        updatedAt: "2023-06-30T13:51:10.113Z",
-        subjectId: "SUB248",
-        __v: 0
-    },
-    {
-        _id: "649eddf17640c026e1f9ba8b",
-        name: "Engineering Mathamatics ",
-        description: "Maths done by Engineers ",
-        createdBy: "Rivu Naskar",
-        createdAt: "2023-06-30T13:51:45.208Z",
-        updatedAt: "2023-06-30T13:51:45.208Z",
-        subjectId: "SUB339",
-        __v: 0
-    }
-]
 
 
 const SubjectCard = ({name, description, createdBy})=>{

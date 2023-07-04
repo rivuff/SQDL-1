@@ -1,10 +1,9 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-
-const SubjectRouter = () => {
+const ModuleRouter = () => {
   return (
     <Outlet/>
-    )
+  )
 }
 
-export default SubjectRouter
+export default ModuleRouter

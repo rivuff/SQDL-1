@@ -20,6 +20,9 @@ import Accept from './components/invite/Accept.js'
 
 //subject page tree
 import SubjectPage from './components/subject/Subject';
+import CourseRouter from './components/CourseRouter';
+import SubjectRouter from './components/subject/SubjectRouter';
+import ModuleRouter from './components/subject/module/ModuleRouter';
 import SingleSubject from './components/subject/SingleSubject';
 import NewSubject from './components/subject/NewSubject';
 import Module from './components/subject/module/Module';
@@ -76,24 +79,34 @@ const router = createBrowserRouter([
         },
         {
           path: '/course',
-          element: <SubjectPage/>,
+          element: <CourseRouter/>,
           children:[
             {
+              path: '',
+              element: <SubjectPage/>
+            },  {
               path: 'new',
               element: <NewSubject />
             }, 
             {
               path: ':subjectid',
-              element: <SingleSubject />,
+              element: <SubjectRouter />,
              children:[
                {
+                 path: '',
+                 element: <SingleSubject />
+               }, {
                  path: 'new',
                  element: <NewModule />
                }, {
                  path: ':moduleid',
-                 element: <Module />,
+                 element: <ModuleRouter />,
                  children:[
 
+                   {
+                     path: '',
+                     element: <Module />
+                   }, 
                    {
                      path: 'new',
                      element: <NewSession />
