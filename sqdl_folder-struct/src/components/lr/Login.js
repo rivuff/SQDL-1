@@ -10,9 +10,9 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { UserState } from "../../context/contextProvider.js";
 import {check, set} from './../Cookies.js'
-
+import {GLOBAL_URL} from '../config.js'
 export default function Login() {
-
+  console.log(GLOBAL_URL)
     //console.log(UserState);
    const {logged, setLogged} = UserState();
     //initializing states
@@ -53,19 +53,19 @@ export default function Login() {
             let data;
             if (useEmail) {
                 data = await axios.post(
-                  `http://localhost:5000/api/v1/user/login`,
+                  GLOBAL_URL+`user/login`,
                   { email: formData.email, password: formData.password },
                   res
                 );
               } else {
                 data = await axios.post(
-                  `http://localhost:5000/api/v1/user/login`,
+                  GLOBAL_URL`user/login`,
                   { studentId: formData.studentId, password: formData.password },
                   res
                 );
               }
             
-            data = await axios.post(`http://localhost:5000/api/v1/user/login`, {email: formData.email, password:formData.password},res)
+            data = await axios.post(GLOBAL_URL+`user/login`, {email: formData.email, password:formData.password},res)
             setLogged(true)
             set(data.data.data);
             console.log('Logged In')

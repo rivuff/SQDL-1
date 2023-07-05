@@ -11,6 +11,9 @@ import {
 import { useState } from 'react';
 import axios from 'axios';
 import {check, set} from './../Cookies'
+import { GLOBAL_URL } from '../config';
+
+
 import StudentSubjects from './StudentSubjects';
 
 const Student = () => {
@@ -35,7 +38,7 @@ const Student = () => {
       }
     }
     //posting data to the server
-    axios.post(`http://localhost:5000/api/v1/user/update`, JSON.stringify(submissionData), res)
+    axios.post(GLOBAL_URL+`user/update`, JSON.stringify(submissionData), res)
       .then((response) => {
         console.log(response.data.data)
         setState({ ...state, name: response.data.data.name, email: response.data.data.email, enrollmentNumber: response.data.data.enrollmentNumber, rollNumber:response.data.data.rollNumber,  editing: false })//update other fields with returned response data

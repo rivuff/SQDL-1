@@ -11,9 +11,11 @@ import {
 import { useState } from 'react';
 import axios from 'axios';
 import StudentSubjects from './StudentSubjects';
+import {check, set} from '../Cookies'
+import { GLOBAL_URL } from '../config';
 
 const Teacher = () => {
-    const userData = JSON.parse(localStorage.getItem('userInfo'));
+    const userData = check()
     const [state, setState] =  useState({
         editing: false,
         name:userData.name,
@@ -34,12 +36,12 @@ const Teacher = () => {
             }
         }
         //posting data to the server
-        axios.post(`http://localhost:5000/api/v1/user/update`, JSON.stringify(submissionData), res)
+        axios.post(GLOBAL_URL + `user/update`, JSON.stringify(submissionData), res)
             .then((response) => {
                 console.log(response.data.data)
                 setState({ ...state, name: response.data.data.name, email: response.data.data.email, editing: false})//update other fields with returned response data
                 //update cookie
-                localStorage.setItem('userInfo', JSON.stringify(response.data.data));
+                set(response.data.data);
             })
             .catch((error) => {
                 setState({ ...state, errmsg:error.message})
@@ -87,9 +89,9 @@ const Teacher = () => {
                           </div>
                       </Typography>
                       <div>
-                        <link to = '/subject/new'>
-                              <Button >New Subject</Button>
-                        </link>
+                        <a href = '/course/new'>
+                              <Button>New Subject</Button>
+                        </a>
                       </div>
                   </CardBody>
             </Card>

@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import { UserState } from "../../context/contextProvider.js";
 import {useState} from 'react'
+import { GLOBAL_URL } from '../config.js';
 
 const Accept = () => {
     const [state, setMsg] = useState({
@@ -29,7 +30,7 @@ const Accept = () => {
                     "Content-type": "application/json",
                 }
             }
-            axios.post('http://localhost:5000/api/v1/teacher/accept', { email: userEmail, password: state.password }, res)
+            axios.post(GLOBAL_URL+'teacher/accept', { email: userEmail, password: state.password }, res)
                 .then((response) => {
                     console.log(response)
                     if (response.data.success == false) {

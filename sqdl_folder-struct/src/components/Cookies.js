@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken";
-import COOKIE_KEY from './.env'
+import {COOKIE_KEY} from './config.js'
 
 export function check(){
     const signed = localStorage.getItem('userInfo');
     try{
         const userData = jwt.verify(signed, COOKIE_KEY)
-        console.log(userData)
         return userData
         }   
     catch (error){
         console.log(error)
+        const signed = localStorage.removeItem('userInfo');
         return null
     }
 }

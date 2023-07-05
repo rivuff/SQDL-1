@@ -36,10 +36,10 @@ const ContextProvider = ({children}) =>{
         if (logged === false){
           navigate('/');
         }
-        console.log(logged);
+        // console.log(logged);
     }, [logged, navigate])
 
-    console.log("context",logged);
+    // console.log("context",logged);
     return <LoginContext.Provider value={{logged,setLogged, user, setUser}}>{children} </LoginContext.Provider>
 
 }

@@ -9,6 +9,10 @@ import {
 import React from "react";
 import axios from 'axios'
 import {useState} from 'react'
+import {GLOBAL_URL} from '../config'
+
+
+
 const postData =  async(type)=>{
     //e.preventDefault();
     // let post_val = {
@@ -28,7 +32,7 @@ const postData =  async(type)=>{
         console.log(postVal.password);
     
         try {
-            const response = await axios.post('http://localhost:5000/api/v1/teacher/login', postVal);
+            const response = await axios.post(GLOBAL_URL+'teacher/login', postVal);
             const data = response.data;
             console.log(response);
             if (data) {
@@ -57,7 +61,7 @@ const postData =  async(type)=>{
             }
         }
 
-        const {data} = await axios.post(`http://localhost:5000/api/v1/student/login`, {enrollment, password},res)
+        const {data} = await axios.post(GLOBAL_URL+`student/login`, {enrollment, password},res)
        
         localStorage.setItem('userInfo', JSON.stringify(data));
     

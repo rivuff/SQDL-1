@@ -1,9 +1,10 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import {check} from '../Cookies'
 import axios from 'axios'
 
 
 const SubjectCard = ({name, description, createdBy})=>{
+    
     return (
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0">
       <div className="flex flex-col h-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -24,12 +25,14 @@ const SubjectCard = ({name, description, createdBy})=>{
 }
 
 const SubjectPage = ({user}) => {
+  if (check() ==null){
+    window.location.href = '/login'
+  }
   async function getUserSubjects (){
     // axios.post('http://localhost:5000/api/v1/')
   }
   return (
     <>
-      <Outlet/>
       All Subjects
       {/* <div>
         <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Choose Subjects</h2>
