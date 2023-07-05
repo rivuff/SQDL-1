@@ -15,10 +15,10 @@ const NewModule = () => {
     fetched: false,
     subject:{
       name:'',
-      description: '',
       _id: subjectid,
-      createdBy: ''
-    }
+    },
+    msg: '',
+    disabled: false
   })
   async function getSubjectInfo(){
     const res = {
@@ -26,26 +26,48 @@ const NewModule = () => {
         "Content-type": "application/json",
       }
     }
-    console.log(subjectid)
     axios.post(GLOBAL_URL +'subject/getByID', {_id: subjectid}, res)
     .then((response)=>{
       console.log(response.data.data)
-      // if (response.data.data.subject.createdBy!=check()){
-      //   console.log('something wrong')
-      //   // window.location.href = '/course'
-      // }
-      setModule({...module, fetched:true, subject:{
-        name: response.data.data.name,
-        description: response.data.data.description,
-        id: response.data.data._id,
-        createdBy: response.data.data.createdBy
-      }})
+      if (response.data.data.createdBy!=check()._id){
+        console.log('Not the owner of model')
+        window.location.href = '/course'
+      }
+      const newmod = module
+      newmod.subject.name = response.data.data.name
+      newmod.subject._id = response.data.data._id
+      newmod.fetched = true
+      setModule(newmod)
+      console.log(module)
     })
     .catch((error)=>{
       console.log(error)
     })
     return null
   }
+
+  async function submissionHandler(){
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      }
+    }
+    axios.post(GLOBAL_URL + 'module/create', { name: module.name, description: module.description, createdBy:module.createdBy, parentSubject:module.subject._id }, res)
+      .then((response => {
+        console.log(response)
+        setModule({ ...module, disabled: true, msg: 'Created Subject Successfully' })
+        //add too cookie
+        window.location.href = '/course/'+subjectid+'/' + response.data.data._id
+      }))
+      .catch((error) => {
+        console.log(error)
+        setModule({ ...module, msg: error.message })
+      })
+  }
+  if(!module.fetched){
+    getSubjectInfo()
+  }
+
   if (check() == null) {
     window.location.href = '/login'
   }
@@ -79,9 +101,9 @@ const NewModule = () => {
             </Typography>
             <form className='mt-8 mb-2 w-80 max-w-screen-lg sm:w-96'>
               <div className='mb-4 flex flex-col gap-6'>
-                <Input label='Name'></Input>
-                <Textarea label='Description'> </Textarea>
-                <Button onClick={/* Add handler */ null}>Create</Button>
+                <Input label='Name' value={module.name} onChange={(e)=>{setModule({...module, name:e.target.value})}}></Input>
+                <Textarea label='Description' value={module.description} onChange={(e) => { setModule({ ...module, description: e.target.value }) }}></Textarea>
+                <Button disabled = {(module.name=='')||(module.description== '')||module.disabled}onClick={()=>{submissionHandler()}}>Create</Button>
               </div>
             </form>
           </Card>

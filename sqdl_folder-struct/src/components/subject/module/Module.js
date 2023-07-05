@@ -6,14 +6,19 @@ import axios from 'axios'
 const Module = () => {
   //get params
   const params = useParams()
-  console.log(params)
   //fetching data
   const [moduleData, setModule] = useState({
     name:'',
     createdBy: '',
     parentSubject: '',
     description: '',
-    fetched: false
+    fetched: false,
+    subject:{
+      name:'',
+      description:'',
+      createdBy: '',
+      _id: ''
+    }
   })
   if (!moduleData.fetched){
     //fetch moduleData

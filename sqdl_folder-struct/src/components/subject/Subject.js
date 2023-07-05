@@ -1,7 +1,7 @@
 import React from "react";
 import {check} from '../Cookies'
 import axios from 'axios'
-
+const isFetched = false
 
 const SubjectCard = ({name, description, createdBy})=>{
     
@@ -28,8 +28,12 @@ const SubjectPage = ({user}) => {
   if (check() ==null){
     window.location.href = '/login'
   }
+
   async function getUserSubjects (){
     // axios.post('http://localhost:5000/api/v1/')
+  }
+  if (!isFetched){
+    getUserSubjects()
   }
   return (
     <>
