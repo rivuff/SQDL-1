@@ -4,8 +4,8 @@ import {Outlet, useParams} from 'react-router-dom'
 import axios from 'axios'
 import { GLOBAL_URL } from '../../config'
 import {check,set} from '../../Cookies'
-import { Input, Typography, Textarea, Card, Button, Breadcrumbs } from '@material-tailwind/react'
-
+import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Drawer, IconButton } from '@material-tailwind/react'
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 
 
@@ -39,7 +39,24 @@ const Module = () => {
     fetched: false //variable to indicate whether data has been requested from server
   });
 
+  //edit drawer state
+  const [open, setOpen] = React.useState(false);
+  const openDrawer = () => setOpen(true);
+  const closeDrawer = () => setOpen(false);
 
+  function handleSub(){
+    const name = document.getElementById('name').value
+    const desc = document.getElementById('desc').value
+    axios.post(GLOBAL_URL+'module/update',{name:name, description:desc, _id: params.moduleid})
+    .then((response)=>{
+      console.log(response)
+      setModule({...module, name: response.data.data.name, description: response.data.data.description})
+      closeDrawer()
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
   async function getAllData(){
     var newmod = module //setting a copy of the component state
 
@@ -112,17 +129,42 @@ const Module = () => {
             <Typography variant='h3'>
               {module.name}
             </Typography>
+            <a onClick={openDrawer} href = '#'>
+              <Typography variant='small' className={(check()._id == module.createdBy) ? 'text-blue-300' : 'hidden'} >
+                Edit
+              </Typography>
+            </a>
+       
+            
             <a href={'/course/' + module.parentSubject._id}>
               <Typography variant='paragraph'>{module.parentSubject.name}</Typography>
             </a>
+            <hr></hr><br/>
             <Typography variant='paragraph' className='text-left'>{module.description}</Typography>
             <br/>
+            <hr></hr>
+
             <Typography variant='h6' className='text-left text-black-200'>
               Sessions
             </Typography>
             Load Session Cards here
           </div>
         </Card>
+        <Drawer open={open} onClose={closeDrawer} className="p-4">
+          <div className="mb-6 flex items-center justify-between">
+            <Typography variant="h5" color="blue-gray">
+              Edit Module
+            </Typography>
+            <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+              <XMarkIcon strokeWidth={2} className="h-5 w-5" />
+            </IconButton>
+          </div>
+          <form className="flex flex-col gap-6 p-4">
+            <Input id ='name'label="Name" defaultValue={module.name} />
+            <Textarea id  ='desc'rows={6} label="Description" defaultValue={module.description} />
+            <Button onClick={() => { handleSub() }}>Update</Button>
+          </form>
+        </Drawer>
       </div>
    </>
   )

@@ -29,7 +29,7 @@ const NewModule = () => {
     axios.post(GLOBAL_URL +'subject/getByID', {_id: subjectid}, res)
     .then((response)=>{
       console.log(response.data.data)
-      if (response.data.data.createdBy!=check()._id){
+      if (response.data.data.createdBy!=check()._id){//if user id not the smae as subject creator id - cannot make module
         console.log('Not the owner of model')
         window.location.href = '/course'
       }

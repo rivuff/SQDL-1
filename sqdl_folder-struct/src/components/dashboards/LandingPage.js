@@ -23,7 +23,7 @@ const LandingPage = ()=>{
     }    
     else if (userData.type == 'teacher'){
         console.log('Teacher dashboard')
-        return (<Teacher/>)
+        window.location.href = '/course'
     }
 
 }
