@@ -36,7 +36,7 @@ const SubjectPage = ({user}) => {
     getUserSubjects()
   }
   return (
-    <>
+    <div>
       All Subjects
       {/* <div>
         <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Choose Subjects</h2>
@@ -50,7 +50,7 @@ const SubjectPage = ({user}) => {
           ))}
         </div>
       </div> */}
-    </>
+    </div>
   );
 };
 

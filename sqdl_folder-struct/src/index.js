@@ -29,6 +29,7 @@ import Module from './components/subject/module/Module';
 import NewModule from './components/subject/module/NewModule';
 import Session from './components/subject/module/session/Session';
 import NewSession from './components/subject/module/session/NewSession';
+import StudentLandingPage from './components/dashboards/StudentLanding';
 
 
 
@@ -74,8 +75,16 @@ const router = createBrowserRouter([
           element: <Profile/>
         },
         {
+          path:'/subject',
+          element: <SubjectPage/>
+        },
+        {
           path:'/about',
           element: <About/>
+        },
+        {
+          path: '/student/dashboard',
+          element: <StudentLandingPage/>
         },
         {
           path: '/course',
@@ -84,7 +93,8 @@ const router = createBrowserRouter([
             {
               path: '',
               element: <SubjectPage/>
-            },  {
+            },  
+            {
               path: 'new',
               element: <NewSubject />
             }, 
