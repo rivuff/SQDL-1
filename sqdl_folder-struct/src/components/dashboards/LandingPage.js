@@ -10,6 +10,7 @@ import {type, check } from './../Cookies'
 const LandingPage = ()=>{
     //cookie check
     const userData = check()
+    console.log(userData)
     if (userData == null){
         window.location.href = '/'
     }

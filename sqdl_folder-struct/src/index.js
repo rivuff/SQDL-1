@@ -74,18 +74,18 @@ const router = createBrowserRouter([
           path:'/profile',
           element: <Profile/>
         },
-        {
-          path:'/subject',
-          element: <SubjectPage/>
-        },
+        // {
+        //   path:'/subject',
+        //   element: <SubjectPage/>
+        // },
         {
           path:'/about',
           element: <About/>
         },
-        {
-          path: '/student/dashboard',
-          element: <StudentLandingPage/>
-        },
+        // {
+        //   path: '/student/dashboard',
+        //   element: <StudentLandingPage/>
+        // },
         {
           path: '/course',
           element: <CourseRouter/>,

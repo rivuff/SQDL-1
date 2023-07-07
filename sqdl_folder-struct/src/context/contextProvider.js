@@ -12,15 +12,15 @@ const ContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (logged && user) {
-      const userType = user?.data?.data?.type;
+      const userType = user?.type;
       console.log(userType);
       if (userType === 'student') {
-        navigate('/student/dashboard');
+        // navigate('/dashboard');
       } else if (userType === 'teacher' || userType === 'admin') {
-        navigate('/dashboard');
+        // navigate('/dashboard');
       }
     } else {
-      navigate('/');
+      // navigate('/');
     }
   }, [logged, user, navigate]);
 

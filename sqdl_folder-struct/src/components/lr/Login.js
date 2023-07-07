@@ -61,9 +61,9 @@ export default function Login() {
           }
     
           setLogged(true);
-          localStorage.setItem('userInfo', JSON.stringify(data));
+          set(data.data.data);
           console.log('Logged In');
-          console.log(logged);
+          window.location.href = '/dashboard'
         } catch (error) {
           console.log(error);
           setFormData({ ...formData, errmsg: error.response.data.message });
