@@ -17,11 +17,7 @@ export default function Login() {
    const {logged, setLogged} = UserState();
     //initializing states
     const [useEmail, setUseEmail] = useState(true);
-    // let [formData, setData] = useState({
-    //     email : '',
-    //     password : '',
-    //     errmsg: ''
-    // })
+ 
 
     const [formData, setFormData] = useState({
         email: '',
@@ -30,7 +26,6 @@ export default function Login() {
         errmsg: '',
       });
      
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -40,43 +35,40 @@ export default function Login() {
         }));
       };
 
-    const loginHandler = async(e)=>{
+      const loginHandler = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const res ={
-                headers:{
-                    "Content-type":"application/json",
-                }
-            }
-
-            let data;
-            if (useEmail) {
-                data = await axios.post(
-                  GLOBAL_URL+`user/login`,
-                  { email: formData.email, password: formData.password },
-                  res
-                );
-              } else {
-                data = await axios.post(
-                  GLOBAL_URL`user/login`,
-                  { studentId: formData.studentId, password: formData.password },
-                  res
-                );
-              }
-            
-            data = await axios.post(GLOBAL_URL+`user/login`, {email: formData.email, password:formData.password},res)
-            setLogged(true)
-            set(data.data.data);
-            console.log('Logged In')
-            window.location.href = '/dashboard'
-            // props.set(true);
+          const res = {
+            headers: {
+              "Content-type": "application/json",
+            },
+          };
+    
+          let data;
+          if (useEmail) {
+            data = await axios.post(
+              GLOBAL_URL + `user/login`,
+              { email: formData.email, password: formData.password },
+              res
+            );
+          } else {
+            data = await axios.post(
+              GLOBAL_URL + `user/login`,
+              { studentId: formData.studentId, password: formData.password },
+              res
+            );
+          }
+    
+          setLogged(true);
+          localStorage.setItem('userInfo', JSON.stringify(data));
+          console.log('Logged In');
+          console.log(logged);
         } catch (error) {
-            console.log(error);
-            setFormData({...formData, errmsg: error.response.data.message})
+          console.log(error);
+          setFormData({ ...formData, errmsg: error.response.data.message });
         }
-    }
-
+      };
     
     const {email , password} = formData;
 

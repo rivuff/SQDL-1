@@ -49,8 +49,9 @@ export default function Register() {
             axios.post(`http://localhost:5000/api/v1/user/signup`, {email, name, password, enrollment, rollno}, res)
             .then((response)=>{
                 //setting data in local storage
-                set(response.data.data);
-                window.location.href = '/dashboard'
+                // set(response.data.data);
+                // window.location.href = '/dashboard'
+                console.log(response.data.data);
             })
             .catch((error)=>{
                 console.log(error)
