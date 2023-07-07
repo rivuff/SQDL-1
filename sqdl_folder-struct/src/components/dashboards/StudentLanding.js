@@ -45,7 +45,7 @@ const JoinSessionCard = ({ courseName, sessionName }) => {
 const StudentLandingPage = () => {
 
     const {user} = UserState();
-    const name = user?.data?.data?.name;
+    const name = user?.name;
   return (
     <div>
     <h2 className='italic font-semibold text-xl flex justify-center p-2 pt-5'>Welcome, <span className='text-deep-orange-400'> {name}</span></h2>
