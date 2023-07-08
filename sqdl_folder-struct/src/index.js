@@ -29,8 +29,7 @@ import Module from './components/subject/module/Module';
 import NewModule from './components/subject/module/NewModule';
 import Session from './components/subject/module/session/Session';
 import NewSession from './components/subject/module/session/NewSession';
-import StudentLandingPage from './components/dashboards/StudentLanding';
-
+//import StudentLandingPage from './components/dashboards/StudentLanding';
 
 
 const AppLayout = ()=>{
@@ -82,6 +81,11 @@ const router = createBrowserRouter([
           path:'/about',
           element: <About/>
         },
+        {
+          path: '/subjects',
+          element: <SubjectPage/>
+        },  
+        
         // {
         //   path: '/student/dashboard',
         //   element: <StudentLandingPage/>
