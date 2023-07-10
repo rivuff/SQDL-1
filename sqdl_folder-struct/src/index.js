@@ -81,10 +81,10 @@ const router = createBrowserRouter([
           path:'/about',
           element: <About/>
         },
-        {
-          path: '/subjects',
-          element: <SubjectPage/>
-        },  
+        // {
+        //   path: '/subjects',
+        //   element: <SubjectPage/>
+        // },  
         
         // {
         //   path: '/student/dashboard',
@@ -126,7 +126,12 @@ const router = createBrowserRouter([
                      element: <NewSession />
                    }, {
                      path: ':sessionid',
-                     element: <Session />
+                     children: [
+                       {
+                         path: '',  
+                         element: <Session />
+                       }, 
+                     ]
                    }
                  ]
                 }
