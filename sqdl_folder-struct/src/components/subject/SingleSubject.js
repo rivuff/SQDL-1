@@ -4,7 +4,7 @@ import { Outlet, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { GLOBAL_URL } from '../config'
 import { check, set } from '../Cookies'
-import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Drawer, IconButton } from '@material-tailwind/react'
+import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Drawer, IconButton, Spinner } from '@material-tailwind/react'
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 
@@ -15,7 +15,7 @@ const ModuleCard = ({ obj }) => {
     return null
   }
   return (
-    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0">
+    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0 inline-block">
       <div className="flex flex-col h-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <a href = {'/course/'+ params.subjectid + '/'+ obj._id}>
           <h5 className="mb-2 text-lg font-bold tracking-tight text-blue-400">{obj.name}</h5>
@@ -58,7 +58,7 @@ const SingleSubject = () => {
   function handleSub() {
     const name = document.getElementById('name').value
     const desc = document.getElementById('desc').value
-    axios.post(GLOBAL_URL + 'subject/update', { name: name, description: desc, _id: params.subject })
+    axios.post(GLOBAL_URL + 'subject/update', { name: name, description: desc, _id: params.subjectid }, res)
       .then((response) => {
         setSubject({ ...subject, name: response.data.data.name, description: response.data.data.description })
         closeDrawer()
@@ -112,6 +112,11 @@ const SingleSubject = () => {
 
   if (subject.fetched !=true) {
     getAllData()
+    return (
+      <div className='align-center p-10 flex flex-col items-center h-screen '>
+        <Spinner></Spinner>
+      </div>
+    )
   }
   return (
     <>
@@ -127,7 +132,7 @@ const SingleSubject = () => {
           </Breadcrumbs>
         </div>
         <br />
-        <Card className="mt-6 w-3/5 p-5">
+        <Card className="mt-6 w-4/5 p-5">
           <div className='text-center'>
             <Typography variant='h3'>
               {subject.name}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import { Input, Typography, Textarea, Card, Button, Breadcrumbs } from '@material-tailwind/react'
+import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Select } from '@material-tailwind/react'
 import { useParams } from 'react-router-dom'
 import { check, set } from '../../../Cookies'
 import axios from 'axios'
@@ -15,6 +15,11 @@ const NewSession = () => {
     title: '',
     description: '',
     createdBy: check()._id,
+    topic: '',
+    conductedBy: check().name,
+    enrollmentLimit: 40,
+    activity_order: [null],
+    iteration: [],
     fetched: false,
     parentModule: {
       name: '',
@@ -64,7 +69,7 @@ const NewSession = () => {
         "Content-type": "application/json",
       }
     }
-    axios.post(GLOBAL_URL + 'session/create', { title: session.title, description: session.description, createdBy: session.createdBy, parentModule: session.parentModule._id }, res)
+    axios.post(GLOBAL_URL + 'session/create', session, res)
       .then((response => {
         console.log(response)
         setSession({ ...module, disabled: true, msg: 'Created Session Successfully' })
@@ -77,6 +82,37 @@ const NewSession = () => {
       })
   }
 
+  function updateArray (index, val) {
+    const value = session.activity_order
+    value[index] = val
+    return value
+  }
+  function removeArray(index){
+    const update = session.activity_order
+    if (update.length ==1){
+      return [null]
+    }
+    const x = update.splice(index,1)
+    
+    return update
+  }
+  const ActivitySelect = () => {
+    return(
+      session.activity_order.map((activity, index) => {
+        return (<div className='inline-block'>
+          <select label='Activity' className='inline-block w-2/3 h-8 mx-2' value={activity} onChange={(e) => { setSession({ ...session, activity_order: updateArray(index,e.target.value) }) }}>
+            <option label='' value={null}></option>
+            <option label='Deliver Content' value='Deliver Content'></option>
+            <option label='Question Posing' value='Question Posing'></option>
+            <option label='Personal Prioritization' value='Personal Prioritization'></option>
+            <option label='Prioritization' value='Priortization'></option>
+            <option label='Question Answering' value='Quesiton Answering'></option>
+          </select>
+          <Button size='sm' onClick={() => { setSession({ ...session, activity_order: session.activity_order.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={()=>{setSession({...session, activity_order: removeArray(index)})}}>-</Button>
+        </div>)
+      })
+    )
+  }
 
   if (check() == null) {
     window.location.href = '/login'
@@ -86,6 +122,7 @@ const NewSession = () => {
   }
   else {
     if (!session.fetched) {
+      console.log(session.fetched)
       getInfo()
     }
     return (
@@ -107,7 +144,7 @@ const NewSession = () => {
           </Breadcrumbs>
         </div>
         <br />
-        <div className='border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex'>
+        <div className='border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex w-4/5'>
           <Card color="transparent" shadow={false}>
             <Typography variant='h4' className='text-center text-black'>
               New Session
@@ -117,17 +154,24 @@ const NewSession = () => {
             </span>
             <form className='mt-8 mb-2 w-80 max-w-screen-lg sm:w-96'>
               <div className='mb-4 flex flex-col gap-6'>
-                <Input label='Name' value={session.title} onChange={(e) => { setSession({ ...session, title: e.target.value, disabled: false }) }}></Input>
+                <Input label='Title' value={session.title} onChange={(e) => { setSession({ ...session, title: e.target.value, disabled: false }) }}></Input>
                 <Textarea label='Description' value={session.description} onChange={(e) => { setSession({ ...session, description: e.target.value, disabled:false }) }}></Textarea>
-                <Button disabled={(session.title == '') || (session.description == '') || session.disabled} onClick={() => { submissionHandler() }}>Create</Button>
+                <Input label='Topic' value={session.topic} onChange={(e) => { setSession({ ...session, topic: e.target.value, disabled: false }) }}></Input>
+                <Input label='Conducted By' value={session.conductedBy} onChange={(e) => { setSession({ ...session, conductedBy: e.target.value, disabled: false }) }}></Input>
+                <Input label='Enrollment Limit' value={session.enrollmentLimit} type='number' onChange={(e) => { setSession({ ...session, enrollmentLimit: e.target.value, disabled: false }) }}></Input>
+                <ActivitySelect/>
+                <Button disabled={(session.title == '') || (session.description == '') || session.disabled||(session.activity_order.length == 1 && session.activity_order[0]==null)} onClick={() => { submissionHandler() }}>Create</Button>
+              
               </div>
             </form>
           </Card>
+
         </div>
       </div>
     )
   }
 }
+
 
 
 export default NewSession

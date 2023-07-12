@@ -13,18 +13,19 @@ import { useState } from "react";
 
 export default function TeacherInvite({handler}) {
     const [msg, setMsg] = useState('')
+    const [subjects, setSub] = useState([])
     const [open, setOpen] = useState(false);
     const toggleOpen = () => setOpen(cur => !cur);
-
     async function submitHandler(e){
-        console.log(document.getElementById('invitationEmail').value)
         const res = {
             headers: {
                 "Content-type": "application/json"
             }
         }
-        axios.post('http://localhost:5000/api/v1/admin/invite', { email: document.getElementById('invitationEmail').value, name: document.getElementById('invitationName').value}, res)
+        console.log('posted')
+        axios.post('http://localhost:5000/api/v1/admin/invite', { email: document.getElementById('invitationEmail').value, name: document.getElementById('invitationName').value, subject : document.getElementById('subject').value}, res)
         .then((response)=>{
+            console.log(response)
             if (response.status == 200){
                 //update hook to show success
                 setMsg('')
@@ -35,11 +36,19 @@ export default function TeacherInvite({handler}) {
             }
         })
         .catch((error)=>{
-            setMsg('')
-            setMsg('ERROR: '+error.response.data.message)
+            setMsg('')  
+            setMsg('ERROR: ')
                 //update hook to show error
         })
     }
+    async function getSubjects(){
+        const data = await axios.get('http://localhost:5000/api/v1/subject/getAll')
+        setSub(data.data.data)
+    }
+    if (subjects.length == 0){
+        getSubjects()
+    }
+
     return (    
 
         <div>
@@ -55,6 +64,13 @@ export default function TeacherInvite({handler}) {
                             </Typography>
                             <Input size="md" label="Name" id ='invitationName'/>
                             <Input size="md" label="Email" id = 'invitationEmail'/>
+                            <select id = 'subject'>
+                                {subjects.map((subject)=>{
+                                    return(
+                                        <option value = {subject._id}>{subject.name}</option>
+                                    )
+                                })}
+                            </select>
                             <Button className="w-1/4" variant="outlined" onClick={(e) => { submitHandler(e)}}>Submit</Button>
                         </div>
                     </CardBody>

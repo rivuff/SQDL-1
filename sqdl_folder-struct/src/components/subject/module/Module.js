@@ -4,7 +4,7 @@ import {Outlet, useParams} from 'react-router-dom'
 import axios from 'axios'
 import { GLOBAL_URL } from '../../config'
 import {check,set} from '../../Cookies'
-import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Drawer, IconButton } from '@material-tailwind/react'
+import { Input, Typography, Textarea, Card, Button, Breadcrumbs, Drawer, IconButton, Spinner } from '@material-tailwind/react'
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 
@@ -14,11 +14,12 @@ const SessionCard = ({ obj }) => {
   if (obj == []) {
     return null
   }
+  console.log(obj)
   return (
-    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0">
+    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0 inline-block">
       <div className="flex flex-col h-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <a href={'/course/' + params.subjectid + '/'+params.moduleid +'/'+ obj._id}>
-          <h5 className="mb-2 text-lg font-bold tracking-tight text-blue-400">{obj.name}</h5>
+          <h5 className="mb-2 text-lg font-bold tracking-tight text-blue-400">{obj.title}</h5>
         </a>
         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{obj.description}</p>
         <div className="flex-grow"></div> {/* Fill remaining space */}
@@ -108,8 +109,13 @@ const Module = () => {
       newmod.name = response.data.data.name
       newmod.description = response.data.data.description
       newmod.createdBy = response.data.data.createdBy
-
     })
+    .then(()=>{ //fetching child session objects
+      return axios.post(GLOBAL_URL + 'session/getAllFromModuleID', {_id: params.moduleid}, res)
+    })
+    .then((response)=>{
+      newmod.childSession = response.data.data
+  })
     .then(()=>{
       newmod.fetched = true
       setModule({ ...newmod })
@@ -121,10 +127,15 @@ const Module = () => {
 
   if (!module.fetched){
     getAllData()
+    return (
+      <div className='align-center p-10 flex flex-col items-center h-screen '>
+      <Spinner></Spinner>
+      </div>
+    )
   }
   return (
    <>
-      <div className='align-center p-10 flex flex-col items-center h-screen '>
+      <div className='align-center p-10 flex flex-col items-center h-screen w-full'>
         <div className=''>
           <Breadcrumbs className=''>
             <a href="/course" className="opacity-60">
@@ -141,7 +152,7 @@ const Module = () => {
           </Breadcrumbs>
         </div>
         <br />
-        <Card className="mt-6 w-2/5 p-5">
+        <Card className="mt-6 w-4/5 p-5">
           <div className='text-center'>
             <Typography variant='h3'>
               {module.name}
@@ -166,11 +177,16 @@ const Module = () => {
               </Button>
             </Typography>
             <div>
-              {module.childSession.map((object) => {
-                return (
-                  <SessionCard obj={object} />
-                )
-              })}
+              {module.childSession == []? "No Sessions":
+                
+                  module.childSession.map((object) => {
+                    return (
+                      <SessionCard obj={object} />
+                    )
+                  })
+                
+
+              }
             </div>
           </div>
         </Card>

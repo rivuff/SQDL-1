@@ -37,6 +37,7 @@ const NewModule = () => {
       newmod.subject.name = response.data.data.name
       newmod.subject._id = response.data.data._id
       newmod.fetched = true
+      newmod.disabled = true
       setModule(newmod)
       console.log(module)
     })
