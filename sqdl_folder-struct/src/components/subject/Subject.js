@@ -3,7 +3,7 @@ import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
 
 const SubjectCard = ({name, description, subjectId, createdBy})=>{
-     const {user} = UserState();
+    const {user} = UserState();
     console.log(user.subjects);
     const isSubjectAdded = user.subjects.includes(subjectId);
 
