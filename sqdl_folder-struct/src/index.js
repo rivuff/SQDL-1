@@ -29,6 +29,7 @@ import Module from './components/subject/module/Module';
 import NewModule from './components/subject/module/NewModule';
 import Session from './components/subject/module/session/Session';
 import NewSession from './components/subject/module/session/NewSession';
+import Join from './components/subject/module/session/join/Join';
 //import StudentLandingPage from './components/dashboards/StudentLanding';
 
 
@@ -130,6 +131,9 @@ const router = createBrowserRouter([
                        {
                          path: '',  
                          element: <Session />
+                       },     {
+                         path: 'join',  
+                         element: <Join />
                        }, 
                      ]
                    }
