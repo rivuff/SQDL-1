@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom'
 import { GLOBAL_URL } from '../../../../config'
 import axios from 'axios'
 import Creator from './Creator'
+import { Spinner } from '@material-tailwind/react'
 
 const Join = () => {
+    let session, subject 
     const [auth,setAuth] = useState(null)
     let user = check()
     let params = useParams()
@@ -15,12 +17,12 @@ const Join = () => {
         }
     }
     async function detail (){
-        let subject = await axios.post(GLOBAL_URL + 'subject/getByID', { _id: params.subjectid }, res)
-        let session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
+        subject = await axios.post(GLOBAL_URL + 'subject/getByID', { _id: params.subjectid }, res)
+        session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
         //removing HTTP headers from response
         subject = subject.data.data 
         session = session.data.data
-        if (session.createdBy == user._id && user.type =='teacher'){ //user is the creator of session
+        if (session.createdBy == user._id && user.type =='teacher'){ //user is the creator of session and has to be teacher
             setAuth( 'Creator')
         }
 
@@ -64,11 +66,16 @@ const Join = () => {
             setAuth( 'Not Authorized')
         }
     }
-    if (auth != 'Creator' || auth != 'Allowed'){
-        setTimeout(()=>{
-            detail() //wait 10 seconds before updating status
-        }, 10000)
+
+    if (auth == null){ //as soon as user is authorized to view pages, dynamic page updating stops
+        detail() //wait 10 seconds before updating status
+        return (
+            <div className='h-screen flex flex-col items-center justify-center'>
+                <Spinner className='w-12 h-12' />
+            </div>
+        )
     }
+    console.log(auth)
     if (auth == 'Creator'){
         return <Creator/>
     }
@@ -78,13 +85,13 @@ const Join = () => {
     if (auth == 'Requested'){
         return(
             <div className='text-center h-screen flex flex-col items-center justify-center'>
-                You have requested access for this subject. Once {session.conductedBy} approves, you will be able to join
+                You have requested access for this subject. Once the teacher approves, you will be able to join
             </div>
         )
     }    if (auth == 'Blocked'){
         return (
             <div className='text-center h-screen flex flex-col items-center justify-center'>
-                    You have been blocked from this subject. Please reach out to {session.conductedBy} for assistance
+                You have been blocked from this subject. Please reach out to the teacher for further assistance
             </div>
         )
     }
