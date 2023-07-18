@@ -10,12 +10,16 @@ const Join = () => {
     let session, subject 
     const [auth,setAuth] = useState(null)
     let user = check()
+    if (user == null){
+        window.location.href = '/login'
+    }
     let params = useParams()
     const res = {
         headers: {
             "Content-type": "application/json",
         }
     }
+    console.log('Join')
     async function detail (){
         subject = await axios.post(GLOBAL_URL + 'subject/getByID', { _id: params.subjectid }, res)
         session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
