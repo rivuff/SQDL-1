@@ -4,7 +4,7 @@ import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
 
 
-const QuestionForm = () => {
+const QuestionForm = ({onSubmit}) => {
   const [questionText, setQuestionText] = useState('');
 
     const {user} = UserState();
@@ -34,6 +34,8 @@ const QuestionForm = () => {
       }
 
       const addingtoUser = await axios.post('http://localhost:5000/api/v1/user/addquestion', addData)
+
+      onSubmit();
       
       // Handle the response from the backend (if needed)
      
@@ -47,7 +49,7 @@ const QuestionForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border border-gray-300 rounded ">
-    <div className="mb-4 flex flex-col-reverse">
+    <div className="mb-2">
       <label htmlFor="questionText" className="block mb-2 font-bold">
         Your Question:
       </label>
