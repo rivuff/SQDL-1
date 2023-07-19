@@ -29,7 +29,12 @@ import Module from './components/subject/module/Module';
 import NewModule from './components/subject/module/NewModule';
 import Session from './components/subject/module/session/Session';
 import NewSession from './components/subject/module/session/NewSession';
+import SubjectDetailsPage from './components/dashboards/SubjectDetails';
+//import QuestionForm from './components/questionPosing/questionForm';
+import QuestionPosed from './components/questionPosing/questions';
+
 import Join from './components/subject/module/session/join/Join';
+
 //import StudentLandingPage from './components/dashboards/StudentLanding';
 
 
@@ -82,11 +87,19 @@ const router = createBrowserRouter([
           path:'/about',
           element: <About/>
         },
-        // {
-        //   path: '/subjects',
-        //   element: <SubjectPage/>
-        // },  
-        
+        {
+          path: '/subjects',
+          element: <SubjectPage/>
+        },  
+        {
+          path: '/subject/:id',
+          element: <SubjectDetailsPage />
+        },
+        {
+          path: 'question',
+          element: <QuestionPosed/>
+        },
+
         // {
         //   path: '/student/dashboard',
         //   element: <StudentLandingPage/>
@@ -103,6 +116,7 @@ const router = createBrowserRouter([
               path: 'new',
               element: <NewSubject />
             }, 
+            
             {
               path: ':subjectid',
               element: <SubjectRouter />,

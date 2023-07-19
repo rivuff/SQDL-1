@@ -18,8 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { type, check } from './../Cookies'
 
 
-
-
 function NavList(props) {
     var navList = props.navList;
     const navigate = useNavigate();
@@ -91,7 +89,7 @@ function NavList(props) {
                             className="p-1 font-medium "
                         >
                         <li
-                        className="text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg"
+                        className="text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg cursor-pointer"
                         onClick={LogoutHandler}
                       >
                         Log out
@@ -150,7 +148,7 @@ function NavList(props) {
                             color="red"
                             className="p-1 font-medium "
                         >
-                            <Link onClick={LogoutHandler} className=" text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg">
+                            <Link onClick={LogoutHandler} className=" text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg cursor-pointer">
                                 Log out
                             </Link>
                         </Typography>
