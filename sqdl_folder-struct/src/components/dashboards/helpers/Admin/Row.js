@@ -38,14 +38,12 @@ const Row = ({_id, handler}) => {
             .then((response) => {
                 let data = response.data.data
                 editForm({...data, isFetched:true})
-                console.log(data)
             })
             .catch((error) => {
                 console.log(error)
             })
     }
     async function deleteUser(email){
-        console.log(email)
         const res = {
             headers: {
                 "Content-type": "application/json",
@@ -55,23 +53,18 @@ const Row = ({_id, handler}) => {
 
             try {
                  const response  = await  axios.delete('http://localhost:5000/api/v1/user/delete', {data: { email: email }}, res)
-                 console.log(response);
                  editForm({ ...formData, isFetched: false, deleted: true })//update other fields with returned response data
 
 
             } catch (error) {
-                console.log(error);
             }
            
-            console.log(email)
             axios.post('http://localhost:5000/api/v1/user/delete', { email: email }, res)
                 .then((response) => {
-                    console.log(response)
                     editForm({ ...formData, isFetched: false, deleted: true })//update other fields with returned response data
                     handler()
                 })
                 .catch((error) => {
-                    console.log(error)
                 })
         }
         else{
@@ -113,7 +106,6 @@ const Row = ({_id, handler}) => {
             }
         }
         //posting data to the server
-        console.log(info)
         axios.post(`http://localhost:5000/api/v1/user/update`, JSON.stringify(info), res)
             .then((response) => {
                 editForm({ ...response.data.data, isFetched: true })//update other fields with returned response data

@@ -15,7 +15,6 @@ const TeacherTable = () => {
     })
     
     async function fetchTeacherData() { //= async(req,res)=>{
-        console.log('function')
         const res = {
             headers: {
                 "Content-type": "application/json",
@@ -23,10 +22,8 @@ const TeacherTable = () => {
         }
         axios.get(`http://localhost:5000/api/v1/user/getall`, res).then((response) => {
             let allusers = response.data.data
-            console.log(allusers)
             let allteachers = []
             allusers.forEach((user) => {
-                console.log(user)
                 if ((user.type) == 'student') {
                     allteachers.push(user)
                 }

@@ -32,6 +32,9 @@ import NewSession from './components/subject/module/session/NewSession';
 import SubjectDetailsPage from './components/dashboards/SubjectDetails';
 //import QuestionForm from './components/questionPosing/questionForm';
 import QuestionPosed from './components/questionPosing/questions';
+
+import Join from './components/subject/module/session/join/Join';
+
 //import StudentLandingPage from './components/dashboards/StudentLanding';
 
 
@@ -96,6 +99,7 @@ const router = createBrowserRouter([
           path: 'question',
           element: <QuestionPosed/>
         },
+
         // {
         //   path: '/student/dashboard',
         //   element: <StudentLandingPage/>
@@ -137,7 +141,15 @@ const router = createBrowserRouter([
                      element: <NewSession />
                    }, {
                      path: ':sessionid',
-                     element: <Session />
+                     children: [
+                       {
+                         path: '',  
+                         element: <Session />
+                       },     {
+                         path: 'join',  
+                         element: <Join />
+                       }, 
+                     ]
                    }
                  ]
                 }

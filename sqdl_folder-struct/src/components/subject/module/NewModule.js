@@ -37,6 +37,7 @@ const NewModule = () => {
       newmod.subject.name = response.data.data.name
       newmod.subject._id = response.data.data._id
       newmod.fetched = true
+      newmod.disabled = true
       setModule(newmod)
       console.log(module)
     })
@@ -55,7 +56,7 @@ const NewModule = () => {
     axios.post(GLOBAL_URL + 'module/create', { name: module.name, description: module.description, createdBy:module.createdBy, parentSubject:module.subject._id }, res)
       .then((response => {
         console.log(response)
-        setModule({ ...module, disabled: true, msg: 'Created Subject Successfully' })
+        setModule({ ...module, disabled: true, msg: 'Created Module Successfully' })
         //add too cookie
         window.location.href = '/course/'+subjectid+'/' + response.data.data._id
       }))
