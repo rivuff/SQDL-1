@@ -5,6 +5,7 @@ import { GLOBAL_URL } from '../../../../config'
 import axios from 'axios'
 import Creator from './Creator'
 import { Spinner } from '@material-tailwind/react'
+import Allowed from './Allowed'
 
 const Join = () => {
     let session, subject 
@@ -84,7 +85,7 @@ const Join = () => {
         return <Creator/>
     }
     if (auth == 'Allowed'){
-        //render allowed page
+        return(<Allowed/>)
     }    
     if (auth == 'Requested'){
         return(

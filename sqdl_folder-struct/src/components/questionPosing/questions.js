@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import QuestionForm from './questionForm';
 import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
+import { useParams } from 'react-router-dom';
 
 const QuestionPosed = () => {
   const [questions, setQuestions] = useState([]);
   const {user} = UserState();
   const userId = user._id
-
+  console.log('Question posed')
   useEffect(() => {
     fetchQuestions();
   }, []);

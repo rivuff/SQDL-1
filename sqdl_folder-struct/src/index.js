@@ -79,10 +79,6 @@ const router = createBrowserRouter([
           path:'/profile',
           element: <Profile/>
         },
-        // {
-        //   path:'/subject',
-        //   element: <SubjectPage/>
-        // },
         {
           path:'/about',
           element: <About/>
@@ -100,10 +96,6 @@ const router = createBrowserRouter([
           element: <QuestionPosed/>
         },
 
-        // {
-        //   path: '/student/dashboard',
-        //   element: <StudentLandingPage/>
-        // },
         {
           path: '/course',
           element: <CourseRouter/>,

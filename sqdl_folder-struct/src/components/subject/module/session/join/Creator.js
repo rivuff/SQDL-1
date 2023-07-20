@@ -42,6 +42,10 @@ const Creator = () => {
     let approved = sessionData.approved_request
     let req = sessionData.access_request
     let blocked = sessionData.blocked_request
+    //get user data data
+    let user = await axios.post(GLOBAL_URL+'user/getID', {_id:_id}, res)
+    user = user.data.data
+
     try{ //drop element from approved 
       let index = approved.indexOf(_id)
       approved.splice(index, 1)
@@ -61,8 +65,21 @@ const Creator = () => {
     catch(error){
       console.log(error)
     }
+    let subjects = user.subjects
+    let allowedBy = user.allowedBy
+    try{
+      let index = subjects.indexOf(params.subjectid)
+      subjects.splice(index, 1);
+      index = allowedBy.indexOf(sessionData.createdBy)
+      allowedBy.splice(index,1)
+    }
+    catch(error){
+      console.log('Passing case')
+    }
     if (status == 'approved'){
       approved.push(_id)
+      subjects.push(params.subjectid)
+      allowedBy.push(sessionData.createdBy)
     }else if (status == 'requested'){
       req.push(_id)
     }else if (status == 'blocked'){
@@ -72,6 +89,11 @@ const Creator = () => {
     //send updated session Data to server
     let payload = await axios.post(GLOBAL_URL +'session/update', {_id: params.sessionid, access_request: req, approved_request: approved, blocked_request: blocked}, res)
     payload = payload.data.data
+    
+    
+    //change user data 
+    let response = await axios.post(GLOBAL_URL + 'user/update', {_id:_id, allowedBy:allowedBy, subjects:subjects })
+    console.log(response)
     setSession(payload)
   }
 
