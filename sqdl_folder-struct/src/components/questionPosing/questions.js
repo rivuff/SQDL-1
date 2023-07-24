@@ -10,7 +10,7 @@ const QuestionPosed = () => {
   const [questions, setQuestions] = useState([]);
   const {user} = UserState();
   const userId = user._id
-
+  const params = useParams();
 
   useEffect(() => {
 
@@ -48,7 +48,7 @@ const QuestionPosed = () => {
 
   const fetchAllQuestions = async()=>{
     try {
-      const response  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', sessionId)
+      const response  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', params.sessionid)
 
       console.log("All question fetched");
       setQuestions(response.data);

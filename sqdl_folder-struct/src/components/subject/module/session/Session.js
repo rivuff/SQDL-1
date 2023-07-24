@@ -108,6 +108,9 @@ const Session = () => {
         newsess.enrollmentLimit = response.data.data.enrollmentLimit
         newsess.activity_order = response.data.data.activity_order
         newsess.copy = response.data.data.activity_order //copy to manage edit form states
+        if (newsess.copy == []){
+          newsess.copy = [null]
+        }
         newsess.iteration = response.data.data.iteration
         newsess.access_request = response.data.data.access_request
         newsess.blocked_request = response.data.data.blocked_request
@@ -122,6 +125,7 @@ const Session = () => {
         console.log(error)
       })
   }
+  console.log(session.copy)
     function updateArray (index, val) {
     const value = session.copy
     value[index] = val
@@ -137,9 +141,26 @@ const Session = () => {
     return update
   }
   const ActivitySelect = () => {
-    return (
-      session.copy.map((activity, index) => {
-        return (<div className='inline-block'>
+    if (session.copy.length  == 0){
+      return (
+<div className='inline-block'>
+            <select label='Activity' className='inline-block w-2/3 h-7 mx-2' onChange={(e) => { session.copy = updateArray(0, e.target.value) }}>
+              <option label='' value={null}></option>
+              <option label='Deliver Content' value='Deliver Content'></option>
+              <option label='Question Posing' value='Question Posing'></option>
+              <option label='Personal Prioritization' value='Personal Prioritization'></option>
+              <option label='Prioritization' value='Priortization'></option>
+              <option label='Question Answering' value='Quesiton Answering'></option>
+            </select>
+            <Button size='sm' onClick={() => { setSession({ ...session, copy: session.copy.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={() => { setSession({ ...session, copy: removeArray(0) }) }}>-</Button>
+          </div>)
+      
+    }
+    else{
+
+      return (
+        session.copy.map((activity, index) => {
+          return (<div className='inline-block'>
           <select label='Activity' className='inline-block w-2/3 h-7 mx-2' value={activity} onChange={(e) => { session.copy =  updateArray(index, e.target.value) }}>
             <option label='' value={null}></option>
             <option label='Deliver Content' value='Deliver Content'></option>
@@ -151,7 +172,8 @@ const Session = () => {
           <Button size='sm' onClick={() => { setSession({ ...session, copy: session.copy.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={() => { setSession({ ...session, copy: removeArray(index) }) }}>-</Button>
         </div>)
       })
-    )
+      )
+    }
   }
 
   if (!session.fetched) {

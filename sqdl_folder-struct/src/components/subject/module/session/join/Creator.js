@@ -1,17 +1,22 @@
 import {React, useState} from 'react'
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {Drawer, Spinner, Typography, IconButton, Button} from '@material-tailwind/react';
-import { GLOBAL_URL } from '../../../../config';
+import {Drawer, Spinner, Typography, IconButton, Button, Card, CardHeader, CardBody} from '@material-tailwind/react';
+import { GLOBAL_URL, SOCKET_URL } from '../../../../config';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import {io} from 'socket.io-client'
+
+
 const res = {
   headers: {
     "Content-type": "application/json",
   }
 }
 
+const socket = io(SOCKET_URL)
 
 const Creator = () => {
+
   const params = useParams();
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
@@ -35,6 +40,11 @@ const Creator = () => {
     let payload = await axios.post(GLOBAL_URL+'user/getIDs', {_ids: studentList}, res)
     payload = payload.data.data
     setStudents(payload)
+  }
+
+  if (sessionData!=null){
+    //emit sessionData everytime component experiences change
+    socket.emit("serversession"+sessionData?._id, sessionData);
   }
 
   async function statusChangeHandler(e, _id){
@@ -75,6 +85,27 @@ const Creator = () => {
     setSession(payload)
   }
 
+  async function activityChange(){
+    let current = sessionData.current_activity
+    if (current == null){
+      current = sessionData.activity_order[0]
+      console.log(current)
+    }
+    else{
+      //find index of current activity
+      let index = sessionData.activity_order.indexOf(current)
+      if (index == sessionData.activity_order.length -1){
+        //don't do anything
+      }
+      else{
+        current = sessionData.activity_order[index+1]
+      }
+    }
+    //update session
+    let response = await axios.post(GLOBAL_URL + 'session/update', {_id: params.sessionid, current_activity:current},res)
+    setSession(response.data.data)
+  }
+
   if (sessionData == null){
     getSession()
   }
@@ -83,10 +114,37 @@ const Creator = () => {
       getStudents()
     }
   }
-
+  socket.on('clientsession' + sessionData?._id, (arg) => {
+    console.log(arg)
+  })
   return (    
     <div>
-    <Button onClick={openDrawer}>Manage Students</Button>
+        <div>
+          <br/>
+        <div className='flex flex-col items-center justify-center'>
+          <Card className='w-3/5 text-center'>
+
+              <CardBody>
+              <Typography variant='h4'>
+                {sessionData?.title}           <Button  size = 'sm' onClick={openDrawer}>Students</Button>
+
+              </Typography>
+              <br/>
+              Current Acitivity: {sessionData?.current_activity}<br/>
+              <Button size='sm' onClick={() => { activityChange()}}>{sessionData?.current_activity == null?'Start Activity': 'Next Activity'}</Button>
+              <br/>
+              <Button size='sm' color='red'>End Session</Button>
+              </CardBody>
+          </Card>
+          <br/>
+
+        </div>
+        
+      </div>
+    
+
+
+
       <Drawer open={open} onClose={closeDrawer} className="p-4" placement = 'left'>
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
