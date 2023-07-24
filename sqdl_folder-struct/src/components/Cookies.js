@@ -3,6 +3,13 @@ import {COOKIE_KEY} from './config.js'
 
 export function check(){
     const signed = localStorage.getItem('userInfo');
+    if (signed == null){
+        
+    }
+    
+    if (signed == null){
+        return null
+    }
     return JSON.parse(signed)
     try{
         const userData = jwt.verify(signed, COOKIE_KEY)

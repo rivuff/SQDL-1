@@ -6,11 +6,16 @@ import axios from 'axios'
 import Creator from './Creator'
 import { Spinner } from '@material-tailwind/react'
 import Allowed from './Allowed'
+import {io} from 'socket.io-client'
+import { SOCKET_URL } from '../../../../config'
+
 
 const Join = () => {
+    const socket = io(SOCKET_URL)
     let session, subject 
     const [auth,setAuth] = useState(null)
     let user = check()
+    console.log(check())
     if (user == null){
         window.location.href = '/login'
     }
@@ -63,7 +68,7 @@ const Join = () => {
                 console.log(ra)
                 axios.post(GLOBAL_URL + 'session/update', { access_request: ra, _id: session._id }, res)
                     .then((response) => {
-                        setAuth('Requested access')
+                        setAuth('Requested')
                     })
             }
         }
@@ -71,6 +76,7 @@ const Join = () => {
             setAuth( 'Not Authorized')
         }
     }
+
 
     if (auth == null){ //as soon as user is authorized to view pages, dynamic page updating stops
         detail() //wait 10 seconds before updating status
@@ -89,12 +95,21 @@ const Join = () => {
         return <Allowed/>
     }    
     if (auth == 'Requested'){
+        //set socket thing
+        console.log(params.sessionid + 'student' + 'stateupdate')
+        socket.on(params.sessionid + 'student' + 'stateupdate', (args) => {
+            console.log('broadcast received')
+        })
+        socket.emit(params.sessionid + 'teacher' + 'stateUpdate', {fetch:true})
         return(
             <div className='text-center h-screen flex flex-col items-center justify-center'>
                 You have requested access for this subject. Once the teacher approves, you will be able to join
             </div>
         )
     }    if (auth == 'Blocked'){
+        socket.on(params.sessionid + 'student' + 'stateupdate', (args) => {
+            console.log('broadcast received')
+        })
         return (
             <div className='text-center h-screen flex flex-col items-center justify-center'>
                 You have been blocked from this subject. Please reach out to the teacher for further assistance

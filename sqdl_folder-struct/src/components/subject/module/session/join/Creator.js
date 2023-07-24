@@ -15,6 +15,7 @@ const res = {
 
 const socket = io(SOCKET_URL)
 
+
 const Creator = () => {
 
   const params = useParams();
@@ -22,10 +23,17 @@ const Creator = () => {
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
 
-  const [sessionData, setSession] = useState()
+  const [sessionData, setSession] = useState(null)
   const [students, setStudents] =  useState([])
 
-  
+  socket.on(params.sessionid + 'teacher' + 'stateUpdate', (args) => {
+    getSession()
+  })
+
+
+  function broadcastState(state){
+    socket.emit( params.sessionid + 'student' + 'stateUpdate', params.sessionid);
+  }
   async function getSession(){
     let session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
     session = session.data.data
@@ -35,17 +43,12 @@ const Creator = () => {
   async function getStudents(){
     let studentList = sessionData.access_request
     if (sessionData.approved_request.length !=0)
-    {studentList.push(sessionData.approved_request)    }
-    if (sessionData.blocked_request.length !=0) { studentList.push(sessionData.blocked_request) }
+    {studentList = studentList.concat(sessionData.approved_request)    }
+    if (sessionData.blocked_request.length !=0) { studentList = studentList.concat(sessionData.blocked_request) }
     let payload = await axios.post(GLOBAL_URL+'user/getIDs', {_ids: studentList}, res)
     payload = payload.data.data
     setStudents(payload)
-  }
-
-  if (sessionData!=null){
-    //emit sessionData everytime component experiences change
-    socket.emit("serversession"+sessionData?._id, sessionData);
-  }
+  } 
 
   async function statusChangeHandler(e, _id){
     const status = e.target.value
@@ -82,6 +85,8 @@ const Creator = () => {
     //send updated session Data to server
     let payload = await axios.post(GLOBAL_URL +'session/update', {_id: params.sessionid, access_request: req, approved_request: approved, blocked_request: blocked}, res)
     payload = payload.data.data
+    broadcastState(payload)
+    console.log('session state modified')
     setSession(payload)
   }
 
@@ -103,20 +108,21 @@ const Creator = () => {
     }
     //update session
     let response = await axios.post(GLOBAL_URL + 'session/update', {_id: params.sessionid, current_activity:current},res)
+    broadcastState(response.data.data)
+    console.log('Session Modified')
     setSession(response.data.data)
   }
 
-  if (sessionData == null){
+
+  //fetch Data in case state hook is null
+  if (students.length == 0 & sessionData != null) {
+    getStudents()
+  }
+
+  if( sessionData == null){
     getSession()
   }
-  else{
-    if (students.length == 0){
-      getStudents()
-    }
-  }
-  socket.on('clientsession' + sessionData?._id, (arg) => {
-    console.log(arg)
-  })
+
   return (    
     <div>
         <div>
@@ -126,12 +132,12 @@ const Creator = () => {
 
               <CardBody>
               <Typography variant='h4'>
-                {sessionData?.title}           <Button  size = 'sm' onClick={openDrawer}>Students</Button>
+                {sessionData?.title}           <Button size='sm' onClick={() => { openDrawer(); console.log(sessionData) }}>Students</Button>
 
               </Typography>
               <br/>
               Current Acitivity: {sessionData?.current_activity}<br/>
-              <Button size='sm' onClick={() => { activityChange()}}>{sessionData?.current_activity == null?'Start Activity': 'Next Activity'}</Button>
+              <Button size='sm' onClick={() => { activityChange();}}>{sessionData?.current_activity == null?'Start Activity': 'Next Activity'}</Button>
               <br/>
               <Button size='sm' color='red'>End Session</Button>
               </CardBody>

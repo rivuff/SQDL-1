@@ -17,7 +17,7 @@ const SubjectCard = ({name, description, subjectId, createdBy})=>{
         }
 
 
-        const response = await axios.post('http://localhost:5000/api/v1/subject/add', data)
+        const response = await axios.post('http://localhost:5000/api/v1/subject/addUserSubject', data)
         .then(response => {
             console.log(response);
         });
