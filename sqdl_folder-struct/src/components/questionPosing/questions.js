@@ -10,11 +10,8 @@ const QuestionPosed = () => {
   const [questions, setQuestions] = useState([]);
   const {user} = UserState();
   const userId = user._id
-  const sessionId = user.currSession
 
-  //const socket = io.connect('http://localhost:5000')
 
-  console.log('Question posed')
   useEffect(() => {
 
     fetchQuestions();

@@ -2,12 +2,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
-import { Typography, Textarea, Button, Card, Input } from '@material-tailwind/react';
-import { useParams } from 'react-router-dom';
+
 
 const QuestionForm = ({onSubmit}) => {
   const [questionText, setQuestionText] = useState('');
-  const params = useParams();
 
   const {user} = UserState();
   const name = user?._id
@@ -16,7 +14,7 @@ const QuestionForm = ({onSubmit}) => {
   const handleSubmit = async (e) => {
    e.preventDefault();
     e.preventDefault();
-    document.getElementById('Button').disabled = true
+    
     try {
       // Replace 'http://your-backend-api.com' with your actual backend API URL
     
@@ -44,11 +42,7 @@ const QuestionForm = ({onSubmit}) => {
       // Handle the response from the backend (if needed)
      
       console.log('Response from the backend:', addingtoUser)
-      document.getElementById('questionType').value = ''
-      document.getElementById('questionPriority').value = ''
-      document.getElementById('Button').disabled = false
       setQuestionText('');
-
     } catch (error) {
       // Handle errors if the request fails
       console.error('Error submitting question:', error);
@@ -56,38 +50,25 @@ const QuestionForm = ({onSubmit}) => {
   };
 
   return (
-    <Card>
-      <form onSubmit={handleSubmit} className="p-4 border border-gray-300 rounded ">
-        <div className="mb-2">
-          <label htmlFor="questionText" className="block mb-2 font-bold">
-            Your Question:
-          </label>
-          <Textarea
-            id="questionText"
-            name="questionText"
-            value={questionText}
-            label='Question'
-            onChange={(e) => setQuestionText(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            rows={4}
-            required
-          />
-        </div>
-        <div className='inline-block'>
-          <div className='inline-block py-2'>Type: &nbsp; <select label='Type' id='questionType'>
-            <option value={'Clarification'}>Clarification</option>
-            <option value={'Exploratory'}>Exploratory</option>
-          </select></div> &nbsp;&nbsp;&nbsp;
-          <div className='inline-block py-3'>
-            <Input type='number' label='Priority' id ='questionPriority' min='1' max='10' defaultValue={5}></Input>
-          </div>
-        </div>
-        <br/>
-        <Button id ='Button' type="submit" className="px-4 py-2 text-white bg-blue-500 rounded">
-          Submit Question
-        </Button>
-      </form>
-    </Card>
+    <form onSubmit={handleSubmit} className="p-4 border border-gray-300 rounded ">
+    <div className="mb-2">
+      <label htmlFor="questionText" className="block mb-2 font-bold">
+        Your Question:
+      </label>
+      <textarea
+        id="questionText"
+        name="questionText"
+        value={questionText}
+        onChange={(e) => setQuestionText(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded"
+        rows={4}
+        required
+      />
+    </div>
+    <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded">
+      Submit Question
+    </button>
+  </form>
   );
 };
 
