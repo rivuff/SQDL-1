@@ -34,6 +34,7 @@ import SubjectDetailsPage from './components/dashboards/SubjectDetails';
 import QuestionPosed from './components/questionPosing/questions';
 
 import Join from './components/subject/module/session/join/Join';
+import TeacherInterface from './components/dashboards/Teacher';
 
 //import StudentLandingPage from './components/dashboards/StudentLanding';
 
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
         {
           path: 'question',
           element: <QuestionPosed/>
+        },
+        {
+          path: 'teacher/question',
+          element: <TeacherInterface/>
         },
 
         {
