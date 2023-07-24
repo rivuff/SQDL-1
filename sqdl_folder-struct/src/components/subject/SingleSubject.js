@@ -119,7 +119,7 @@ const SingleSubject = () => {
     )
   }
   return (
-    <>
+    <div>
       <div className='align-center p-10 flex flex-col items-center h-screen '>
         <div className=''>
           <Breadcrumbs className=''>
@@ -181,7 +181,7 @@ const SingleSubject = () => {
           </form>
         </Drawer>
       </div>
-    </>
+    </div>
   )
 }
 

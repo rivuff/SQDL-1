@@ -4,14 +4,31 @@ import QuestionForm from './questionForm';
 import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
 import { useParams } from 'react-router-dom';
+import io from 'socket.io-client';
 
 const QuestionPosed = () => {
   const [questions, setQuestions] = useState([]);
   const {user} = UserState();
   const userId = user._id
+  const sessionId = user.currSession
+
+  //const socket = io.connect('http://localhost:5000')
+
   console.log('Question posed')
   useEffect(() => {
+
     fetchQuestions();
+
+    console.log("trying to connect");
+    // socket.on('question_enabled', () => {
+    //   fetchAllQuestions(); // Fetch all questions again when the event is received
+    //   console.log("connected to socket");
+    // });
+
+    // return () => {
+    //   socket.disconnect(); // Disconnect the socket when the component unmounts
+    // };
+
   }, []);
 
   const fetchQuestions = async () => {
@@ -28,9 +45,22 @@ const QuestionPosed = () => {
       setQuestions(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error('Error fetching user questions:', error);
     }
   };
+
+  const fetchAllQuestions = async()=>{
+    try {
+      const response  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', sessionId)
+
+      console.log("All question fetched");
+      setQuestions(response.data);
+      console.log(response.data);
+      
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
+  }
 
 
   const handleQuestionSubmit = async () => {

@@ -9,26 +9,25 @@ const QuestionForm = ({onSubmit}) => {
   const [questionText, setQuestionText] = useState('');
   const params = useParams();
 
-    const {user} = UserState();
-    const name = user?._id
-    const session = user?.currSession
-
+  const {user} = UserState();
+  const name = user?._id
+  const session = user?.currSession
+  
   const handleSubmit = async (e) => {
+   e.preventDefault();
     e.preventDefault();
     document.getElementById('Button').disabled = true
     try {
       // Replace 'http://your-backend-api.com' with your actual backend API URL
-
+    
       const questionData = {
         questionText : questionText,
         session: session,
-        questionType: document.getElementById('questionType').value,
-        questionTag: document.getElementById('questionPriority').value,
         iterationIndex: 1,
         raisedBy: name,
-        session: params.sessionid
+        questionTag: document.getElementById('questionType').value,
       }
-
+    
       const response = await axios.post('http://localhost:5000/api/v1/question/create', questionData);
 
       console.log('Response from the backend:', response.data);
@@ -93,5 +92,9 @@ const QuestionForm = ({onSubmit}) => {
 };
 
 export default QuestionForm;
+
+
+
+
 
 
