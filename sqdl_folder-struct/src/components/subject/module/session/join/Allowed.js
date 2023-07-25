@@ -10,7 +10,7 @@ const Allowed = () => {
   const params = useParams();
   const [sessionData, setSession] = useState()
 
-  io.on(params.sessionid + 'student' +'stateUpdate', (args)=>{
+  socket.on(params.sessionid + 'student' +'stateUpdate', (args)=>{
     console.log(args)
   })
   return (

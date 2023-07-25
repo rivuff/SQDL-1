@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { check } from '../../../../Cookies'
+import { check, set } from '../../../../Cookies'
 import { useParams } from 'react-router-dom'
 import { GLOBAL_URL } from '../../../../config'
 import axios from 'axios'
@@ -25,19 +25,33 @@ const Join = () => {
             "Content-type": "application/json",
         }
     }
-    console.log('Join')
+
+    //websocket listener
+    socket.on(params.sessionid + 'student' + 'stateUpdate', (args) => {
+        detail()
+    })
+
     async function detail (){
         subject = await axios.post(GLOBAL_URL + 'subject/getByID', { _id: params.subjectid }, res)
         session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
         //removing HTTP headers from response
         subject = subject.data.data 
         session = session.data.data
+
+        if (check().subjects.includes(subject._id)){
+            setAuth('Allowed')
+        }
         if (session.createdBy == user._id && user.type =='teacher'){ //user is the creator of session and has to be teacher
             setAuth( 'Creator')
         }
 
         else if (user.type == 'student'){
             if (session.approved_request.includes(user._id)){
+                //add subject to user profile
+                user = check()
+                user.subjects = user.subjects.concat(subject._id)
+                let payload = await axios.post(GLOBAL_URL+'user/update', user, res)
+                set(payload.data.data)
                 setAuth('Allowed')
                 //redirect
             }
@@ -78,6 +92,7 @@ const Join = () => {
     }
 
 
+
     if (auth == null){ //as soon as user is authorized to view pages, dynamic page updating stops
         detail() //wait 10 seconds before updating status
         return (
@@ -94,12 +109,10 @@ const Join = () => {
         //render allowed page
         return <Allowed/>
     }    
+
+ 
     if (auth == 'Requested'){
-        //set socket thing
-        console.log(params.sessionid + 'student' + 'stateupdate')
-        socket.on(params.sessionid + 'student' + 'stateupdate', (args) => {
-            console.log('broadcast received')
-        })
+ 
         socket.emit(params.sessionid + 'teacher' + 'stateUpdate', {fetch:true})
         return(
             <div className='text-center h-screen flex flex-col items-center justify-center'>
@@ -107,9 +120,6 @@ const Join = () => {
             </div>
         )
     }    if (auth == 'Blocked'){
-        socket.on(params.sessionid + 'student' + 'stateupdate', (args) => {
-            console.log('broadcast received')
-        })
         return (
             <div className='text-center h-screen flex flex-col items-center justify-center'>
                 You have been blocked from this subject. Please reach out to the teacher for further assistance
