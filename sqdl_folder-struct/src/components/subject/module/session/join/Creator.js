@@ -16,6 +16,44 @@ const res = {
 const socket = io(SOCKET_URL)
 
 
+const Questions = ()=>{
+  //fetch questions with current iteration and session
+  //needs to be dynamically updated
+
+  let questions  = [] //list of questions
+
+  return(
+    <div>
+      <h4> Submitted Questions </h4>
+      <table className="w-full min-w-max table-auto text-left">
+        <thead>
+          <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+            <th>Question Text</th>
+            <th>Type</th>
+            <th>Posed By</th>
+            <th>Self-Priority</th>
+            <th>Peer-Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          {questions.map((object)=>{
+            return(
+              <tr className='p-4 border-b border-blue-gray-50'>
+                <td>{object.questionText}</td>
+                <td>{object.questionType}</td>
+                <td>{object.raisedBy}</td>
+                <td>{object.priorityBySelf}</td>
+                <td>{object.priorityByPeer}</td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+
 const Creator = () => {
 
   const params = useParams();
@@ -89,7 +127,7 @@ const Creator = () => {
     console.log('session state modified')
     setSession(payload)
   }
-
+  console.log(students)
   async function activityChange(){
     let current = sessionData.current_activity
     if (current == null){
@@ -137,10 +175,37 @@ const Creator = () => {
               </Typography>
               <br/>
               Current Acitivity: {sessionData?.current_activity}<br/>
+              Current Iteration: {sessionData?.iteration}<br/>
               <Button size='sm' onClick={() => { activityChange();}}>{sessionData?.current_activity == null?'Start Activity': 'Next Activity'}</Button>
               <br/>
               <Button size='sm' color='red'>End Session</Button>
+
+              <hr/>
               </CardBody>
+            {sessionData?.current_activity == 'Question Posing' || sessionData?.current_activity == 'Peer Prioritization' ?
+              (
+                <CardBody>
+                  <Questions/>
+                </CardBody>
+              )
+              :
+              (
+                 sessionData?.current_activity == 'Question Answering' ?
+                  (
+                    <CardBody>
+                      Select Questions to be answered
+
+                    </CardBody>
+                  )
+                  :
+                  (
+                    <div>
+                      No ongoing activity to display
+                    </div>
+                  )
+              
+              )
+              }
           </Card>
           <br/>
 
@@ -175,6 +240,9 @@ const Creator = () => {
             <tbody>
               {students.length !=0?
                 students.map((student) => {
+                  if (student == null){
+                    return null
+                  }
                   return (
                     <tr>
                       <td>{student.name}</td>

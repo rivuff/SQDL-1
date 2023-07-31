@@ -146,11 +146,11 @@ const Session = () => {
 <div className='inline-block'>
             <select label='Activity' className='inline-block w-2/3 h-7 mx-2' onChange={(e) => { session.copy = updateArray(0, e.target.value) }}>
               <option label='' value={null}></option>
-              <option label='Deliver Content' value='Deliver Content'></option>
+              <option label='Deliver Content' value=' '></option>
               <option label='Question Posing' value='Question Posing'></option>
               <option label='Personal Prioritization' value='Personal Prioritization'></option>
               <option label='Prioritization' value='Priortization'></option>
-              <option label='Question Answering' value='Quesiton Answering'></option>
+              <option label='Question Answering' value='Question Answering'></option>
             </select>
             <Button size='sm' onClick={() => { setSession({ ...session, copy: session.copy.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={() => { setSession({ ...session, copy: removeArray(0) }) }}>-</Button>
           </div>)
@@ -167,7 +167,7 @@ const Session = () => {
             <option label='Question Posing' value='Question Posing'></option>
             <option label='Personal Prioritization' value='Personal Prioritization'></option>
             <option label='Prioritization' value='Priortization'></option>
-            <option label='Question Answering' value='Quesiton Answering'></option>
+            <option label='Question Answering' value='Question Answering'></option>
           </select>
           <Button size='sm' onClick={() => { setSession({ ...session, copy: session.copy.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={() => { setSession({ ...session, copy: removeArray(index) }) }}>-</Button>
         </div>)

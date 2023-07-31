@@ -106,7 +106,7 @@ const NewSession = () => {
             <option label='Question Posing' value='Question Posing'></option>
             <option label='Personal Prioritization' value='Personal Prioritization'></option>
             <option label='Prioritization' value='Priortization'></option>
-            <option label='Question Answering' value='Quesiton Answering'></option>
+            <option label='Question Answering' value='Question Answering'></option>
           </select>
           <Button size='sm' onClick={() => { setSession({ ...session, activity_order: session.activity_order.concat([null]) }) }}>+</Button><Button color='red' size='sm' onClick={()=>{setSession({...session, activity_order: removeArray(index)})}}>-</Button>
         </div>)
