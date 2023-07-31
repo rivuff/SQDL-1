@@ -15,7 +15,6 @@ const Join = () => {
     let session, subject 
     const [auth,setAuth] = useState(null)
     let user = check()
-    console.log(check())
     if (user == null){
         window.location.href = '/login'
     }
@@ -101,7 +100,6 @@ const Join = () => {
             </div>
         )
     }
-    console.log(auth)
     if (auth == 'Creator'){
         return <Creator/>
     }

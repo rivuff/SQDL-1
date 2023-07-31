@@ -5,7 +5,7 @@ import { UserState } from '../../context/contextProvider';
 import { Typography, Textarea, Button, Card, Input } from '@material-tailwind/react';
 import { useParams } from 'react-router-dom';
 
-const QuestionForm = ({ onSubmit }) => {
+const QuestionForm = ({ onSubmit, iteration }) => {
   const [questionText, setQuestionText] = useState('');
   const params = useParams();
 
@@ -22,7 +22,7 @@ const QuestionForm = ({ onSubmit }) => {
         session: params.sessionid,
         questionType: document.getElementById('questionType').value,
         questionTag: document.getElementById('questionPriority').value,
-        iterationIndex: 1,
+        iterationIndex: iteration,
         raisedBy: name,
         //questionTag: document.getElementById('questionType').value,
       }
@@ -52,8 +52,7 @@ const QuestionForm = ({ onSubmit }) => {
 
       console.log('Response from the backend:', addingtoUser)
 
-      document.getElementById('questionType').value = ''
-      document.getElementById('questionPriority').value = ''
+      document.getElementById('questionPriority').value = '5'
       document.getElementById('Button').disabled = false
 
       console.log("Response from Session",addQuestionToSession);
@@ -87,7 +86,7 @@ const QuestionForm = ({ onSubmit }) => {
         </div>
         <div className='inline-block'>
           <div className='inline-block py-2'>Type: &nbsp; <select label='Type' id='questionType'>
-            <option value={'Clarification'}>Clarification</option>
+            <option value={'Clarification'} selected>Clarification</option>
             <option value={'Exploratory'}>Exploratory</option>
           </select></div> &nbsp;&nbsp;&nbsp;
           <div className='inline-block py-3'>

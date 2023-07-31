@@ -4,11 +4,11 @@ import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
 import { Typography, Textarea, Button, Card, Input } from '@material-tailwind/react';
 import { useParams } from 'react-router-dom';
+import { check } from '../Cookies';
 
 const QuestionForm = ({ onSubmit }) => {
   const [questionText, setQuestionText] = useState('');
   const params = useParams();
-
   const { user } = UserState();
   const name = user?._id
   const session = user?.currSession
@@ -61,13 +61,13 @@ const QuestionForm = ({ onSubmit }) => {
     try {
       const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
         params: {
-          userId: userId,
+          userId: check()._id,
           sessionIteration: sessionIteration, // Pass the session iteration as a parameter
         },
       });
 
       console.log("Question fetched");
-      setQuestions(response.data);
+      setQuestionText(response.data);
       console.log(response.data);
     } catch (error) {
       console.error('Error fetching user questions:', error);
@@ -79,7 +79,7 @@ const QuestionForm = ({ onSubmit }) => {
       const response  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', params.sessionid)
 
       console.log("All question fetched");
-      setQuestions(response.data);
+      setQuestionText(response.data);
       console.log(response.data);
       
     } catch (error) {
@@ -90,7 +90,7 @@ const QuestionForm = ({ onSubmit }) => {
 
   const handleQuestionSubmit = async () => {
     // Refetch questions after a new question is submitted
-    fetchQuestions();
+    fetchQuestions1();
   };
 
 

@@ -16,16 +16,29 @@ const res = {
 const socket = io(SOCKET_URL)
 
 
-const Questions = ()=>{
-  //fetch questions with current iteration and session
-  //needs to be dynamically updated
 
-  let questions  = [] //list of questions
+const Questions = ({iteration})=>{
+  const params = useParams()
+
+  const [questions, setQuestion] = useState([]);
+  async function getQuestions() {
+    //fetch questions with current iteration and session
+    let payload = await axios.post(GLOBAL_URL +'question/get', {index: iteration , session: params.sessionid})
+  //needs to be dynamically updated
+    payload = payload.data
+    //consider making payload sortable here
+    setQuestion(payload)
+  }
+  if (questions.length == 0){
+    getQuestions()
+  }
+
+ 
 
   return(
-    <div>
+    <div className='w-full overflow-auto'>
       <h4> Submitted Questions </h4>
-      <table className="w-full min-w-max table-auto text-left">
+      <table className="w-full min-w-max table-auto text-left overflow-auto">
         <thead>
           <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
             <th>Question Text</th>
@@ -39,11 +52,11 @@ const Questions = ()=>{
           {questions.map((object)=>{
             return(
               <tr className='p-4 border-b border-blue-gray-50'>
-                <td>{object.questionText}</td>
-                <td>{object.questionType}</td>
-                <td>{object.raisedBy}</td>
-                <td>{object.priorityBySelf}</td>
-                <td>{object.priorityByPeer}</td>
+                <td className='px-1'>{object.questionText}</td>
+                <td className='px-1'>{object.questionTag}</td>
+                <td className='px-1'>{object.raisedBy}</td>
+                <td className='px-1'>{object.priorityBySelf}</td>
+                <td className='px-1'>{object.priorityByPeer}</td>
               </tr>
             )
           })}
@@ -65,9 +78,9 @@ const Creator = () => {
   const [students, setStudents] =  useState([])
 
   socket.on(params.sessionid + 'teacher' + 'stateUpdate', (args) => {
+    console.log('Reloading page data...')
     getSession()
   })
-
 
   function broadcastState(state){
     socket.emit( params.sessionid + 'student' + 'stateUpdate', params.sessionid);
@@ -119,7 +132,6 @@ const Creator = () => {
     }else if (status == 'blocked'){
       blocked.push(_id)
     }
-    console.log(approved, req, blocked)
     //send updated session Data to server
     let payload = await axios.post(GLOBAL_URL +'session/update', {_id: params.sessionid, access_request: req, approved_request: approved, blocked_request: blocked}, res)
     payload = payload.data.data
@@ -127,25 +139,28 @@ const Creator = () => {
     console.log('session state modified')
     setSession(payload)
   }
-  console.log(students)
   async function activityChange(){
     let current = sessionData.current_activity
+    let iteration = sessionData.iteration
     if (current == null){
       current = sessionData.activity_order[0]
-      console.log(current)
     }
     else{
       //find index of current activity
       let index = sessionData.activity_order.indexOf(current)
+      console.log(index, sessionData.activity_order)
       if (index == sessionData.activity_order.length -1){
-        //don't do anything
+          
+          current = null
+          iteration +=1 //go to first activity of next iteration
+          console.log(iteration)
       }
       else{
         current = sessionData.activity_order[index+1]
       }
     }
     //update session
-    let response = await axios.post(GLOBAL_URL + 'session/update', {_id: params.sessionid, current_activity:current},res)
+    let response = await axios.post(GLOBAL_URL + 'session/update', {_id: params.sessionid, current_activity:current, iteration: iteration},res)
     broadcastState(response.data.data)
     console.log('Session Modified')
     setSession(response.data.data)
@@ -185,7 +200,7 @@ const Creator = () => {
             {sessionData?.current_activity == 'Question Posing' || sessionData?.current_activity == 'Peer Prioritization' ?
               (
                 <CardBody>
-                  <Questions/>
+                  <Questions iteration={sessionData.iteration}/>
                 </CardBody>
               )
               :

@@ -18,11 +18,13 @@ const res = {
 
 const Allowed = () => {
 
+  const params = useParams();
+
   function socketBroadcast(){
     console.log("Send update to teacher interface using socket")
+    socket.emit(params.sessionid +'teacherstateUpdate', {fetch:true})
   }
 
-  const params = useParams();
   const [sessionData, setSession] = useState(null)
 
   async function getSession(){
@@ -67,7 +69,7 @@ const Allowed = () => {
             (
               <>
               <Typography>Teacher is accepting questions. Please submit question</Typography>
-              <QuestionForm onSubmit={socketBroadcast}></QuestionForm>
+              <QuestionForm onSubmit={socketBroadcast} iteration = {sessionData.iterationIndex}></QuestionForm>
               </>
             )
         :
