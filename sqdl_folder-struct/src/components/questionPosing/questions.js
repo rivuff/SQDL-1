@@ -6,12 +6,14 @@ import { UserState } from '../../context/contextProvider';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const QuestionPosed = () => {
+const QuestionPosed =async () => {
   const [questions, setQuestions] = useState([]);
   const {user} = UserState();
   const userId = user._id
+  const sessionId = user.currSession;
   const params = useParams();
-
+  
+ // const session  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', params.sessionid)
   useEffect(() => {
 
     fetchQuestions();
@@ -28,30 +30,35 @@ const QuestionPosed = () => {
 
   }, []);
 
-  const fetchQuestions = async () => {
+  // const fetchQuestions = async () => {
 
+  //   try {
+  //     // Replace 'http://your-backend-api.com' with your actual backend API URL
+  //     const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
+  //       params: {
+  //         userId: userId,
+  //       },
+  //     });
+
+  //     console.log("Question fetched");
+  //     setQuestions(response.data);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching user questions:', error);
+  //   }
+  // };
+
+  const fetchQuestions = async (sessionIteration) => {
     try {
-      // Replace 'http://your-backend-api.com' with your actual backend API URL
-      const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
-        params: {
-          userId: userId,
-        },
+      const session = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion',{
+        params:{
+          sessionid: sessionId
+        }
       });
-
-      console.log("Question fetched");
-      setQuestions(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error fetching user questions:', error);
-    }
-  };
-
-  const fetchQuestions1 = async (sessionIteration) => {
-    try {
       const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
         params: {
           userId: userId,
-          sessionIteration: sessionIteration, // Pass the session iteration as a parameter
+          sessionIteration: session.iteration, // Pass the session iteration as a parameter
         },
       });
 
