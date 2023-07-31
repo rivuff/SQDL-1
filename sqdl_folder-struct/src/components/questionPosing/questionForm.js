@@ -12,42 +12,51 @@ const QuestionForm = ({ onSubmit }) => {
   const { user } = UserState();
   const name = user?._id
   const session = user?.currSession
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById('Button').disabled = true
     try {
-      // Replace 'http://your-backend-api.com' with your actual backend API URL
 
       const questionData = {
         questionText: questionText,
-        session: session,
+        session: params.sessionid,
         questionType: document.getElementById('questionType').value,
         questionTag: document.getElementById('questionPriority').value,
         iterationIndex: 1,
         raisedBy: name,
-        session: params.sessionid
+        //questionTag: document.getElementById('questionType').value,
       }
-
+      
+      console.log(session);
       const response = await axios.post('http://localhost:5000/api/v1/question/create', questionData);
 
       console.log('Response from the backend:', response.data);
 
+      console.log(response?.data?.data);
       const addData = {
-        questionId: '64b6ede3bab186cad1ef79cb',
+        questionId: response?.data?.data?._id,
         studentId: name
       }
 
       const addingtoUser = await axios.post('http://localhost:5000/api/v1/user/addquestion', addData)
+
+
+      const addQuestionToSession = await axios.post('http://localhost:5000/api/v1/session/addQuestion', {
+        questionId: response?.data?.data?._id,
+        sessionId: session,
+      });
 
       onSubmit();
 
       // Handle the response from the backend (if needed)
 
       console.log('Response from the backend:', addingtoUser)
+
       document.getElementById('questionType').value = ''
       document.getElementById('questionPriority').value = ''
       document.getElementById('Button').disabled = false
+
+      console.log("Response from Session",addQuestionToSession);
       setQuestionText('');
 
     } catch (error) {
@@ -55,6 +64,8 @@ const QuestionForm = ({ onSubmit }) => {
       console.error('Error submitting question:', error);
     }
   };
+
+
 
   return (
     <Card>
