@@ -89,35 +89,3 @@ const StudentLandingPage = () => {
 };
 
 export default StudentLandingPage;
-
-//<a onClick={() => fetchSubjectDetails(subjectId)} className="text-gray-700 text-base cursor-pointer">{topic}</a>
-//<p className="text-gray-600">{sessionName}</p>
-
-// const sessions = [
-//   {
-//     _id: '64a3b195d0b90eab4b477ad5',
-//     title: "First session",
-//     topic: "Database Management System",
-//     startTime: '2023-07-01T11:30:00.000+00:00',
-//     createdBy: "Rivu Naskar",
-//     createdAt: '2023-07-04T05:43:49.150+00:00',
-//     updatedAt: '2023-07-04T05:43:49.150+00:00',
-//   },
-//   { 
-//     _id: '64a3b27ed0b90eab4b477ad7',
-//     title: "Second session",
-//     topic: "Computer Networks",
-//     startTime: '2023-07-01T13:30:00.000+00:00',
-//     createdBy: "Rivu Naskar",
-//     createdAt: '2023-07-04T05:47:42.890+00:00',
-//     updatedAt: '2023-07-04T05:47:42.890+00:00'
-//   },
-//   {  _id: '64a3b2c8d0b90eab4b477ad9',
-//   title: "Third session",
-//   topic: "Operating System",
-//   startTime: '2023-07-01T13:30:00.000+00:00',
-//   createdBy: "Rivu Naskar",
-//   createdAt: '2023-07-04T05:47:42.890+00:00',
-//   updatedAt: '2023-07-04T05:47:42.890+00:00'
-//  },
-// ];

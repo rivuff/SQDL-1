@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { UserState } from '../../context/contextProvider';
+import { useParams } from 'react-router-dom';
 
 
 const QuestionForm = ({onSubmit}) => {
@@ -10,44 +11,54 @@ const QuestionForm = ({onSubmit}) => {
   const {user} = UserState();
   const name = user?._id
   const session = user?.currSession
-  
+  const params = useParams();
   const handleSubmit = async (e) => {
    e.preventDefault();
     e.preventDefault();
     
     try {
-      // Replace 'http://your-backend-api.com' with your actual backend API URL
     
       const questionData = {
         questionText : questionText,
         session: session,
         iterationIndex: 1,
         raisedBy: name,
-        questionTag: document.getElementById('questionType').value,
+        //questionTag: document.getElementById('questionType').value,
       }
-    
+      
+      console.log(session);
       const response = await axios.post('http://localhost:5000/api/v1/question/create', questionData);
 
       console.log('Response from the backend:', response.data);
 
+      console.log(response?.data?.data);
       const addData = {
-        questionId: '64b6ede3bab186cad1ef79cb',
+        questionId: response?.data?.data?._id,
         studentId: name
       }
 
       const addingtoUser = await axios.post('http://localhost:5000/api/v1/user/addquestion', addData)
+
+
+      const addQuestionToSession = await axios.post('http://localhost:5000/api/v1/session/addQuestion', {
+        questionId: response?.data?.data?._id,
+        sessionId: session,
+      });
 
       onSubmit();
       
       // Handle the response from the backend (if needed)
      
       console.log('Response from the backend:', addingtoUser)
+      console.log("Response from Session",addQuestionToSession);
       setQuestionText('');
     } catch (error) {
       // Handle errors if the request fails
       console.error('Error submitting question:', error);
     }
   };
+
+
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border border-gray-300 rounded ">
