@@ -5,28 +5,6 @@ import TeacherTable from "./helpers/Admin/TeacherTable";
 import StudentTable from "./helpers/Admin/StudentTable";
 import { Button } from "@material-tailwind/react";
 
-const sendInvite = async () => {
-  //axios submission here
-  try {
-    let inviteData = {
-      email: "visitprakhar@gmail.com",
-      name: "Prakhar Gupta",
-    };
-    const response = await axios.post(
-      "http://localhost:5000/api/v1/admin/invite",
-      inviteData,
-    );
-    const data = response.data;
-    console.log(response);
-    if (data) {
-      console.log("Invite sent successfully");
-    } else {
-      console.log("Data not found");
-    }
-  } catch (error) {
-    console.log("User not found");
-  }
-};
 const Admin = () => {
   //Query user data from database
   let users = [];

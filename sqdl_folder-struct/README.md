@@ -12,6 +12,8 @@ Most of the UI-UX has been designed with Material framework in mind - and we hav
 
 Most of the frontend application (running on :3000) uses Axios to make API requests to the backend (running on :5000) - however the use of websockets using the socket.io library is introduced in components/subject/module/session/join - where realtime features are required. However, sockets are only used as triggers for making http requests, as large socket packets tend to make web-apps laggy.
 
+The URLs for endpoint API is stored in config.js - in the variables GLOBAL_URL and SOCKET_URL. Some of the older components have the URL hardcoded and may break during deployment. Recommended that GLOBAL_URL be propagated to those endpoints as well
+
 As of right now, the app can do the following:
 - Student Login/Signup
 - Teacher Login
