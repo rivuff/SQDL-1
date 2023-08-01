@@ -14,7 +14,39 @@ const res = {
 }
 
 
+const SelectedQuestions = ({session})=>{
+  const params = useParams();
+  const [questions, setQuestion] = useState(null)
 
+  async function getQuestion(){
+      let payload = await axios.post(GLOBAL_URL + 'question/get', { index: session.iteration, session: params.sessionid })
+    //needs to be dynamically updated
+    payload = payload.data
+    //consider making payload sortable here
+    setQuestion(payload)
+  }
+  if (questions == null){
+    getQuestion()
+  }
+  else{
+  return(
+    <div>
+      {questions.map((question)=>{
+        return(
+          <div className='w-full flex-row border-2 border-blue-gray-200' >
+            <Typography variant='h6'>{question.questionText}</Typography>
+            <Typography variant = 'small'>Type: {question.questionTag}</Typography>
+            <div className='inline-block align-middle'>
+            <Typography variant = 'small'> Overall Priority: {question.priorityBySystem}</Typography>
+            </div> &nbsp; &nbsp; &nbsp;
+            {/* <button className='underline text-red-400'onClick={()=>{dropHandler(question, index)}} >x</button> */}
+          </div>
+        )
+      })}
+    </div>
+  )
+  }
+}
 
 const Allowed = () => {
 
@@ -43,10 +75,10 @@ const Allowed = () => {
     getSession()
   }
   socket.on(params.sessionid + 'student' +'stateUpdate', (args)=>{
+    console.log('Reloading Session Data')
     getSession() //perform request everytime socket broadcast is received
   })
 
-  console.log(sessionData?.current_activity == 'Question Answering')
 
 
   return (
@@ -69,7 +101,7 @@ const Allowed = () => {
             (
               <>
               <Typography>Teacher is accepting questions. Please submit question</Typography>
-              <QuestionForm onSubmit={socketBroadcast} iteration = {sessionData.iterationIndex}></QuestionForm>
+              <QuestionForm onSubmit={socketBroadcast} iteration = {sessionData.iteration}></QuestionForm>
               </>
             )
         :
@@ -80,9 +112,12 @@ const Allowed = () => {
         :
         (sessionData?.current_activity == 'Question Answering')?
         (
+          <>
           <Typography>
             Here are the questions teacher is answering
           </Typography>
+          <SelectedQuestions session={sessionData}/>
+          </>
         )
         :''
         )

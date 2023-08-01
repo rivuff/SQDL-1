@@ -7,8 +7,8 @@ import { useParams } from 'react-router-dom';
 
 const QuestionForm = ({ onSubmit, iteration }) => {
   const [questionText, setQuestionText] = useState('');
+  const [questionPriority, setPriority] = useState(5);
   const params = useParams();
-
   const { user } = UserState();
   const name = user?._id
   const session = user?.currSession
@@ -20,14 +20,13 @@ const QuestionForm = ({ onSubmit, iteration }) => {
       const questionData = {
         questionText: questionText,
         session: params.sessionid,
-        questionType: document.getElementById('questionType').value,
-        questionTag: document.getElementById('questionPriority').value,
+        questionTag: document.getElementById('questionType').value,
         iterationIndex: iteration,
+        priorityBySelf: questionPriority,
         raisedBy: name,
         //questionTag: document.getElementById('questionType').value,
       }
-      
-      console.log(session);
+      console.log(questionData)
       const response = await axios.post('http://localhost:5000/api/v1/question/create', questionData);
 
       console.log('Response from the backend:', response.data);
@@ -39,7 +38,6 @@ const QuestionForm = ({ onSubmit, iteration }) => {
       }
 
       const addingtoUser = await axios.post('http://localhost:5000/api/v1/user/addquestion', addData)
-
 
       const addQuestionToSession = await axios.post('http://localhost:5000/api/v1/session/addQuestion', {
         questionId: response?.data?.data?._id,
@@ -90,7 +88,7 @@ const QuestionForm = ({ onSubmit, iteration }) => {
             <option value={'Exploratory'}>Exploratory</option>
           </select></div> &nbsp;&nbsp;&nbsp;
           <div className='inline-block py-3'>
-            <Input type='number' label='Priority' id='questionPriority' min='1' max='10' defaultValue={5}></Input>
+            <Input type='number' label='Priority' id='questionPriority' min='1' max='10' defaultValue={5} onChange={(e)=>{setPriority(e.target.value)}}></Input>
           </div>
         </div>
         <br />

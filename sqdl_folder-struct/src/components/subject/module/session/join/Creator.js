@@ -4,6 +4,7 @@ import {Drawer, Spinner, Typography, IconButton, Button, Card, CardHeader, CardB
 import { GLOBAL_URL, SOCKET_URL } from '../../../../config';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'; 
 import {io} from 'socket.io-client'
 
 
@@ -15,28 +16,153 @@ const res = {
 
 const socket = io(SOCKET_URL)
 
+const QuestionCard = ({question,  index, dropHandler})=>{
+  return(
+    <div className='w-full flex-row border-2 border-blue-gray-200' >
+      <Typography variant='h6'>{question.questionText}</Typography>
+      <Typography variant = 'small'>Type: {question.questionTag}</Typography>
+      <div className='inline-block align-middle'>
+      <Typography variant = 'small'> Overall Priority: {question.priorityBySystem}</Typography>
+      </div> &nbsp; &nbsp; &nbsp;
+      {/* <button className='underline text-red-400'onClick={()=>{dropHandler(question, index)}} >x</button> */}
+    </div>
+  )
+}
 
+const QuestionSelect = ({iteration, sessionHandler, broadcaster})=>{
+  const params = useParams()
+  const [questions, setQuestion] = useState(null);
+
+  function dropHandler(q, index){
+    let copy = questions
+    copy.splice(index, 1)
+    setQuestion(copy)
+  }
+
+  async function handleOnDragEnd(result) {
+    const items = Array.from(questions);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    //adding to selected questions
+    
+    let session = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
+    session = session.data.data
+    
+    let selected = session.selected_questions
+    let found
+    for (let i = 0;i<selected.length;i++){
+      if (selected[i].iteration == iteration){
+        found  = i
+      }
+    }
+    if (found == null){
+      try{
+        session.selected_questions = session.selected_questions.concat(
+          {
+            iteration: iteration,
+            questions: items
+          }
+          )
+          console.log(session.selected_questions)
+      }
+      catch(e){
+
+        session.selected_questions = {
+            iteration: iteration,
+            questions: items
+          }
+      }
+    }
+    else{
+      let obj = {
+        iteration: iteration,
+        questions: items
+      }
+      
+      session.selected_questions[found] = obj
+    }
+
+    //update session send broadcast and rerender page
+    let payload = await axios.post(GLOBAL_URL +'session/update', session, res)
+    payload = payload.data.data
+    session = payload
+    broadcaster()
+    sessionHandler(session)
+    setQuestion(items);
+
+  }
+  async function getSession() {
+    let payload = await axios.post(GLOBAL_URL + 'session/get', { _id: params.sessionid }, res)
+    payload = payload.data.data
+    let session = payload
+    console.log(session)
+  }
+  async function getQuestions() {
+    //fetch questions with current iteration and session
+    let payload = await axios.post(GLOBAL_URL + 'question/get', { index: iteration, session: params.sessionid })
+    //needs to be dynamically updated
+    payload = payload.data
+    //consider making payload sortable here
+    setQuestion(payload)
+  }
+  if (questions == null) {
+    getQuestions()
+  }
+  else{
+
+    return(
+      <div>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId='questionSelect'>
+        {(provided)=>(
+          <ul {...provided.droppableProps} ref={provided.innerRef} className='questionSelect'>
+              {questions.map((q, index) => {
+                return (
+                  <Draggable key={q._id} draggableId={q._id} index={index}>
+                    {(provided) => (
+                      <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <QuestionCard question = {q} index  = {index} dropHandler = {dropHandler}></QuestionCard>
+                      </li>
+                    )}
+                  </Draggable>
+                )
+              })}
+              {provided.placeholder}
+            </ul>
+        )}
+        </Droppable>
+      </DragDropContext>
+    </div>
+  )
+}
+}
 
 const Questions = ({iteration})=>{
   const params = useParams()
-
-  const [questions, setQuestion] = useState([]);
+  
+  const [questions, setQuestion] = useState(null);
   async function getQuestions() {
     //fetch questions with current iteration and session
     let payload = await axios.post(GLOBAL_URL +'question/get', {index: iteration , session: params.sessionid})
   //needs to be dynamically updated
     payload = payload.data
     //consider making payload sortable here
+    
     setQuestion(payload)
   }
-  if (questions.length == 0){
+  socket.on(params.sessionid + 'teacher' + 'stateUpdate', (args) => {
+    console.log('Reloading questions...')
+    getQuestions()
+  })
+
+  if (questions == null){
     getQuestions()
   }
+  else{
 
- 
-
-  return(
-    <div className='w-full overflow-auto'>
+    
+    return(
+      <div className='w-full overflow-auto'>
       <h4> Submitted Questions </h4>
       <table className="w-full min-w-max table-auto text-left overflow-auto">
         <thead>
@@ -66,6 +192,7 @@ const Questions = ({iteration})=>{
   )
 }
 
+}
 
 const Creator = () => {
 
@@ -151,7 +278,7 @@ const Creator = () => {
       console.log(index, sessionData.activity_order)
       if (index == sessionData.activity_order.length -1){
           
-          current = null
+          current = sessionData.activity_order[0] //reset iteration
           iteration +=1 //go to first activity of next iteration
           console.log(iteration)
       }
@@ -189,7 +316,14 @@ const Creator = () => {
 
               </Typography>
               <br/>
-              Current Acitivity: {sessionData?.current_activity}<br/>
+              {sessionData?.current_activity == null ? (<>
+                No activity in progress
+              </>)
+              :
+               (<>
+                  Current Activity: {sessionData?.current_activity}<br />
+               </>)
+               }
               Current Iteration: {sessionData?.iteration}<br/>
               <Button size='sm' onClick={() => { activityChange();}}>{sessionData?.current_activity == null?'Start Activity': 'Next Activity'}</Button>
               <br/>
@@ -209,7 +343,7 @@ const Creator = () => {
                   (
                     <CardBody>
                       Select Questions to be answered
-
+                    <QuestionSelect iteration={ sessionData.iteration} sessionHandler={setSession} broadcaster = {broadcastState}/>
                     </CardBody>
                   )
                   :
