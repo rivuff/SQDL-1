@@ -1,15 +1,15 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import {check} from './Cookies'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import { check } from "./Cookies";
 const CourseRouter = () => {
-  const user = check()
+  const user = check();
 
-  if (user == null){
+  if (user == null) {
     // window.location.href = '/login'
-    return null
+    return null;
   }
-  
-  return (<Outlet user/>)
-}
 
-export default CourseRouter
+  return <Outlet user />;
+};
+
+export default CourseRouter;

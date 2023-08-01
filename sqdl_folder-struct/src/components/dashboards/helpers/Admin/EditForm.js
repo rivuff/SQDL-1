@@ -1,12 +1,8 @@
-import React from 'react'
+import React from "react";
 
 const EditForm = (props) => {
-    let data = props.data
-    return (
-    <div>
-        
-    </div>
-  )
-}
+  let data = props.data;
+  return <div></div>;
+};
 
-export default EditForm
+export default EditForm;
