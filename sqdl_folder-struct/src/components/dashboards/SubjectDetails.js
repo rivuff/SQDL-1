@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const SubjectDetailsPage = () => {
   const { id } = useParams();
@@ -9,12 +9,14 @@ const SubjectDetailsPage = () => {
   useEffect(() => {
     const fetchSubjectDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/subject/get?subjectId=${id}`);
+        const response = await fetch(
+          `http://localhost:5000/api/v1/subject/get?subjectId=${id}`,
+        );
         const data = await response.json();
         setSubjectDetails(data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching subject details:', error);
+        console.error("Error fetching subject details:", error);
         setIsLoading(false); // Update loading state in case of an error
       }
     };
@@ -36,7 +38,9 @@ const SubjectDetailsPage = () => {
       <div className="bg-white p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-2">{subjectDetails.data.name}</h2>
         <p className="text-gray-600 mb-4">{subjectDetails.data.description}</p>
-        <p className="text-gray-500">Created by: {subjectDetails.data.createdBy}</p>
+        <p className="text-gray-500">
+          Created by: {subjectDetails.data.createdBy}
+        </p>
       </div>
       {/* Display other subject details as needed */}
     </div>

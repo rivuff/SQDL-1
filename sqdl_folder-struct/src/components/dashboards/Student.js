@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
 const sessions = [
-  { id: 1, courseName: 'Math', sessionName: 'Session 1' },
-  { id: 2, courseName: 'Science', sessionName: 'Session 2' },
-  { id: 3, courseName: 'History', sessionName: 'Session 3' },
+  { id: 1, courseName: "Math", sessionName: "Session 1" },
+  { id: 2, courseName: "Science", sessionName: "Session 2" },
+  { id: 3, courseName: "History", sessionName: "Session 3" },
 ];
 
 const JoinSessionCard = ({ courseName, sessionName }) => {
   const handleJoinSession = () => {
     // Logic for joining the session
-    console.log('Joining session:', courseName, sessionName);
+    console.log("Joining session:", courseName, sessionName);
   };
 
   return (
