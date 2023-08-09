@@ -12,7 +12,68 @@ import {
 import { useParams } from "react-router-dom";
 import { check } from "../Cookies";
 
-const QuestionForm = ({ onSubmit }) => {
+
+const QuestionPosed =async () => {
+  const [questions, setQuestions] = useState([]);
+  const {user} = UserState();
+  const userId = user._id
+  const sessionId = user.currSession;
+  const params = useParams();
+  
+ // const session  = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion', params.sessionid)
+  useEffect(() => {
+
+    fetchQuestions();
+
+    console.log("trying to connect");
+    // socket.on('question_enabled', () => {
+    //   fetchAllQuestions(); // Fetch all questions again when the event is received
+    //   console.log("connected to socket");
+    // });
+
+    // return () => {
+    //   socket.disconnect(); // Disconnect the socket when the component unmounts
+    // };
+
+  }, []);
+}
+
+  // const fetchQuestions = async () => {
+
+  //   try {
+  //     // Replace 'http://your-backend-api.com' with your actual backend API URL
+  //     const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
+  //       params: {
+  //         userId: userId,
+  //       },
+  //     });
+
+  //     console.log("Question fetched");
+  //     setQuestions(response.data);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching user questions:', error);
+  //   }
+  // };
+
+  const fetchQuestions = async (sessionIteration) => {
+    try {
+        const session = await axios.get('http://localhost:5000/api/v1/session/getsessionquestion',{
+          params:{
+            sessionid: sessionId
+          }
+        });
+        const response = await axios.get('http://localhost:5000/api/v1/question/usrId', {
+          params: {
+            userId: userId,
+            sessionIteration: session.iteration,
+          } // Pass the session iteration as a parameter
+    })     
+    } catch (error) {
+      console.log(error);
+    }
+  }
+export const QuestionForm = ({ onSubmit }) => {
   const [questionText, setQuestionText] = useState("");
   const params = useParams();
   const { user } = UserState();
@@ -76,6 +137,7 @@ const QuestionForm = ({ onSubmit }) => {
             userId: check()._id,
             sessionIteration: sessionIteration, // Pass the session iteration as a parameter
           },
+
         },
       );
 
@@ -160,5 +222,3 @@ const QuestionForm = ({ onSubmit }) => {
     </Card>
   );
 };
-
-export default QuestionForm;
