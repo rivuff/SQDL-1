@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Typography, Button } from "@material-tailwind/react";
 import axios from "axios";
-
+import "./StudentTable.css";
 import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
 import LoadingRow from "./LoadingRow";
@@ -43,59 +43,59 @@ const TeacherTable = () => {
   }
   return (
     <div>
-      <TeacherInvite handler={fetchTeacherData}></TeacherInvite>
-      <Card className="h-full w-full items-center overflow-x-auto">
-        <table className="w-full min-w-max table-auto text-left border-spacing-2 border-slate-500 p-2">
-          <thead>
+      {/* <TeacherInvite handler={fetchTeacherData}></TeacherInvite> */}
+      <Card className="h-full w-full items-center overflow-x-auto p-4">
+        <table className="w-full min-w-max table-auto text-center border-1 border-spacing-6 border-blue-700 rounded-none shadow-none">
+          <thead className="header">
             <tr className="h-20px">
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gray-100 p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 >
                   Name
                 </Typography>
               </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gray-100 p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 >
                   Email
                 </Typography>
               </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gray-100 p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 >
                   Teacher ID
                 </Typography>
               </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gra p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 >
                   Last Modified
                 </Typography>
               </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gray-100 p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 ></Typography>
               </th>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th className="border-b border-blue-gray-100 p-4">
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+                  color="white"
+                  className="font-bold text-lg leading-none"
                 ></Typography>
               </th>
             </tr>
@@ -117,6 +117,7 @@ const TeacherTable = () => {
           </tbody>
         </table>
       </Card>
+      <TeacherInvite handler={fetchTeacherData}></TeacherInvite>
     </div>
   );
 };

@@ -38,7 +38,7 @@ export default function AdminPopover({ id }) {
       const data = await axios.post(
         `http://localhost:5000/api/v1/user/update`,
         formData,
-        res,
+        res
       );
 
       // setLogged(true);

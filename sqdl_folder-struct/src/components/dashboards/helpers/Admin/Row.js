@@ -9,7 +9,7 @@ import {
   Option,
   Typography,
 } from "@material-tailwind/react";
-
+import "./StudentTable.css";
 import react from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -54,7 +54,7 @@ const Row = ({ _id, handler }) => {
         const response = await axios.delete(
           "http://localhost:5000/api/v1/user/delete",
           { data: { email: email } },
-          res,
+          res
         );
         editForm({ ...formData, isFetched: false, deleted: true }); //update other fields with returned response data
       } catch (error) {}
@@ -107,7 +107,7 @@ const Row = ({ _id, handler }) => {
       .post(
         `http://localhost:5000/api/v1/user/update`,
         JSON.stringify(info),
-        res,
+        res
       )
       .then((response) => {
         editForm({ ...response.data.data, isFetched: true }); //update other fields with returned response data
@@ -130,25 +130,34 @@ const Row = ({ _id, handler }) => {
         className={formData.deleted ? "hidden" : "font-bold"}
         key={formData._id}
       >
-        <td className="p-2 ">
+        <td className="odd  p-4 ">
           <Typography>{formData.name}</Typography>
         </td>
-        <td>
+        <td className="even">
           <Typography>{formData.email}</Typography>
         </td>
-        <td>
+        <td className="odd">
           <Typography>{formData.enrollmentNumber}</Typography>
         </td>
-        <td>
+        <td className="even">
           <Typography>{formData.rollNumber}</Typography>
         </td>
-        <td>
+        <td className="odd">
           <Typography>
             <Popover>
               <PopoverHandler>
-                <Button size="sm" id={"click" + formData._id}>
+                {/* <Button size="sm" id={"click" + formData._id}>
                   Edit
-                </Button>
+                </Button> */}
+
+                <button
+                  id={"click" + formData._id}
+                  size="sm"
+                  type="button"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 "
+                >
+                  Edit
+                </button>
               </PopoverHandler>
               <PopoverContent className="p-4">
                 <form className="flex flex-col items-center justify-center">
@@ -206,7 +215,7 @@ const Row = ({ _id, handler }) => {
                       updateHandler(
                         e,
                         formData._id,
-                        document.getElementById("type" + formData._id).value,
+                        document.getElementById("type" + formData._id).value
                       );
                     }}
                   >
@@ -217,8 +226,13 @@ const Row = ({ _id, handler }) => {
             </Popover>
           </Typography>
         </td>{" "}
-        <td>
-          <Button size="sm" color="red">
+        <td className="even">
+          <button
+            type="button"
+            size="sm"
+            color="red"
+            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -236,7 +250,7 @@ const Row = ({ _id, handler }) => {
                 d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
               />
             </svg>
-          </Button>
+          </button>
         </td>
       </tr>
     );
@@ -244,25 +258,30 @@ const Row = ({ _id, handler }) => {
     //teacher edit form
     return (
       <tr className="font-bold ">
-        <td className="p-2 ">
+        <td className="odd p-4 ">
           <Typography>{formData.name}</Typography>
         </td>
-        <td>
+        <td className="even">
           <Typography>{formData.email}</Typography>
         </td>
-        <td>
+        <td className="odd">
           <Typography>{formData._id}</Typography>
         </td>
-        <td>
+        <td className="even">
           <Typography>{formData.updatedAt}</Typography>
         </td>
-        <td>
+        <td className="odd">
           <Typography>
             <Popover>
               <PopoverHandler>
-                <Button size="sm" id={"click" + formData._id}>
+                <button
+                  id={"click" + formData._id}
+                  size="sm"
+                  type="button"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 "
+                >
                   Edit
-                </Button>
+                </button>
               </PopoverHandler>
               <PopoverContent className="p-4">
                 <form className="flex flex-col items-center justify-center">
@@ -308,7 +327,7 @@ const Row = ({ _id, handler }) => {
                       updateHandler(
                         e,
                         formData._id,
-                        document.getElementById("type" + formData._id).value,
+                        document.getElementById("type" + formData._id).value
                       );
                     }}
                   >
@@ -319,8 +338,13 @@ const Row = ({ _id, handler }) => {
             </Popover>
           </Typography>
         </td>{" "}
-        <td>
-          <Button size="sm" color="red">
+        <td className="even">
+          <button
+            type="button"
+            size="sm"
+            color="red"
+            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -338,7 +362,7 @@ const Row = ({ _id, handler }) => {
                 d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
               />
             </svg>
-          </Button>
+          </button>
         </td>
       </tr>
     );

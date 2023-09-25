@@ -9,11 +9,27 @@ const StudentSubjects = ({ array }) => {
   }
 
   return (
-    <table className="w-full rounded-xl">
+    <table className=" w-full min-w-max table-auto text-left border-spacing-2 border-slate-500 p-2">
       <thead>
-        <tr className="bg-orange-500">
-          <th className="text-2xl text-white py-4 font-poppins">Subject Name </th>
-          <th className="text-2xl text-white py-4 font-poppins">Taught By</th>
+        <tr className=" h-20px">
+          <th className=" border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-2/3">
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="text-black font-normal leading-none opacity-70"
+            >
+              Subject Name
+            </Typography>
+          </th>{" "}
+          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-1/3">
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="text-black font-normal leading-none opacity-70"
+            >
+              Taught By
+            </Typography>
+          </th>
         </tr>
       </thead>
       <tbody>

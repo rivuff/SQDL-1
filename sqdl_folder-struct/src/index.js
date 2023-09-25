@@ -3,6 +3,9 @@ import { Outlet } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavBar from "./components/homepage/NavBar.jsx";
+import Provide from "./components/homepage/Provide";
+import Counter from "./components/homepage/Counter";
+import Homepage from "./components/homepage/Homepage";
 import Footer from "./components/homepage/Footer.js";
 import SQDLCarousel from "./components/homepage/Carousel.js";
 import Login from "./components/lr/Login.js";
@@ -32,7 +35,8 @@ import Session from "./components/subject/module/session/Session";
 import NewSession from "./components/subject/module/session/NewSession";
 import SubjectDetailsPage from "./components/dashboards/SubjectDetails";
 //import QuestionForm from './components/questionPosing/questionForm';
-import {QuestionForm} from "./components/questionPosing/questions";
+
+import { QuestionForm } from "./components/questionPosing/questions";
 
 import Join from "./components/subject/module/session/join/Join";
 import TeacherInterface from "./components/dashboards/Teacher";
@@ -44,7 +48,12 @@ const AppLayout = () => {
     <div>
       <ContextProvider>
         <NavBar
-          navList={{home: "Home", about: "About", login: "Login", register: "Register" }}
+          navList={{
+            home: "Home",
+            about: "About",
+            login: "Login",
+            register: "Register",
+          }}
         />
         <Outlet />
         <Footer />
@@ -60,7 +69,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <SQDLCarousel />,
+        element: <Homepage />,
       },
       {
         path: "/login",

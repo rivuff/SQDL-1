@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import {
-  Navbar,
   Collapse,
   Typography,
   IconButton,
+  Navbar,
   Popover,
   PopoverHandler,
-  Button,
   Input,
   PopoverContent,
 } from "@material-tailwind/react";
@@ -16,7 +16,6 @@ import { UserState } from "../../context/contextProvider";
 
 import { useNavigate } from "react-router-dom";
 import { type, check } from "./../Cookies";
-
 function NavList(props) {
   var navList = props.navList;
   const navigate = useNavigate();
@@ -29,7 +28,7 @@ function NavList(props) {
   if (check() == null) {
     // Render navigation list for non-logged-in users
     return (
-      <ul className="mr-8 flex flex-col lg:flex-row lg:items-center lg:gap-20">
+      <ul className="bg-transparent text-2xl my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
         {Object.entries(navList).map(([key, val]) => {
           return (
             <li key={key}>
@@ -37,15 +36,12 @@ function NavList(props) {
                 as="li"
                 variant="small"
                 color="blue-gray"
-                className="font-medium"
+                className="p-1 bg-transparent font-medium text-2xl "
               >
                 <Link
                   to={key === "home" ? "/" : key}
                   key={key}
-                  className="
-                    flex relative items-center pt-4 font-redHatMonoWeight font-redHatMono border-b-0 text-xl hover:animate-line
-                    before:content=[''] before:absolute before:bottom-0 before:bg-gray-600 before:h-[2px] before:w-0 hover:before:animate-line
-                  "
+                  className=" text-black text-xl flex items-center hover:text-blue-500 transition-colors"
                 >
                   {val}
                 </Link>
@@ -58,13 +54,13 @@ function NavList(props) {
   } else if (check().type === "student") {
     // Render navigation list for student users
     return (
-      <ul className="my-4 ml-6 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
         <li>
           <Typography
             as="li"
             variant="small"
             color="blue-gray"
-            className="p-1 font-medium "
+            className="p-1 bg-transparent font-medium "
           >
             <Link
               to={"/"}
@@ -108,7 +104,7 @@ function NavList(props) {
     );
   } else {
     return (
-      <ul className="my-2 flex flex-col gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
         <li>
           <Typography
             as="li"
@@ -190,30 +186,29 @@ function NavBar(props) {
     };
   }, []);
 
-  window.addEventListener('scroll', () => {
+  window.addEventListener("scroll", () => {
     window.scrollY >= 20 ? setNavColor(true) : setNavColor(false);
-  })
+  });
 
   var navList = props.navList; //props to pass into Navlist
 
   return (
-    <nav className={`w-full shadow-transparent mb-4 z-20 transition-all duration-500 ${navColor ? "bg-gray-300 opacity-50" : "bg-transparent"}`}>
+    <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
       <div className="flex items-center justify-between text-blue-gray-900 ">
         <Typography
           as="a"
           href="#"
           variant="h6"
-          className="ml-4 cursor-pointer text-black "
+          className="mr-4 cursor-pointer py-1.5 text-2xl font-extrabold text-black"
         >
-          <Link to="/" className="font-montserratWeight font-montserrat text-3xl">SQDL</Link>
-        </Typography>
-
-        <div className="hidden lg:block">
-          <NavList navList={navList} />
-        </div>
+          <Link to="/">SQDL</Link>
+        </Typography>{" "}
+        <div className="bg-transparent hidden lg:block">
+          <NavList navList={navList} />{" "}
+        </div>{" "}
         <IconButton
           variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden bg-slate-200"
+          className="bg-transparent ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden bg-slate-200"
           ripple={false}
           onClick={() => setOpenNav(!openNav)}
         >
@@ -227,7 +222,37 @@ function NavBar(props) {
       <Collapse open={openNav}>
         <NavList navList={navList} />
       </Collapse>
-    </nav>
+    </Navbar>
+    // <Navbar className="   bg-opacity-0" fluid rounded>
+    //   <Navbar.Brand href="/">
+    //     <span className="bg-transparent self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+    //       SQDL
+    //     </span>
+    //   </Navbar.Brand>
+    //   <div className="flex md:order-2">
+    //     <Navbar.Toggle />
+    //   </div>
+    //   <Navbar.Collapse>
+    //     <p>
+    //       <NavList navList={navList} />
+    //     </div>
+    //     <IconButton
+    //       variant="text"
+    //       className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden bg-slate-200"
+    //       ripple={false}
+    //       onClick={() => setOpenNav(!openNav)}
+    //     >
+    //       {openNav ? (
+    //         <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+    //       ) : (
+    //         <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+    //       )}
+    //     </IconButton>
+    //   </div>
+    //   <Collapse open={openNav}>
+    //     <NavList navList={navList} />
+    //   </Collapse>
+    // </Navbar>
   );
 }
 

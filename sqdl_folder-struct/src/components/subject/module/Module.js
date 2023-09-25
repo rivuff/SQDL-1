@@ -122,7 +122,7 @@ const Module = () => {
         return axios.post(
           GLOBAL_URL + "subject/getByID",
           { _id: params.subjectid },
-          res,
+          res
         );
       })
       .then((response) => {
@@ -139,7 +139,7 @@ const Module = () => {
         return axios.post(
           GLOBAL_URL + "module/getID",
           { _id: params.moduleid },
-          res,
+          res
         );
       })
       .then((response) => {
@@ -154,7 +154,7 @@ const Module = () => {
         return axios.post(
           GLOBAL_URL + "session/getAllFromModuleID",
           { _id: params.moduleid },
-          res,
+          res
         );
       })
       .then((response) => {

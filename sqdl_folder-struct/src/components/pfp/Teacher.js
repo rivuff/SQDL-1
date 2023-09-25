@@ -58,8 +58,8 @@ const Teacher = () => {
       });
   }
   return (
-    <div className="align-center p-10 flex items-center justify-center ">
-      <div className="border-blue-400 border-4 rounded-lg p-10">
+    <div className="align-center p-10 flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 ">
+      <div className="bg-blue-800 border-blue-400 border-4 rounded-lg p-10">
         <Card className="w-96">
           <CardHeader floated={false} className="h-80">
             <svg
@@ -77,11 +77,15 @@ const Teacher = () => {
               />
             </svg>
           </CardHeader>
-          <CardBody className="text-center">
-            <Typography variant="h4" color="blue-gray" className="mb-2">
+          <CardBody className="bg-blue-800 border-white border-4 text-center">
+            <Typography
+              variant="h4"
+              color="blue-gray"
+              className="text-white mb-2"
+            >
               {userData.name}
             </Typography>
-            <Typography color="blue" className="font-medium" textGradient>
+            <Typography className="text-2xl text-white font-bold" textGradient>
               Teacher
             </Typography>
             <div>
@@ -132,10 +136,10 @@ const Teacher = () => {
           </CardBody>
         </Card>
       </div>
-      <div className="p-10 w-2/3">
+      <div className=" p-10 w-2/3">
         <Card className="w-192">
-          <CardBody className="text-center">
-            <Typography variant="h4" color="blue-gray" className="mb-2">
+          <CardBody className="text-center border-blue-800 border-4 rounded-lg p-10">
+            <Typography variant="h4" color="blue-gray " className="mb-2">
               Subjects
               <div>
                 <StudentSubjects array={userData.subjects} />

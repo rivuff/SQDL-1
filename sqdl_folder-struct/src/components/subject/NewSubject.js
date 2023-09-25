@@ -35,7 +35,7 @@ const NewSubject = () => {
           description: subject.description,
           createdBy: subject.createdBy,
         },
-        res,
+        res
       )
       .then((response) => {
         setSubject({
@@ -61,7 +61,7 @@ const NewSubject = () => {
     return "Must be a teacher to access this page";
   } else {
     return (
-      <div className="align-center p-10 flex flex-col items-center h-screen ">
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 align-center p-10 flex flex-col items-center h-screen ">
         <div className="">
           <Breadcrumbs className="">
             <a href="/course" className="opacity-60">
@@ -75,7 +75,7 @@ const NewSubject = () => {
         <br />
         <div className="border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex">
           <Card color="transparent" shadow={false}>
-            <Typography variant="h4" className="text-center text-black">
+            <Typography variant="h4" className="text-center text-blue-800">
               New Subject
             </Typography>
             <Typography className="text-center text-red-500">
@@ -98,6 +98,7 @@ const NewSubject = () => {
                   value={subject.description}
                 ></Textarea>
                 <Button
+                  className="bg-blue-800 hover:bg-sky-700"
                   disabled={
                     subject.name == "" ||
                     subject.description == "" ||

@@ -1,0 +1,13 @@
+.header {
+  background-color: #21458f;
+  color: #ffffff;
+}
+.body {
+  background-color: rgba(128, 128, 128, 0.171);
+}
+.even {
+  background-color: rgb(238, 238, 238);
+}
+.odd {
+  background-color: rgb(255, 255, 255);
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Typography, Button } from "@material-tailwind/react";
 import axios from "axios";
-
+import "./StudentTable.css";
 import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
 import LoadingRow from "./LoadingRow";
@@ -43,79 +43,81 @@ const TeacherTable = () => {
   }
   return (
     <div>
-      <Card className="h-full w-full items-center overflow-x-auto">
-        <table className="w-full min-w-max table-auto text-left border-spacing-2 border-slate-500 p-2">
-          <thead>
-            <tr className="h-20px">
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Name
-                </Typography>
-              </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Email
-                </Typography>
-              </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Enrollment Number
-                </Typography>
-              </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Roll Number
-                </Typography>
-              </th>{" "}
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                ></Typography>
-              </th>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                ></Typography>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.isLoading ? (
-              <LoadingRow cols={6} />
-            ) : (
-              state.data.map((object) => {
-                return (
-                  <Row
-                    _id={object._id}
-                    key={object._id}
-                    handler={fetchTeacherData}
-                  ></Row>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </Card>
+      {/* <Card className="h-full w-full items-center overflow-x-auto shadow-none"> */}
+      <table className="w-full min-w-max table-auto text-center border-1 border-spacing-6 border-blue-700 p-8 rounded-none shadow-none">
+        <thead className="header rounded-none	shadow-none">
+          <tr className="h-20px">
+            <th className="border-b border-blue-gray-100 shadow-none p-8">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-bold text-lg leading-none "
+              >
+                Name
+              </Typography>
+            </th>{" "}
+            <th className="border-b border-blue-gray-100  p-4">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-bold text-lg leading-none "
+              >
+                Email
+              </Typography>
+            </th>{" "}
+            <th className="border-b border-blue-gray-100  p-4">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-bold text-lg leading-none "
+              >
+                Enrollment Number
+              </Typography>
+            </th>{" "}
+            <th className="border-b border-blue-gray-100  p-4">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-bold text-lg leading-none "
+              >
+                Roll Number
+              </Typography>
+            </th>{" "}
+            <th className="border-b border-blue-gray-100  p-4">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-bold text-lg leading-none "
+              ></Typography>
+            </th>
+            <th className="border-b border-blue-gray-100  p-4">
+              <Typography
+                variant="small"
+                fontSize="30"
+                color="white"
+                className="font-bold text-lg leading-none"
+              ></Typography>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="body">
+          {state.isLoading ? (
+            <LoadingRow cols={6} />
+          ) : (
+            state.data.map((object) => {
+              return (
+                <Row
+                  _id={object._id}
+                  key={object._id}
+                  handler={fetchTeacherData}
+                  className="row"
+                ></Row>
+              );
+            })
+          )}
+        </tbody>
+      </table>
+      {/* </Card> */}
     </div>
   );
 };

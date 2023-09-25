@@ -13,7 +13,7 @@ const JoinSessionCard = ({ title, topic, createdBy, subjectId, startTime }) => {
   const fetchSubjectDetails = async (subjectId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/subject/get?subjectId=${subjectId}`,
+        `http://localhost:5000/api/v1/subject/get?subjectId=${subjectId}`
       ); // Replace with your actual API endpoint for fetching subject details
       const data = await response.json();
       // Use the subject details as required (e.g., display in a modal or navigate to a subject details page)
@@ -76,7 +76,7 @@ const StudentLandingPage = () => {
     const fetchSessions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/user/getSession?userId=${userId}`,
+          `http://localhost:5000/api/v1/user/getSession?userId=${userId}`
         ); // Replace with your actual API endpoint
         const data = await response.json();
         console.log(data);
