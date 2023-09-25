@@ -11,6 +11,7 @@ import Register from "./components/lr/Register";
 import LandingPage from "./components/dashboards/LandingPage.js";
 import Profile from "./components/Profile.js";
 import About from "./components/About.js";
+import LRPages from "./components/LRPages/LRPages";
 
 //global context provider
 import ContextProvider from "./context/contextProvider";
@@ -31,7 +32,7 @@ import Session from "./components/subject/module/session/Session";
 import NewSession from "./components/subject/module/session/NewSession";
 import SubjectDetailsPage from "./components/dashboards/SubjectDetails";
 //import QuestionForm from './components/questionPosing/questionForm';
-import QuestionPosed from "./components/questionPosing/questions";
+import {QuestionForm} from "./components/questionPosing/questions";
 
 import Join from "./components/subject/module/session/join/Join";
 import TeacherInterface from "./components/dashboards/Teacher";
@@ -43,7 +44,7 @@ const AppLayout = () => {
     <div>
       <ContextProvider>
         <NavBar
-          navList={{ about: "About", login: "Login", register: "Register" }}
+          navList={{home: "Home", about: "About", login: "Login", register: "Register" }}
         />
         <Outlet />
         <Footer />
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />,
+        element: <LRPages />,
       },
       {
         path: "/register",
@@ -99,7 +100,7 @@ const router = createBrowserRouter([
       },
       {
         path: "question",
-        element: <QuestionPosed />,
+        element: <QuestionForm />,
       },
       {
         path: "teacher/question",

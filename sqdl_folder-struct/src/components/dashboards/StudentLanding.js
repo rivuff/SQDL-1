@@ -28,7 +28,7 @@ const JoinSessionCard = ({ title, topic, createdBy, subjectId, startTime }) => {
       <div
         className="flex-none h-48 lg:h-auto lg:w-48 bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden"
         style={{
-          backgroundImage: `url(${require("../images/download.jpeg")})`,
+          backgroundImage: `url(${require("../../images/download.jpeg")})`,
         }}
         title="proffesor"
       ></div>

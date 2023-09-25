@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   Collapse,
@@ -25,11 +25,11 @@ function NavList(props) {
     localStorage.removeItem("userInfo");
     navigate("/");
   };
-
+  console.log(check());
   if (check() == null) {
     // Render navigation list for non-logged-in users
     return (
-      <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <ul className="mr-8 flex flex-col lg:flex-row lg:items-center lg:gap-20">
         {Object.entries(navList).map(([key, val]) => {
           return (
             <li key={key}>
@@ -37,12 +37,15 @@ function NavList(props) {
                 as="li"
                 variant="small"
                 color="blue-gray"
-                className="p-1 font-medium "
+                className="font-medium"
               >
                 <Link
-                  to={key}
+                  to={key === "home" ? "/" : key}
                   key={key}
-                  className=" text-black flex items-center hover:text-blue-500 transition-colors text-lg"
+                  className="
+                    flex relative items-center pt-4 font-redHatMonoWeight font-redHatMono border-b-0 text-xl hover:animate-line
+                    before:content=[''] before:absolute before:bottom-0 before:bg-gray-600 before:h-[2px] before:w-0 hover:before:animate-line
+                  "
                 >
                   {val}
                 </Link>
@@ -55,7 +58,7 @@ function NavList(props) {
   } else if (check().type === "student") {
     // Render navigation list for student users
     return (
-      <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <ul className="my-4 ml-6 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
         <li>
           <Typography
             as="li"
@@ -65,7 +68,7 @@ function NavList(props) {
           >
             <Link
               to={"/"}
-              className=" text-black flex items-center hover:text-blue-500 transition-colors text-lg"
+              className=" text-white flex items-center hover:text-blue-500 transition-colors text-lg"
             >
               About
             </Link>
@@ -105,7 +108,7 @@ function NavList(props) {
     );
   } else {
     return (
-      <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      <ul className="my-2 flex flex-col gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
         <li>
           <Typography
             as="li"
@@ -173,7 +176,8 @@ function NavList(props) {
 }
 
 function NavBar(props) {
-  const [openNav, setOpenNav] = React.useState(false);
+  const [openNav, setOpenNav] = useState(false);
+  const [navColor, setNavColor] = useState(false);
 
   const handleWindowResize = () =>
     window.innerWidth >= 960 && setOpenNav(false);
@@ -186,18 +190,22 @@ function NavBar(props) {
     };
   }, []);
 
+  window.addEventListener('scroll', () => {
+    window.scrollY >= 20 ? setNavColor(true) : setNavColor(false);
+  })
+
   var navList = props.navList; //props to pass into Navlist
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
+    <nav className={`w-full shadow-transparent mb-4 z-20 transition-all duration-500 ${navColor ? "bg-gray-300 opacity-50" : "bg-transparent"}`}>
       <div className="flex items-center justify-between text-blue-gray-900 ">
         <Typography
           as="a"
           href="#"
           variant="h6"
-          className="mr-4 cursor-pointer py-1.5 text-2xl font-extrabold text-black"
+          className="ml-4 cursor-pointer text-black "
         >
-          <Link to="/">SQDL</Link>
+          <Link to="/" className="font-montserratWeight font-montserrat text-3xl">SQDL</Link>
         </Typography>
 
         <div className="hidden lg:block">
@@ -219,7 +227,7 @@ function NavBar(props) {
       <Collapse open={openNav}>
         <NavList navList={navList} />
       </Collapse>
-    </Navbar>
+    </nav>
   );
 }
 

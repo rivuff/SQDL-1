@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function SQDLCarousel() {
   return (
-    <Carousel className="rounded-xl">
+    <Carousel>
       <div className="relative h-full w-full">
         <img
           src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80"
@@ -16,16 +16,16 @@ export default function SQDLCarousel() {
             <Typography
               variant="h1"
               color="white"
-              className="mb-4 text-3xl md:text-4xl lg:text-5xl font-semibold"
+              className="mb-4 text-2xl md:text-4xl lg:text-5xl font-montserrat font-montserratWeight"
             >
               Student Query Driven Learning
             </Typography>
             <Typography
               variant="lead"
               color="white"
-              className="mb-12 opacity-80 text-white"
+              className="mb-12 opacity-80 text-white text-2xl font-poppins"
             >
-              This SQDL App has been designed to enable some degree of
+              This SQDL App has been designed to enable
               self-directed learning in classroom environments
             </Typography>
             <div className="flex justify-center gap-6">
