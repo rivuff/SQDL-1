@@ -13,39 +13,46 @@ const LRPages = () => {
   };
 
   return (
-    <div className="flex justify-center w-full bg-lightesh-gray">
+    <div className="md-1/2:flex md-1/2:justify-center grid place-items-center w-full bg-lightesh-gray">
       <img
         src={lrImage}
         alt="lr-image"
-        className={`h-screen absolute z-10 ${
-          toggleLogin ? "animate-move-left" : "animate-move-right"
-        }`}
+        className={`h-screen absolute z-10  ${
+          toggleLogin ? 
+            "animate-move-left xl-1/4:translate-x-0 translate-x-10" 
+            : 
+            "animate-move-right"
+        }
+        hidden md-1/2:block
+        `}
       />
       <div
         className={`absolute top-1/3 left-4 text-center z-20 ${
           toggleLogin ? "visible animate-zoom-in" : "invisible animate-fade-out"
-        }`}
+        } hidden md-1/2:block`}
       >
-        <h3 className="text-5xl font-poppins text-white font-semibold">
+        <h3 className="xl-3/2:text-5xl -translate-x-6 lg:translate-x-0 text-3xl font-poppins text-white font-semibold">
           Welcome Back!
         </h3>
-        <p className="text-lg text-white mt-5 m-10">
+        <p className="text-lg text-white mt-5 m-10 -translate-x-6 lg:translate-x-0">
           Enter you login credential here
         </p>
         <button
           onClick={handleClick}
           className="text-lg text-black py-5 px-12 rounded-full bg-lightesh-gray font-bold 
-            transition-all hover:bg-blue-400"
+            transition-all hover:bg-blue-400 -translate-x-6 lg:translate-x-0"
         >
           Sign Up
         </button>
       </div>
       <div
-        className={`absolute top-1/3 right-4 text-center z-20 ${
+        className={`absolute top-1/3 right-0 text-center z-20 ${
           toggleLogin ? "invisible animate-fade-out" : "visible animate-zoom-in"
-        }`}
+        }
+        hidden md-1/2:block
+        `}
       >
-        <h3 className="text-5xl font-poppins text-white font-semibold">
+        <h3 className="xl-3/2:text-5xl text-3xl  font-poppins text-white font-semibold">
           Create Account
         </h3>
         <p className="text-lg text-white mt-5 m-10">
@@ -59,8 +66,8 @@ const LRPages = () => {
           Sign In
         </button>
       </div>
-      <Register display={toggleLogin ? "invisible animate-fade-out" : "block animate-zoom-in"} />
-      <Login display={toggleLogin ? "block animate-zoom-in" : "invisible animate-fade-out"} />
+      <Register display={toggleLogin ? "max-md-1/2:hidden invisible animate-fade-out" : "block animate-zoom-in"}  handler={handleClick}/>
+      <Login display={toggleLogin ? "block animate-zoom-in" : "max-md-1/2:hidden invisible animate-fade-out"} handler={handleClick}/>
     </div>
   );
 };

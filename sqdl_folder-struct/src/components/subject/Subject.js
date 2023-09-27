@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { UserState } from "../../context/contextProvider";
 import { Button } from "@material-tailwind/react";
@@ -37,7 +38,10 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
   };
 
   return (
-    <div className="rounded-2xl shadow-md relative w-1/5 border-2 border-gray-400">
+    <NavLink
+      className="rounded-2xl shadow-md relative w-1/5 border-2 border-gray-400"
+      to={`/course/${subjectId}`}
+    >
       <div className="rounded-t-xl w-full bg-blue-500 p-4">
         <h3 className="text-white font-2xl">{name}</h3>
       </div>
@@ -49,7 +53,7 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
           <Button color="blue">Add</Button>
         )}
       </div>
-    </div>
+    </NavLink>
   );
 
   // return (

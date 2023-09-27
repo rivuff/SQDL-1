@@ -10,6 +10,10 @@ module.exports = withMT({
     extend: {
       screens: {
         'xs': "400px",
+        'md-1/2': '880px',
+        'xl-3/2': '1400px',
+        'xl-1/4': '1200px',
+        'max-md-1/2': {'max': '880px'}
       },
       colors: {
         'dark-gray': '#222831',
