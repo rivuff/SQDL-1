@@ -50,7 +50,7 @@ const NewSession = () => {
     axios
       .post(GLOBAL_URL + "module/getID", { _id: moduleid }, res)
       .then((response) => {
-        if (response.data.data.createdBy != check()._id) {
+        if (check().subjects.includes(response._id)) {
           //if user id not the smae as subject creator id - cannot make module
           console.log("Not the owner of model");
           window.location.href = "/course";

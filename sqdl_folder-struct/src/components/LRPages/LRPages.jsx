@@ -5,8 +5,8 @@ import Register from "./Register";
 
 import lrImage from "../../images/lrImage.png";
 
-const LRPages = () => {
-  const [toggleLogin, setToogleLogin] = useState(true);
+const LRPages = ({ toggle }) => {
+  const [toggleLogin, setToogleLogin] = useState(toggle);
 
   const handleClick = () => {
     setToogleLogin(!toggleLogin);

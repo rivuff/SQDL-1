@@ -37,11 +37,16 @@ const NewModule = () => {
       .post(GLOBAL_URL + "subject/getByID", { _id: subjectid }, res)
       .then((response) => {
         console.log(response.data.data);
-        if (response.data.data.createdBy != check()._id) {
-          //if user id not the smae as subject creator id - cannot make module
+        console.log(check());
+        if (check().subjects.includes(response._id)) {
           console.log("Not the owner of model");
-          window.location.href = "/course";
+          window.location.href = '/course';
         }
+        // if (response.data.data.createdBy != check()._id) {
+        //   //if user id not the smae as subject creator id - cannot make module
+        //   console.log("Not the owner of model");
+        //   window.location.href = "/course";
+        // }
         const newmod = module;
         newmod.subject.name = response.data.data.name;
         newmod.subject._id = response.data.data._id;
@@ -128,6 +133,7 @@ const NewModule = () => {
                   label="Name"
                   value={module.name}
                   onChange={(e) => {
+                    console.log(module.name);
                     setModule({ ...module, name: e.target.value });
                   }}
                 ></Input>
@@ -135,14 +141,14 @@ const NewModule = () => {
                   label="Description"
                   value={module.description}
                   onChange={(e) => {
+                    console.log(module.description);
                     setModule({ ...module, description: e.target.value });
                   }}
                 ></Textarea>
                 <Button
                   disabled={
-                    module.name == "" ||
-                    module.description == "" ||
-                    module.disabled
+                    module.name === "" ||
+                    module.description === ""
                   }
                   onClick={() => {
                     submissionHandler();

@@ -50,7 +50,7 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
         {isSubjectAdded ? (
           <Button color="green">Added</Button>
         ) : (
-          <Button color="blue">Add</Button>
+          <Button color="blue" onClick={addSubject}>Add</Button>
         )}
       </div>
     </NavLink>

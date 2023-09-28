@@ -73,11 +73,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <LRPages />,
+        element: <LRPages toggle={true}/>,
       },
       {
         path: "/register",
-        element: <Register />,
+        element: <LRPages toggle={false}/>,
       },
       {
         path: "/dashboard",
