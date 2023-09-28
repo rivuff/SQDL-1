@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import {
@@ -9,6 +10,9 @@ import {
   Breadcrumbs,
   Select,
 } from "@material-tailwind/react";
+
+import { Label, TextInput } from "flowbite-react";
+import "./NewSession.css";
 import { useParams } from "react-router-dom";
 import { check, set } from "../../../Cookies";
 import axios from "axios";
@@ -180,25 +184,25 @@ const NewSession = () => {
       getInfo();
     }
     return (
-      <div className="align-center p-10 flex flex-col items-center h-screen ">
-        <div className="">
+      <div className="bgForm align-center flex flex-col items-center h-screen ">
+        <div className="bg-white rounded-lg">
           <Breadcrumbs className="">
-            <a href="/course" className="opacity-60">
+            <a href="/course" className="">
               Courses
             </a>
-            <a href={"/course/" + subjectid} className="opacity-60">
+            <a href={"/course/" + subjectid} className="">
               {session.parentModule.parentSubject.name}
             </a>
-            <a href={"/course/" + subjectid} className="opacity-60">
+            <a href={"/course/" + subjectid} className="">
               {session.parentModule.name}
             </a>
             <a href="#" className="">
-              <span className="text-blue-300">New Session</span>
+              <span className="text-blue-800">New Session</span>
             </a>
           </Breadcrumbs>
         </div>
         <br />
-        <div className="border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex w-4/5">
+        <div className="formDiv bg-white border-blue-800 border-4 rounded-lg py-10 items-center justify-center flex w-4/5">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" className="text-center text-black">
               New Session

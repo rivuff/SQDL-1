@@ -7,6 +7,7 @@ import {
   Button,
   Breadcrumbs,
 } from "@material-tailwind/react";
+import "./NewSubject.css";
 import { check, set } from "../Cookies";
 import axios from "axios";
 import { GLOBAL_URL } from "../config";
@@ -61,7 +62,7 @@ const NewSubject = () => {
     return "Must be a teacher to access this page";
   } else {
     return (
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 align-center p-10 flex flex-col items-center h-screen ">
+      <div className="subject align-center p-10 flex flex-col items-center h-screen ">
         <div className="">
           <Breadcrumbs className="">
             <a href="/course" className="opacity-60">
@@ -73,8 +74,8 @@ const NewSubject = () => {
           </Breadcrumbs>
         </div>
         <br />
-        <div className="border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex">
-          <Card color="transparent" shadow={false}>
+        <div className="bg-white border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex">
+          <Card color="white" shadow={false}>
             <Typography variant="h4" className="text-center text-blue-800">
               New Subject
             </Typography>

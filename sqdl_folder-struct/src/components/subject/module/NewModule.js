@@ -8,6 +8,7 @@ import {
   Button,
   Breadcrumbs,
 } from "@material-tailwind/react";
+import "./NewModule.css";
 import { useParams } from "react-router-dom";
 import { check, set } from "../../Cookies";
 import axios from "axios";
@@ -40,7 +41,7 @@ const NewModule = () => {
         console.log(check());
         if (check().subjects.includes(response._id)) {
           console.log("Not the owner of model");
-          window.location.href = '/course';
+          window.location.href = "/course";
         }
         // if (response.data.data.createdBy != check()._id) {
         //   //if user id not the smae as subject creator id - cannot make module
@@ -76,7 +77,7 @@ const NewModule = () => {
           createdBy: module.createdBy,
           parentSubject: module.subject._id,
         },
-        res,
+        res
       )
       .then((response) => {
         console.log(response);
@@ -107,7 +108,7 @@ const NewModule = () => {
       getSubjectInfo();
     }
     return (
-      <div className="align-center p-10 flex flex-col items-center h-screen ">
+      <div className=" module align-center p-10 flex flex-col items-center h-screen ">
         <div className="">
           <Breadcrumbs className="">
             <a href="/course" className="opacity-60">
@@ -122,7 +123,7 @@ const NewModule = () => {
           </Breadcrumbs>
         </div>
         <br />
-        <div className="border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex">
+        <div className="bg-white border-blue-400 border-4 rounded-lg p-5 py-10 items-center justify-center flex">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" className="text-center text-black">
               New Module
@@ -146,10 +147,7 @@ const NewModule = () => {
                   }}
                 ></Textarea>
                 <Button
-                  disabled={
-                    module.name === "" ||
-                    module.description === ""
-                  }
+                  disabled={module.name === "" || module.description === ""}
                   onClick={() => {
                     submissionHandler();
                   }}
