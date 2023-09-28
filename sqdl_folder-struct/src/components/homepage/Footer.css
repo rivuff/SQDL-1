@@ -1,0 +1,9 @@
+.footerDiv {
+  background-image: url("../../images/wave5.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-bottom: 1rem;
+}
+.copyright {
+  margin-top: 6.5rem;
+}
