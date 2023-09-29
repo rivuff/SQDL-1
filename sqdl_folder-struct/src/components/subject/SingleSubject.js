@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import axios from "axios";
 import { GLOBAL_URL } from "../config";
@@ -30,22 +30,27 @@ const ModuleCard = ({ obj, no }) => {
   return (
     <Card className="mt-6 w-96">
       <CardBody>
-        <Typography variant="h4" className="mb-2 text-dark-gray font-redHatMono font-redHatMonoWeight">
-          Module No. {no+1} : {obj.name}
+        <Typography
+          variant="h4"
+          className="mb-2 text-dark-gray font-redHatMono font-redHatMonoWeight"
+        >
+          Module No. {no + 1} : {obj.name}
         </Typography>
-        <Typography className="font-poppins">
-          {obj.description}
-        </Typography>
+        <Typography className="font-poppins">{obj.description}</Typography>
       </CardBody>
       <CardFooter className="pt-0">
         <NavLink to={`/course/${params.subjectid}/${obj._id}`}>
-          <Button color="green" variant="gradient" className="rounded-xl text-md">
+          <Button
+            color="green"
+            variant="gradient"
+            className="rounded-xl text-md"
+          >
             Next
           </Button>
         </NavLink>
       </CardFooter>
     </Card>
-  )
+  );
   // return (
   //   <div className="w-full bg-blue-500 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0 inline-block">
   //     <div className="flex flex-col h-full p-6 bg-blue-800 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -65,6 +70,7 @@ const ModuleCard = ({ obj, no }) => {
 
 const SingleSubject = () => {
   const params = useParams();
+  console.log(params);
 
   //headers for axios requests
   const res = {
@@ -83,6 +89,10 @@ const SingleSubject = () => {
     fetched: false, //variable to indicate whether data has been requested from server
   });
 
+  console.log(check());
+  console.log(`check()._id = ${check()._id}`);
+  console.log(`Created By = ${subject.createdBy}`);
+
   //edit drawer state
   const [open, setOpen] = React.useState(false);
   const openDrawer = () => setOpen(true);
@@ -91,6 +101,7 @@ const SingleSubject = () => {
   function handleSub() {
     const name = document.getElementById("name").value;
     const desc = document.getElementById("desc").value;
+    console.log(name, desc, params.subjectid);
     axios
       .post(
         GLOBAL_URL + "subject/update",
@@ -141,6 +152,7 @@ const SingleSubject = () => {
       })
       .then(() => {
         //requesting moduledata
+        console.log(newsub);
         return axios.post(
           GLOBAL_URL + "module/getAllFromSubjectID",
           { _id: params.subjectid },
@@ -176,7 +188,10 @@ const SingleSubject = () => {
     <div className="p-10 flex flex-col gap-10 bg-lightesh-gray">
       <Breadcrumbs
         separator={
-          <ArrowLongRightIcon className="h-4 w-4 text-white" strokeWidth={2.5} />
+          <ArrowLongRightIcon
+            className="h-4 w-4 text-white"
+            strokeWidth={2.5}
+          />
         }
         className="rounded-full border border-white bg-gradient-to-tr from-blue-600 to-blue-500 p-1"
       >
@@ -194,28 +209,74 @@ const SingleSubject = () => {
         </a>
       </Breadcrumbs>
       <div className="mx-auto flex flex-col gap-7">
-        <h1 
-          className="text-5xl text-dark-gray font-montserrat font-extrabold"
-        >
+        <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           {subject.name}
         </h1>
-        <p className="text-xl font-poppins">
-          {subject.description}
-        </p>
+        <a onClick={openDrawer} href="#">
+          <Typography
+            variant="small"
+            className={
+              check().subjects.includes(params.subjectid)
+                ? "text-blue-600 text-xl font-semibold"
+                : "hidden"
+            }
+          >
+            Edit
+          </Typography>
+        </a>
+        <p className="text-xl font-poppins">{subject.description}</p>
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           Modules
         </h3>
         <div>
           {subject.childModule.map((object, ind) => {
-             return <ModuleCard obj={object} no={ind} />;
+            return <ModuleCard obj={object} no={ind} />;
           })}
         </div>
         <NavLink to={`/course/${params.subjectid}/new`}>
-          <Button color="blue" variant="gradient">
+          <Button color="blue" variant="gradient" fullWidth={true}>
             Add New Module
           </Button>
         </NavLink>
+        <Button
+          color="blue"
+          variant="gradient"
+          onClick={openDrawer}
+          className={
+            check().subjects.includes(params.subjectid)
+              ? "font-semibold"
+              : "hidden"
+          }
+        >
+          Edit
+        </Button>
       </div>
+      <Drawer open={open} onClose={closeDrawer} className="p-4">
+        <div className="mb-6 flex items-center justify-between">
+          <Typography variant="h5" color="blue-gray">
+            Edit Subject
+          </Typography>
+          <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+            <XMarkIcon strokeWidth={2} className="h-5 w-5" />
+          </IconButton>
+        </div>
+        <form className="flex flex-col gap-6 p-4">
+          <Input id="name" label="Name" defaultValue={subject.name} />
+          <Textarea
+            id="desc"
+            rows={6}
+            label="Description"
+            defaultValue={subject.description}
+          />
+          <Button
+            onClick={() => {
+              handleSub();
+            }}
+          >
+            Update
+          </Button>
+        </form>
+      </Drawer>
     </div>
   );
   // return (
