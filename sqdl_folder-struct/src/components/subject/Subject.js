@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import "./Subject.css";
 import { UserState } from "../../context/contextProvider";
 import { Button } from "@material-tailwind/react";
 
@@ -39,18 +40,20 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
 
   return (
     <NavLink
-      className="rounded-2xl shadow-md relative w-1/5 border-2 border-gray-400"
+      className="main bg-blue-100 rounded-2xl border-blue-800 border-2 shadow-md relative w-1/5 inline-block "
       to={`/course/${subjectId}`}
     >
       <div className="rounded-t-xl w-full bg-blue-500 p-4">
         <h3 className="text-white font-2xl">{name}</h3>
       </div>
       <div className="p-4 mb-5">{description}</div>
-      <div className="rounded-b-xl w-full my-4 mx-2">
+      <div className=" rounded-b-xl w-full my-4 mx-2">
         {isSubjectAdded ? (
           <Button color="green">Added</Button>
         ) : (
-          <Button color="blue" onClick={addSubject}>Add</Button>
+          <Button color="blue" onClick={addSubject}>
+            Add
+          </Button>
         )}
       </div>
     </NavLink>
@@ -129,7 +132,7 @@ const SubjectPage = () => {
       <h2 className=" font-bold text-3xl flex justify-center p-2 pt-5">
         Choose Subjects
       </h2>
-      <div className="card-container ml-5 m-2 p-2 flex flex-wrap -mx-2 gap-10 justify-center">
+      <div className="card-container ml-5 m-2 p-2 flex flex-wrap mx-2 gap-10 justify-center">
         {data &&
           data.map((subject) => (
             <SubjectCard

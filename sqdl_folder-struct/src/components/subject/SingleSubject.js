@@ -28,7 +28,7 @@ const ModuleCard = ({ obj, no }) => {
     return null;
   }
   return (
-    <Card className="mt-6 w-96">
+    <Card className="mt-6 w-96 inline-block m-2">
       <CardBody>
         <Typography
           variant="h4"
@@ -212,18 +212,6 @@ const SingleSubject = () => {
         <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           {subject.name}
         </h1>
-        <a onClick={openDrawer} href="#">
-          <Typography
-            variant="small"
-            className={
-              check().subjects.includes(params.subjectid)
-                ? "text-blue-600 text-xl font-semibold"
-                : "hidden"
-            }
-          >
-            Edit
-          </Typography>
-        </a>
         <p className="text-xl font-poppins">{subject.description}</p>
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           Modules
