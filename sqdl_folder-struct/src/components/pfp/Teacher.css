@@ -1,0 +1,33 @@
+.img {
+  width: 15rem;
+  margin: auto;
+  margin-bottom: 1rem;
+  border-radius: 100%;
+}
+.right {
+  width: 100vw;
+}
+@media only screen and (max-width: 768px) {
+  .main {
+    height: 80rem;
+    align-items: normal;
+  }
+  .mainDiv {
+    display: block;
+    width: 100vw;
+    height: auto;
+    position: relative;
+    left: 10.7rem;
+    align-items: normal;
+  }
+  .right {
+    display: block;
+    width: 100vw;
+    position: relative;
+    top: 34rem;
+    right: 9.8rem;
+  }
+  .card {
+    display: block;
+  }
+}

@@ -195,7 +195,7 @@ const NewSession = () => {
       getInfo();
     }
     return (
-      <div className="bgForm align-center flex flex-col items-center h-screen ">
+      <div className="bgForm align-center flex flex-col items-center p-8">
         <div className="bg-white rounded-lg">
           <Breadcrumbs className="">
             <a href="/course" className="">
@@ -219,7 +219,7 @@ const NewSession = () => {
               New Session
             </Typography>
             <span className="text-red-600 text-center">{session.msg}</span>
-            <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+            <form className="form mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
               <div className="mb-4 flex flex-col gap-6">
                 <Input
                   label="Title"

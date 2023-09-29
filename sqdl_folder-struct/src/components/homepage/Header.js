@@ -18,7 +18,7 @@ const HeaderStyled = styled.header`
   width: 100%;
   position: relative;
   bottom: 5rem;
-  z-index: -5;
+  z-index: -1;
   background-image: url(${bg});
   background-repeat: no-repeat;
   background-size: cover;

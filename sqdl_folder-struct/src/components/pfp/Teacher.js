@@ -9,6 +9,8 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { useState } from "react";
+import "./Teacher.css";
+import teacher from "../../images/teacher1.png";
 import axios from "axios";
 import StudentSubjects from "./StudentSubjects";
 import { check, set } from "../Cookies";
@@ -58,26 +60,31 @@ const Teacher = () => {
       });
   }
   return (
-    <div className="align-center p-10 flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 ">
-      <div className="bg-blue-800 border-blue-400 border-4 rounded-lg p-10">
-        <Card className="w-96">
-          <CardHeader floated={false} className="h-80">
-            <svg
+    <div className="main align-center p-10 flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 ">
+      <div className="mainDiv align-center bg-blue-100 border-blue-400 border-4 rounded-lg p-2">
+        <Card className="align-center bg-transparent border-none ">
+          {/* <CardHeader floated={false} className="card "> */}
+          {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-45 h-45"
+              class="w-45 h-45 rounded-full"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
               />
-            </svg>
-          </CardHeader>
-          <CardBody className="bg-blue-800 border-white border-4 text-center">
+            </svg> */}
+          <img
+            src={teacher}
+            className="img border-white border-4"
+            alt="teacher pfp"
+          />
+          {/* </CardHeader> */}
+          <CardBody className="bg-white border-white border-4 text-center">
             <Typography
               variant="h4"
               color="blue-gray"
@@ -85,7 +92,7 @@ const Teacher = () => {
             >
               {userData.name}
             </Typography>
-            <Typography className="text-2xl text-white font-bold" textGradient>
+            <Typography className="text-2xl text-black font-bold" textGradient>
               Teacher
             </Typography>
             <div>
@@ -136,8 +143,8 @@ const Teacher = () => {
           </CardBody>
         </Card>
       </div>
-      <div className=" p-10 w-2/3">
-        <Card className="w-192">
+      <div className=" right p-10">
+        <Card className="card">
           <CardBody className="text-center border-blue-800 border-4 rounded-lg p-10">
             <Typography variant="h4" color="blue-gray " className="mb-2">
               Subjects

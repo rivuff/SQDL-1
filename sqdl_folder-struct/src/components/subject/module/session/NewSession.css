@@ -1,11 +1,13 @@
 .bgForm {
   background: url("../../../../images/bgForm2.jpg");
   background-size: cover;
-  padding-top: 0.5rem;
+
+  z-index: 0;
 }
 .formDiv {
   width: 60vw;
 }
+
 @media only screen and (max-width: 768px) {
   .formDiv {
     width: 100vw;
