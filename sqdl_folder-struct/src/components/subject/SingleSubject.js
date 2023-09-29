@@ -38,11 +38,11 @@ const ModuleCard = ({ obj, no }) => {
         </Typography>
       </CardBody>
       <CardFooter className="pt-0">
-        <Button color="green" variant="gradient" className="rounded-xl text-md">
-          <NavLink to={`/course/${params.subjectid}/${obj._id}`}>
+        <NavLink to={`/course/${params.subjectid}/${obj._id}`}>
+          <Button color="green" variant="gradient" className="rounded-xl text-md">
             Next
-          </NavLink>
-        </Button>
+          </Button>
+        </NavLink>
       </CardFooter>
     </Card>
   )

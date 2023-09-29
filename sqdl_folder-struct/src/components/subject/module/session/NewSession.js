@@ -83,8 +83,19 @@ const NewSession = () => {
         "Content-type": "application/json",
       },
     };
+    console.log(session);
     axios
-      .post(GLOBAL_URL + "session/create", session, res)
+      .post(GLOBAL_URL + "session/create", {
+        title: session.title,
+        description: session.description,
+        parentModule: session.parentModule,
+        conductedBy: session.conductedBy,
+        enrollmentLimit: session.enrollmentLimit,
+        activity_order: session.activity_order,
+        topic: session.topic,
+        createdBy: session.createdBy,
+        subject: session.parentModule.parentSubject._id
+      }, res)
       .then((response) => {
         console.log(response);
         setSession({
