@@ -28,7 +28,7 @@ const SessionCard = ({ obj, no }) => {
   }
   console.log(obj);
   return (
-    <Card className="mt-6 w-96 inline-block m-2">
+    <Card className="div mt-6 w-96 inline-block m-2">
       <CardBody>
         <Typography
           variant="h4"
@@ -220,19 +220,19 @@ const Module = () => {
       >
         <a
           href="/course"
-          className="rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
         >
           Courses
         </a>
         <a
           href={"/course/" + params.subjectid}
-          className="rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
         >
           {module.parentSubject.name}
         </a>
         <a
           href={"/course/" + params.subjectid + "/" + params.moduleid}
-          className="rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
         >
           {module.name}
         </a>
