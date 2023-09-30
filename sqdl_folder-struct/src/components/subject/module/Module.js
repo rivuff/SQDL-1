@@ -28,7 +28,7 @@ const SessionCard = ({ obj, no }) => {
   }
   console.log(obj);
   return (
-    <Card className="mt-6 w-96">
+    <Card className="mt-6 w-96 inline-block m-2">
       <CardBody>
         <Typography
           variant="h4"
