@@ -28,7 +28,7 @@ const ModuleCard = ({ obj, no }) => {
     return null;
   }
   return (
-    <Card className="mt-6 w-96 inline-block m-2">
+    <Card className="div mt-6 w-96 inline-block m-2">
       <CardBody>
         <Typography
           variant="h4"

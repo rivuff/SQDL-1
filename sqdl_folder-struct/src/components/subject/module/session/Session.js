@@ -285,17 +285,17 @@ const Session = () => {
   return (
     <>
       <div className="bgSession align-center p-10 flex flex-col items-center h-screen ">
-        <div className="bg-white rounded-md">
+        <div className="links bg-white rounded-md">
           <Breadcrumbs className="">
-            <a href="/course" className="opacity-80">
+            <a href="/course" className="text opacity-80">
               Courses
             </a>
-            <a href={"/course/" + params.subjectid} className="opacity-80">
+            <a href={"/course/" + params.subjectid} className="text opacity-80">
               {session.parentModule.parentSubject.name}
             </a>
             <a
               href={"/course/" + params.subjectid + "/" + params.moduleid}
-              className="opacity-80"
+              className="text opacity-80"
             >
               {session.parentModule.name}
             </a>
@@ -308,14 +308,14 @@ const Session = () => {
                 "/" +
                 params.moduleid
               }
-              className=""
+              className="text"
             >
-              <span className="text-blue-500">{session.title}</span>
+              <span className="text text-blue-500">{session.title}</span>
             </a>
           </Breadcrumbs>
         </div>
         <br />
-        <Card className="mt-6 w-2/5 p-10">
+        <Card className="div mt-6 w-2/5 p-10">
           <div className="text-center">
             <Typography variant="h3">{session.title}</Typography>
             <a href={"/course/" + session.parentModule._id}>
