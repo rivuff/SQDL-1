@@ -7,7 +7,7 @@ import {
     Typography,
   } from "@material-tailwind/react";
 
-const StudentEdit = ({data}) => {
+const StudentEdit = ({data, updateData}) => {
 
     const [editForm, setEditForm] = useState(false);
     const [userData, setUserData] = useState(data)
@@ -50,7 +50,8 @@ const StudentEdit = ({data}) => {
                 ...prev, name: nameRef.current.value, email: emailRef.current.value, 
                 enrollmentNumber: ernoRef.current.value, rollNumber: rnoRef.current.value
             }
-        })
+        });
+        updateData(userData);
         setEditForm(false);
     }
 
@@ -58,7 +59,7 @@ const StudentEdit = ({data}) => {
     <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
         <div className="mb-4 flex flex-col gap-6">
             {formData.map(ele => {
-                return <Input size="lg" label={ele.label} ref={ele.Ref} disabled={!editForm}/>
+                return <Input size="lg" label={ele.label} inputRef={ele.Ref} disabled={!editForm} value={ele.value}/>
             })}
         </div>
         <Button className="mt-6 mr-5" onClick={handleEdit}>

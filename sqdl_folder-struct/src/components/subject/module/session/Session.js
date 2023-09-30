@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, NavLink } from "react-router-dom";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../config";
 import { check, set } from "../../../Cookies";
@@ -355,6 +355,9 @@ const Session = () => {
               );
             })}
             <hr></hr>
+            <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}>
+              Join
+            </NavLink>
           </div>
         </Card>
         <Drawer open={open} onClose={closeDrawer} className="p-4" size={400}>

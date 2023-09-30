@@ -24,10 +24,9 @@ const Join = () => {
     },
   };
 
-  //websocket listener
-  socket.on(params.sessionid + "student" + "stateUpdate", (args) => {
-    detail();
-  });
+  console.log("Hello from join file");
+
+  // initial location of socket.on
 
   async function detail() {
     subject = await axios.post(
@@ -104,6 +103,12 @@ const Join = () => {
     }
   }
 
+  //websocket listener
+  socket.on(params.sessionid + "student" + "stateUpdate", (args) => {
+    console.log("hello from socket.on");
+    detail();
+  });
+
   if (auth == null) {
     //as soon as user is authorized to view pages, dynamic page updating stops
     detail(); //wait 10 seconds before updating status
@@ -138,6 +143,10 @@ const Join = () => {
       </div>
     );
   }
+
+  return (
+    <h1>Nothing</h1>
+  )
 };
 
 export default Join;

@@ -22,7 +22,12 @@ const StudentSubjects = ({ array }) => {
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+          {
+            array.map((ele) => (
+              <Row obj={ele} />
+            ))
+          }
+          {/* <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
             <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -66,7 +71,7 @@ const StudentSubjects = ({ array }) => {
               ABC
             </th>
             <td class="px-6 py-4">XYZ</td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
     </div>

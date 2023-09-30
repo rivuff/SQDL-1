@@ -100,7 +100,7 @@ const Student = () => {
           <h1 
             className="w-[65%] border-b-2 border-brown-300 text-5xl font-montserratWeight font-montserrat mb-10"
           >{!edit ? "Enrolled Subjects" : "Edit Profile"}</h1>
-          {!edit ? <StudentSubjects array={userData.subjects} /> : <StudentEdit data={state} setData={setState}/>}
+          {!edit ? <StudentSubjects array={userData.subjects} /> : <StudentEdit data={state} setData={setState} updateData={updateHandler}/>}
       </div>
     </div>
   );
