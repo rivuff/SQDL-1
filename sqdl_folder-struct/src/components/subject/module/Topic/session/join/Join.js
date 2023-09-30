@@ -42,7 +42,9 @@ const Join = () => {
     //removing HTTP headers from response
     subject = subject.data.data;
     session = session.data.data;
-
+    console.log(subject);
+    console.log(session);
+    console.log(user._id);
     if (check().subjects.includes(subject._id)) {
       setAuth("Allowed");
     }

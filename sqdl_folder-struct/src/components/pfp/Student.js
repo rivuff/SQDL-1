@@ -15,6 +15,7 @@ import { GLOBAL_URL } from "../config";
 
 import StudentSubjects from "./StudentSubjects";
 import StudentEdit from "./StudentEdit";
+import { NavLink } from "react-router-dom";
 
 const Student = () => {
 
@@ -101,6 +102,11 @@ const Student = () => {
             className="w-[65%] border-b-2 border-brown-300 text-5xl font-montserratWeight font-montserrat mb-10"
           >{!edit ? "Enrolled Subjects" : "Edit Profile"}</h1>
           {!edit ? <StudentSubjects array={userData.subjects} /> : <StudentEdit data={state} setData={setState} updateData={updateHandler}/>}
+          <NavLink to={`/addStudentSubject`}>
+            <Button className="mt-4">
+              Add Subject ➡️
+            </Button>
+          </NavLink>
       </div>
     </div>
   );

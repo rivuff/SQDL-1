@@ -14,6 +14,7 @@ import Register from "./components/lr/Register";
 import LandingPage from "./components/dashboards/LandingPage.js";
 import Profile from "./components/Profile.js";
 import About from "./components/About.js";
+import AddStudentSubject from "./components/pfp/AddStudentSubject";
 import LRPages from "./components/LRPages/LRPages";
 
 //global context provider
@@ -31,8 +32,10 @@ import SingleSubject from "./components/subject/SingleSubject";
 import NewSubject from "./components/subject/NewSubject";
 import Module from "./components/subject/module/Module";
 import NewModule from "./components/subject/module/NewModule";
-import Session from "./components/subject/module/session/Session";
-import NewSession from "./components/subject/module/session/NewSession";
+import Topic from "./components/subject/module/Topic/Topic";
+import NewTopic from "./components/subject/module/Topic/NewTopic";
+import Session from "./components/subject/module/Topic/session/Session"
+import NewSession from "./components/subject/module/Topic/session/NewSession"
 import SubjectDetailsPage from "./components/dashboards/SubjectDetails";
 //import QuestionForm from './components/questionPosing/questionForm';
 
@@ -90,6 +93,18 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/topic",
+        element: <Topic />,
+      },
+      {
+        path: "/newtopic",
+        element: <NewTopic />,
+      },
+      {
+        path: "/addStudentSubject",
+        element: <AddStudentSubject />
       },
       // {
       //   path:'/subject',
