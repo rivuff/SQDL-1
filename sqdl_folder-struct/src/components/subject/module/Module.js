@@ -28,24 +28,31 @@ const SessionCard = ({ obj, no }) => {
   }
   console.log(obj);
   return (
-    <Card className="mt-6 w-96">
+    <Card className="mt-6 w-96 inline-block m-2">
       <CardBody>
-        <Typography variant="h4" className="mb-2 text-dark-gray font-redHatMono font-redHatMonoWeight">
-          Session No. {no+1} : {obj.title}
+        <Typography
+          variant="h4"
+          className="mb-2 text-dark-gray font-redHatMono font-redHatMonoWeight"
+        >
+          Session No. {no + 1} : {obj.title}
         </Typography>
-        <Typography className="font-poppins">
-          {obj.description}
-        </Typography>
+        <Typography className="font-poppins">{obj.description}</Typography>
       </CardBody>
       <CardFooter className="pt-0">
-        <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${obj._id}`}>
-          <Button color="green" variant="gradient" className="rounded-xl text-md">
+        <NavLink
+          to={`/course/${params.subjectid}/${params.moduleid}/${obj._id}`}
+        >
+          <Button
+            color="green"
+            variant="gradient"
+            className="rounded-xl text-md"
+          >
             Next
           </Button>
         </NavLink>
       </CardFooter>
     </Card>
-  )
+  );
   // return (
   //   <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2 flex-shrink-0 inline-block">
   //     <div className="flex flex-col h-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -202,9 +209,12 @@ const Module = () => {
 
   return (
     <div className="p-10 flex flex-col gap-10 bg-lightesh-gray">
-      <Breadcrumbs 
+      <Breadcrumbs
         separator={
-          <ArrowLongRightIcon className="h-4 w-4 text-white" strokeWidth={2.5} />
+          <ArrowLongRightIcon
+            className="h-4 w-4 text-white"
+            strokeWidth={2.5}
+          />
         }
         className="rounded-full border border-white bg-gradient-to-tr from-blue-600 to-blue-500 p-1"
       >
@@ -226,26 +236,23 @@ const Module = () => {
         >
           {module.name}
         </a>
-      </Breadcrumbs>  
+      </Breadcrumbs>
 
       <div className="mx-auto flex flex-col gap-7">
-        <h1 
-          className="text-5xl text-dark-gray font-montserrat font-extrabold"
-        >
+        <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           {module.parentSubject.name}: {module.name}
         </h1>
-        <p className="text-xl font-poppins">
-          {module.description}
-        </p>
+        <p className="text-xl font-poppins">{module.description}</p>
         <div>
-          {module.childSession == []
-            ? <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
-            Sessions
-          </h3> :
-          module.childSession.map((object, ind) => {
-            return <SessionCard obj={object} no={ind}/>
-          })
-          }
+          {module.childSession == [] ? (
+            <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
+              Sessions
+            </h3>
+          ) : (
+            module.childSession.map((object, ind) => {
+              return <SessionCard obj={object} no={ind} />;
+            })
+          )}
         </div>
         <NavLink to={`/course/${params.subjectid}/${params.moduleid}/new`}>
           <Button color="blue" variant="gradient">
@@ -254,12 +261,12 @@ const Module = () => {
         </NavLink>
       </div>
     </div>
-  )
+  );
   // return (
   //   <>
   //     <div className="align-center p-10 flex flex-col items-center h-screen w-full">
   //       <div className="">
-  //         <Breadcrumbs 
+  //         <Breadcrumbs
   //           separator={
   //           <ArrowLongRightIcon className="h-4 w-4 text-white" strokeWidth={2.5} />
   //           }

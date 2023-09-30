@@ -15,6 +15,7 @@ import {
   IconButton,
   Spinner,
 } from "@material-tailwind/react";
+import "./Session.css";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const Session = () => {
@@ -283,18 +284,18 @@ const Session = () => {
   }
   return (
     <>
-      <div className="align-center p-10 flex flex-col items-center h-screen ">
-        <div className="">
+      <div className="bgSession align-center p-10 flex flex-col items-center h-screen ">
+        <div className="bg-white rounded-md">
           <Breadcrumbs className="">
-            <a href="/course" className="opacity-60">
+            <a href="/course" className="opacity-80">
               Courses
             </a>
-            <a href={"/course/" + params.subjectid} className="opacity-60">
+            <a href={"/course/" + params.subjectid} className="opacity-80">
               {session.parentModule.parentSubject.name}
             </a>
             <a
               href={"/course/" + params.subjectid + "/" + params.moduleid}
-              className="opacity-60"
+              className="opacity-80"
             >
               {session.parentModule.name}
             </a>
@@ -309,12 +310,12 @@ const Session = () => {
               }
               className=""
             >
-              <span className="text-blue-300">{session.title}</span>
+              <span className="text-blue-500">{session.title}</span>
             </a>
           </Breadcrumbs>
         </div>
         <br />
-        <Card className="mt-6 w-2/5 p-5">
+        <Card className="mt-6 w-2/5 p-10">
           <div className="text-center">
             <Typography variant="h3">{session.title}</Typography>
             <a href={"/course/" + session.parentModule._id}>
@@ -344,7 +345,7 @@ const Session = () => {
             </Typography>
             <hr />
             <Typography className="font-semibold text-left">
-              Activities
+              Activities :
             </Typography>
             {session.activity_order.map((activity) => {
               return (

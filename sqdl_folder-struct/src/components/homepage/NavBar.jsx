@@ -145,7 +145,7 @@ function NavList(props) {
           >
             <Link
               to={"/dashboard"}
-              className=" text-black p-2 rounded-md flex items-center bg-cyan-200 hover:text-blue-500 transition-colors text-lg"
+              className=" text-white p-2 rounded-md flex items-center bg-blue-600 hover:text-blue-500 transition-colors text-lg"
             >
               Dashboard
             </Link>
@@ -160,7 +160,7 @@ function NavList(props) {
           >
             <Link
               onClick={LogoutHandler}
-              className=" text-black p-2 rounded-md flex items-center bg-red-400 hover:bg-red-600 transition-colors text-lg cursor-pointer"
+              className=" text-white p-2 rounded-md flex items-center bg-red-600 hover:bg-red-600 transition-colors text-lg cursor-pointer"
             >
               Log out
             </Link>
