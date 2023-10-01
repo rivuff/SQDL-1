@@ -1,5 +1,5 @@
 .bgSession {
-  background-image: url("../../../../images/bgForm2.jpg");
+  background-image: url("../../../../../images/bgForm2.jpg");
   background-size: cover;
 }
 @media only screen and (max-width: 768px) {

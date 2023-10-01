@@ -34,14 +34,14 @@ import Module from "./components/subject/module/Module";
 import NewModule from "./components/subject/module/NewModule";
 import Topic from "./components/subject/module/Topic/Topic";
 import NewTopic from "./components/subject/module/Topic/NewTopic";
-import Session from "./components/subject/module/Topic/session/Session"
-import NewSession from "./components/subject/module/Topic/session/NewSession"
+import Session from "./components/subject/module/Topic/session/Session";
+import NewSession from "./components/subject/module/Topic/session/NewSession";
 import SubjectDetailsPage from "./components/dashboards/SubjectDetails";
 //import QuestionForm from './components/questionPosing/questionForm';
 
 import { QuestionForm } from "./components/questionPosing/questions";
 
-import Join from "./components/subject/module/session/join/Join";
+import Join from "./components/subject/module/Topic/session/join/Join";
 import TeacherInterface from "./components/dashboards/Teacher";
 
 //import StudentLandingPage from './components/dashboards/StudentLanding';
@@ -76,11 +76,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <LRPages toggle={true}/>,
+        element: <LRPages toggle={true} />,
       },
       {
         path: "/register",
-        element: <LRPages toggle={false}/>,
+        element: <LRPages toggle={false} />,
       },
       {
         path: "/dashboard",
@@ -104,7 +104,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/addStudentSubject",
-        element: <AddStudentSubject />
+        element: <AddStudentSubject />,
       },
       // {
       //   path:'/subject',

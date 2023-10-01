@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { check, set } from "../../../../Cookies";
+import { check, set } from "../../../../../Cookies";
 import { useParams } from "react-router-dom";
-import { GLOBAL_URL } from "../../../../config";
+import { GLOBAL_URL } from "../../../../../config";
 import axios from "axios";
 import Creator from "./Creator";
 import { Spinner } from "@material-tailwind/react";
 import Allowed from "./Allowed";
 import { io } from "socket.io-client";
-import { SOCKET_URL } from "../../../../config";
+import { SOCKET_URL } from "../../../../../config";
 
 const Join = () => {
   const socket = io(SOCKET_URL);
@@ -32,12 +32,12 @@ const Join = () => {
     subject = await axios.post(
       GLOBAL_URL + "subject/getByID",
       { _id: params.subjectid },
-      res,
+      res
     );
     session = await axios.post(
       GLOBAL_URL + "session/get",
       { _id: params.sessionid },
-      res,
+      res
     );
     //removing HTTP headers from response
     subject = subject.data.data;
@@ -78,7 +78,7 @@ const Join = () => {
           .post(
             GLOBAL_URL + "session/update",
             { approved_request: aa, _id: session._id },
-            res,
+            res
           )
           .then((response) => {
             console.log(response);
@@ -94,7 +94,7 @@ const Join = () => {
           .post(
             GLOBAL_URL + "session/update",
             { access_request: ra, _id: session._id },
-            res,
+            res
           )
           .then((response) => {
             setAuth("Requested");
@@ -146,9 +146,7 @@ const Join = () => {
     );
   }
 
-  return (
-    <h1>Nothing</h1>
-  )
+  return <h1>Nothing</h1>;
 };
 
 export default Join;

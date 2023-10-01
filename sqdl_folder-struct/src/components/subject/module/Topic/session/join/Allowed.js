@@ -1,11 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { GLOBAL_URL, SOCKET_URL } from "../../../../config";
+import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
 import { useState } from "react";
 import axios from "axios";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
-import QuestionForm from "../../../../questionPosing/questionForm";
+import QuestionForm from "../../../../../questionPosing/questionForm";
 const socket = io(SOCKET_URL);
 const res = {
   headers: {
@@ -69,7 +69,7 @@ const Allowed = () => {
     let payload = await axios.post(
       GLOBAL_URL + "session/get",
       { _id: params.sessionid },
-      res,
+      res
     );
     try {
       payload = payload.data.data;

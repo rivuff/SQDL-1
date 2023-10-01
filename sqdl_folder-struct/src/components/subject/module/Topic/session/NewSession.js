@@ -14,9 +14,9 @@ import {
 import { Label, TextInput } from "flowbite-react";
 import "./NewSession.css";
 import { useParams } from "react-router-dom";
-import { check, set } from "../../../Cookies";
+import { check, set } from "../../../../Cookies";
 import axios from "axios";
-import { GLOBAL_URL } from "../../../config";
+import { GLOBAL_URL } from "../../../../config";
 import { useState } from "react";
 
 const NewSession = () => {
@@ -85,17 +85,21 @@ const NewSession = () => {
     };
     console.log(session);
     axios
-      .post(GLOBAL_URL + "session/create", {
-        title: session.title,
-        description: session.description,
-        parentModule: session.parentModule,
-        conductedBy: session.conductedBy,
-        enrollmentLimit: session.enrollmentLimit,
-        activity_order: session.activity_order,
-        topic: session.topic,
-        createdBy: session.createdBy,
-        subject: session.parentModule.parentSubject._id
-      }, res)
+      .post(
+        GLOBAL_URL + "session/create",
+        {
+          title: session.title,
+          description: session.description,
+          parentModule: session.parentModule,
+          conductedBy: session.conductedBy,
+          enrollmentLimit: session.enrollmentLimit,
+          activity_order: session.activity_order,
+          topic: session.topic,
+          createdBy: session.createdBy,
+          subject: session.parentModule.parentSubject._id,
+        },
+        res
+      )
       .then((response) => {
         console.log(response);
         setSession({

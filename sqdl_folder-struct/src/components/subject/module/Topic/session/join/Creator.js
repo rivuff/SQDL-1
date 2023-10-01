@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardBody,
 } from "@material-tailwind/react";
-import { GLOBAL_URL, SOCKET_URL } from "../../../../config";
+import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -60,7 +60,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     let session = await axios.post(
       GLOBAL_URL + "session/get",
       { _id: params.sessionid },
-      res,
+      res
     );
     session = session.data.data;
 
@@ -105,7 +105,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     let payload = await axios.post(
       GLOBAL_URL + "session/get",
       { _id: params.sessionid },
-      res,
+      res
     );
     payload = payload.data.data;
     let session = payload;
@@ -241,7 +241,7 @@ const Creator = () => {
     let session = await axios.post(
       GLOBAL_URL + "session/get",
       { _id: params.sessionid },
-      res,
+      res
     );
     session = session.data.data;
     setSession(session);
@@ -258,7 +258,7 @@ const Creator = () => {
     let payload = await axios.post(
       GLOBAL_URL + "user/getIDs",
       { _ids: studentList },
-      res,
+      res
     );
     payload = payload.data.data;
     setStudents(payload);
@@ -306,7 +306,7 @@ const Creator = () => {
         approved_request: approved,
         blocked_request: blocked,
       },
-      res,
+      res
     );
     payload = payload.data.data;
     broadcastState(payload);
@@ -338,7 +338,7 @@ const Creator = () => {
         current_activity: current,
         iteration: iteration,
       },
-      res,
+      res
     );
     broadcastState(response.data.data);
     console.log("Session Modified");
@@ -463,7 +463,7 @@ const Creator = () => {
                             sessionData.approved_request.includes(student._id)
                               ? "approved"
                               : sessionData.blocked_request.includes(
-                                  student._id,
+                                  student._id
                                 )
                               ? "blocked"
                               : "requested"

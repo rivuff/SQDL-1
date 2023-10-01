@@ -2,8 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { Outlet, useParams, NavLink } from "react-router-dom";
 import axios from "axios";
-import { GLOBAL_URL } from "../../../config";
-import { check, set } from "../../../Cookies";
+import { GLOBAL_URL } from "../../../../config";
+import { check, set } from "../../../../Cookies";
 import {
   Input,
   Typography,
@@ -356,7 +356,9 @@ const Session = () => {
               );
             })}
             <hr></hr>
-            <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}>
+            <NavLink
+              to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}
+            >
               Join
             </NavLink>
           </div>
