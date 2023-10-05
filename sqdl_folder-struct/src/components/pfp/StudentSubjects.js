@@ -7,6 +7,7 @@ const StudentSubjects = ({ array }) => {
   if (array == []) {
     return "Enroll in a course here";
   }
+  console.log(array);
 
   return (
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

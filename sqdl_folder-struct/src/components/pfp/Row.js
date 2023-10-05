@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { GLOBAL_URL } from "../config";
 import { useState } from "react";
 import { Typography } from "@material-tailwind/react";
 const Row = ({ obj }) => {
@@ -9,27 +10,76 @@ const Row = ({ obj }) => {
     _id: obj,
     fetched: false,
   });
-  if (!state.fetched) {
-    //fetch subject data
-    axios
-      .post(
-        "http://localhost:5000/api/v1/subject/getID",
+
+  const getData = async() => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "subject/getByID",
         { _id: obj },
-        { headers: { "Content-type": "application/json" } },
+        res
       )
-      .then((response) => {
-        const data = response.data.data;
-        updateState({
-          ...state,
-          name: data.name,
-          createdBy: data.createdBy,
-          _id: data._id,
-          fetched: !state.fetched,
-        });
+      updateState(prev => {
+        return {...prev, name: response.data.data.name, createdBy: response.data.data.createdBy, _id: response.data.data._id}
       })
-      .catch((error) => {
-        console.log(error);
-      });
+    } catch(error) {
+      console.log(error);
+    }
+
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "user/getID",
+        {_id: state.createdBy}, 
+        res
+      )
+      updateState(prev => {
+        return {...prev, createdBy: response.data.data.name, fetched: !state.fetched}
+      })
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  if (!state.fetched) {
+    getData();
+
+
+    //fetch subject data
+    // axios
+    //   .post(
+    //     GLOBAL_URL + "subject/getByID",
+    //     { _id: obj },
+    //     { headers: { "Content-type": "application/json" } },
+    //   )
+    //   .then((response) => {
+    //     const data = response.data.data;
+    //     updateState({
+    //       ...state,
+    //       name: data.name,
+    //       // createdBy: data.createdBy,
+    //       _id: data._id,
+    //       // fetched: !state.fetched,
+    //     });
+    //     return axios.post(
+    //       GLOBAL_URL + "user/getID",
+    //       {_id: data.createBy}, 
+    //       { headers: { "Content-type": "application/json" } },
+    //     )
+    //   }).then((response) => {
+    //     console.log(response);
+    //     updateState({
+    //       ...state,
+    //       createdBy: response.data.data.name,
+    //       fetched: !state.fetched
+    //     })
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
   return (
     <>
