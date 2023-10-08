@@ -4,10 +4,10 @@ import React from "react";
 import axios from "axios";
 
 const StudentSubjects = ({ array }) => {
+  console.log(array);
   if (array == []) {
     return "Enroll in a course here";
   }
-  console.log(array);
 
   return (
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

@@ -10,7 +10,8 @@ const Row = ({ obj }) => {
     _id: obj,
     fetched: false,
   });
-
+  console.log("Hello");
+  console.log(obj);
   const getData = async() => {
     const res = {
       headers: {
@@ -22,7 +23,8 @@ const Row = ({ obj }) => {
         GLOBAL_URL + "subject/getByID",
         { _id: obj },
         res
-      )
+      );
+      console.log(response);
       updateState(prev => {
         return {...prev, name: response.data.data.name, createdBy: response.data.data.createdBy, _id: response.data.data._id}
       })
@@ -36,6 +38,7 @@ const Row = ({ obj }) => {
         {_id: state.createdBy}, 
         res
       )
+      console.log(response);
       updateState(prev => {
         return {...prev, createdBy: response.data.data.name, fetched: !state.fetched}
       })

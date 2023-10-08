@@ -118,7 +118,7 @@ const AddStudentSubject = () => {
         "Content-type": "application/json",
       },
     };
-
+    console.log(check()._id);
     try {
       const response = await axios.post(
         GLOBAL_URL + "subject/addUserSubject",
@@ -128,6 +128,8 @@ const AddStudentSubject = () => {
         }, res
       )
       console.log(response);
+      set(response.data.data);
+      window.location.href = "/profile"
     } catch(error) {
       console.log(error);
     }

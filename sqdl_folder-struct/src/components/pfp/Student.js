@@ -22,6 +22,8 @@ const Student = () => {
   const [edit, setEdit] = useState(false);
 
   const userData = check();
+
+  console.log(userData);
   const [state, setState] = useState({
     editing: false,
     name: userData.name,
@@ -31,6 +33,7 @@ const Student = () => {
     type: userData.type,
     errmsg: "",
   });
+
 
   async function updateHandler() {
     let submissionData = userData;
