@@ -4,10 +4,13 @@ import axios from "axios";
 import "./Subject.css";
 import { UserState } from "../../context/contextProvider";
 import { Button } from "@material-tailwind/react";
+import { GLOBAL_URL } from "../config";
+import { check } from "../Cookies";
 
 const SubjectCard = ({ name, description, subjectId, createdBy }) => {
   const { user } = UserState();
   console.log(user.subjects);
+  console.log(name, description, subjectId);
 
   const isSubjectAdded = user.subjects.includes(subjectId);
 
@@ -112,13 +115,18 @@ const SubjectPage = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    
+    const fetchData = async() => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/v1/subject/getAll"
         );
-        console.log(response.data.data);
-        setData(response.data.data);
+        const fetchedSubjects = response.data.data;
+        const subjects = check().subjects.map(subId => {
+          return fetchedSubjects.filter(sub => sub._id === subId)
+        })
+        console.log(subjects);
+        setData(subjects);
       } catch (error) {
         console.error(error);
       }
@@ -127,22 +135,25 @@ const SubjectPage = () => {
     fetchData();
   }, []);
 
+
   return (
     <div className="bg-gradient-to-r from-cyan-500 to-blue-500 overflow-x-hidden pr-6">
       <h2 className=" font-bold text-3xl flex justify-center p-2 pt-5">
         Choose Subjects
       </h2>
       <div className="card-container ml-5 m-2 p-2 flex flex-wrap mx-2 gap-10 justify-center">
-        {data &&
-          data.map((subject) => (
-            <SubjectCard
-              key={subject._id}
-              subjectId={subject._id}
-              name={subject.name}
-              description={subject.description}
-              createdBy={subject.createdBy}
-            />
-          ))}
+          {data && data.map((subject) => {
+            console.log(subject[0].name)
+            return (
+              <SubjectCard
+                key={subject[0]._id}
+                subjectId={subject[0]._id}
+                name={subject[0].name}
+                description={subject[0].description}
+                createdBy={subject[0].createdBy}
+              />
+            )
+            })}
       </div>
     </div>
   );

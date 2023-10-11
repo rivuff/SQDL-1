@@ -37,6 +37,7 @@ import NewTopic from "./components/subject/module/Topic/NewTopic";
 import Session from "./components/subject/module/Topic/session/Session";
 import NewSession from "./components/subject/module/Topic/session/NewSession";
 import SubjectDetailsPage from "./components/dashboards/SubjectDetails";
+import SessionForm from "./components/SessionForm";
 //import QuestionForm from './components/questionPosing/questionForm';
 
 import { QuestionForm } from "./components/questionPosing/questions";
@@ -95,16 +96,12 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/topic",
-        element: <Topic />,
-      },
-      {
-        path: "/newtopic",
-        element: <NewTopic />,
-      },
-      {
         path: "/addStudentSubject",
         element: <AddStudentSubject />,
+      },
+      {
+        path: "/sessionform",
+        element: <SessionForm />,
       },
       // {
       //   path:'/subject',
@@ -166,11 +163,20 @@ const router = createBrowserRouter([
                 children: [
                   {
                     path: "",
-                    element: <Module />,
+                    element: <Topic />,
                   },
                   {
-                    path: "new",
-                    element: <NewSession />,
+                    path: "newTopic",
+                    element: <NewTopic />
+                  },
+                  {
+                    path: ":topicid",
+                    children: [
+                      {
+                        path: "newSession",
+                        element: <NewSession />,
+                      }
+                    ]
                   },
                   {
                     path: ":sessionid",
