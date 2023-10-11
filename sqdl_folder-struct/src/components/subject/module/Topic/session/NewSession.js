@@ -18,10 +18,12 @@ import { check, set } from "../../../../Cookies";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../../config";
 import { useState } from "react";
+import { Global } from "@emotion/react";
 
 const NewSession = () => {
   const subjectid = useParams().subjectid;
   const moduleid = useParams().moduleid;
+  const topicid = useParams().topicid;
   const [session, setSession] = useState({
     title: "",
     description: "",
@@ -91,6 +93,7 @@ const NewSession = () => {
           title: session.title,
           description: session.description,
           parentModule: session.parentModule,
+          parentTopic: topicid,
           conductedBy: session.conductedBy,
           enrollmentLimit: session.enrollmentLimit,
           activity_order: session.activity_order,
@@ -100,7 +103,7 @@ const NewSession = () => {
         },
         res
       )
-      .then((response) => {
+      .then(async(response) => {
         console.log(response);
         setSession({
           ...module,
@@ -108,13 +111,32 @@ const NewSession = () => {
           msg: "Created Session Successfully",
         });
         //add too cookie
-        window.location.href =
+        try {
+          const data = await axios.post(
+            GLOBAL_URL + "topic/getById",
+            {_id: topicid}, res
+          )
+
+          const topicData = data.data.data;
+          topicData.sessions.push(response.data.data);
+          console.log(topicData);
+
+          const updata = await axios.post(
+            GLOBAL_URL + "topic/update",
+            topicData, res
+          )
+          console.log(updata);
+          window.location.href =
           "/course/" +
           subjectid +
           "/" +
-          moduleid +
-          "/" +
-          response.data.data._id;
+          moduleid
+        } catch (error) {
+          console.log(error);
+          setSession({ ...session, msg: error.message, disabled: true});
+        }
+        
+        
       })
       .catch((error) => {
         console.log(error);
@@ -155,12 +177,12 @@ const NewSession = () => {
             <option label="Deliver Content" value="Deliver Content"></option>
             <option label="Question Posing" value="Question Posing"></option>
             <option
-              label="Personal Prioritization"
+              label="Own Prioritization"
               value="Personal Prioritization"
             ></option>
-            <option label="Prioritization" value="Priortization"></option>
+            <option label="Peer Priortization" value="Priortization"></option>
             <option
-              label="Question Answering"
+              label="Answer Summarization"
               value="Question Answering"
             ></option>
           </select>
@@ -226,7 +248,7 @@ const NewSession = () => {
             <form className="form mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
               <div className="mb-4 flex flex-col gap-6">
                 <Input
-                  label="Title"
+                  label="Session Name"
                   value={session.title}
                   onChange={(e) => {
                     setSession({
@@ -248,7 +270,7 @@ const NewSession = () => {
                   }}
                 ></Textarea>
                 <Input
-                  label="Topic"
+                  label="Topic Name"
                   value={session.topic}
                   onChange={(e) => {
                     setSession({

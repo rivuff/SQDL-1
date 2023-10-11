@@ -20,6 +20,7 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
+import Students from "./Students";
 
 const ModuleCard = ({ obj, no }) => {
   const params = useParams();
@@ -214,31 +215,37 @@ const SingleSubject = () => {
         </h1>
         <p className="text-xl font-poppins">{subject.description}</p>
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
-          Modules
+          Lesson Plan
         </h3>
         <div>
           {subject.childModule.map((object, ind) => {
             return <ModuleCard obj={object} no={ind} />;
           })}
         </div>
-        <NavLink to={`/course/${params.subjectid}/new`}>
-          <Button color="blue" variant="gradient" fullWidth={true}>
-            Add New Module
-          </Button>
-        </NavLink>
-        <Button
-          color="blue"
-          variant="gradient"
-          onClick={openDrawer}
-          className={
-            check().subjects.includes(params.subjectid)
-              ? "font-semibold"
-              : "hidden"
-          }
-        >
-          Edit
-        </Button>
       </div>
+      <div>
+        <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
+          Students
+        </h3>
+        <Students subId = {params.subjectid}/>
+      </div>
+      <NavLink to={`/course/${params.subjectid}/new`}>
+        <Button color="blue" variant="gradient" fullWidth={true}>
+          Add New Module
+        </Button>
+      </NavLink>
+      <Button
+        color="blue"
+        variant="gradient"
+        onClick={openDrawer}
+        className={
+          check().subjects.includes(params.subjectid)
+            ? "font-semibold"
+            : "hidden"
+        }
+      >
+        Edit
+      </Button>
       <Drawer open={open} onClose={closeDrawer} className="p-4">
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">

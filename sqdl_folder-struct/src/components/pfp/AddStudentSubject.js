@@ -19,7 +19,7 @@ const AddStudentSubject = () => {
         },
       };
 
-      const data = await axios.get(GLOBAL_URL + "subject/getAll", res);
+      const data = await axios.post(GLOBAL_URL + "subject/getBySem", {semester: +check().semester}, res);
       console.log(data);
       setSubjects(data.data.data);
     } catch (error) {

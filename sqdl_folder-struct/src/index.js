@@ -44,6 +44,7 @@ import { QuestionForm } from "./components/questionPosing/questions";
 
 import Join from "./components/subject/module/Topic/session/join/Join";
 import TeacherInterface from "./components/dashboards/Teacher";
+import TeacherAssociation from "./components/subject/module/Topic/TeacherAssociation";
 
 //import StudentLandingPage from './components/dashboards/StudentLanding';
 
@@ -96,6 +97,21 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
+<<<<<<< HEAD
+=======
+        path: "/topic",
+        element: <Topic />,
+      },
+      {
+        path: "/teacherassociation",
+        element: <TeacherAssociation />,
+      },
+      {
+        path: "/newtopic",
+        element: <NewTopic />,
+      },
+      {
+>>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
         path: "/addStudentSubject",
         element: <AddStudentSubject />,
       },

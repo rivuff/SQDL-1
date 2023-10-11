@@ -152,11 +152,6 @@ const Teacher = () => {
                 <StudentSubjects array={userData.subjects} />
               </div>
             </Typography>
-            <div>
-              <a href="/course/new">
-                <Button>New Subject</Button>
-              </a>
-            </div>
           </CardBody>
         </Card>
       </div>

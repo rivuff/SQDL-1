@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Typography, Button } from "@material-tailwind/react";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 import "./StudentTable.css";
 import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
@@ -118,6 +119,7 @@ const TeacherTable = () => {
         </table>
       </Card>
       <TeacherInvite handler={fetchTeacherData}></TeacherInvite>
+      
     </div>
   );
 };

@@ -3,9 +3,21 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./Subject.css";
 import { UserState } from "../../context/contextProvider";
+<<<<<<< HEAD
 import { Button } from "@material-tailwind/react";
 import { GLOBAL_URL } from "../config";
 import { check } from "../Cookies";
+=======
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+} from "@material-tailwind/react";
+import cardImg from "../../images/books.png"
+>>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
 
 const SubjectCard = ({ name, description, subjectId, createdBy }) => {
   const { user } = UserState();
@@ -43,10 +55,10 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
 
   return (
     <NavLink
-      className="main bg-blue-100 rounded-2xl border-blue-800 border-2 shadow-md relative w-1/5 inline-block "
+      className=""
       to={`/course/${subjectId}`}
     >
-      <div className="rounded-t-xl w-full bg-blue-500 p-4">
+      {/* <div className="rounded-t-xl w-full bg-blue-500 p-4">
         <h3 className="text-white font-2xl">{name}</h3>
       </div>
       <div className="p-4 mb-5">{description}</div>
@@ -58,7 +70,26 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
             Add
           </Button>
         )}
-      </div>
+      </div> */}
+      <Card className="mt-12 w-96">
+      <CardHeader color="blue-gray" className="relative h-98">
+        <img
+          src={cardImg}
+          alt="card-image"
+        />
+      </CardHeader>
+      <CardBody>
+        <Typography variant="h5" color="blue-gray" className="mb-2">
+        {name}
+        </Typography>
+        <Typography>
+        {description}
+        </Typography>
+      </CardBody>
+      <CardFooter className="pt-0">
+        <Button>Added</Button>
+      </CardFooter>
+    </Card>
     </NavLink>
   );
 
@@ -141,6 +172,7 @@ const SubjectPage = () => {
       <h2 className=" font-bold text-3xl flex justify-center p-2 pt-5">
         Choose Subjects
       </h2>
+<<<<<<< HEAD
       <div className="card-container ml-5 m-2 p-2 flex flex-wrap mx-2 gap-10 justify-center">
           {data && data.map((subject) => {
             console.log(subject[0].name)
@@ -154,6 +186,19 @@ const SubjectPage = () => {
               />
             )
             })}
+=======
+      <div className="flex flex-wrap  gap-10 justify-center">
+        {data &&
+          data.map((subject) => (
+            <SubjectCard
+              key={subject._id}
+              subjectId={subject._id}
+              name={subject.name}
+              description={subject.description}
+              createdBy={subject.createdBy}
+            />
+          ))}
+>>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
       </div>
     </div>
   );

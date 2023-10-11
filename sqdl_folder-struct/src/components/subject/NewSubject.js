@@ -17,10 +17,36 @@ const NewSubject = () => {
   const [subject, setSubject] = useState({
     name: "",
     description: "",
+    year: "",
+    semester: 0,
+    taughtBy: '',
+    division: '',
     createdBy: check()._id,
     msg: "",
     disabled: false,
   });
+
+  const [teachers, setTeachers] = useState([])
+
+  async function getAllTeachers() {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    try {
+      const response = await axios.get(
+        GLOBAL_URL + "user/getall", res
+      )
+      setTeachers(response.data.data.filter(ele => {
+        return ele.type === 'teacher'
+      }))
+    } catch(error) {
+      console.log(error);
+      setSubject({...subject, msg: error.message})
+    }
+  }
 
   async function submissionHandler() {
     const res = {
@@ -34,7 +60,11 @@ const NewSubject = () => {
         {
           name: subject.name,
           description: subject.description,
+          year: subject.year,
+          semester: subject.semester,
           createdBy: subject.createdBy,
+          taughtBy: subject.taughtBy,
+          division: subject.division,
         },
         res
       )
@@ -48,7 +78,7 @@ const NewSubject = () => {
         const user = check();
         user.subjects.push(response.data.data._id);
         set(user);
-        window.location.href = "/course/" + response.data.data._id;
+        window.location.href = "/dashboard";
       })
       .catch((error) => {
         console.log(error);
@@ -58,9 +88,10 @@ const NewSubject = () => {
 
   if (check() == null) {
     window.location.href = "/login";
-  } else if (check().type != "teacher") {
-    return "Must be a teacher to access this page";
+  } else if (check().type != "admin") {
+    return "only admin can create a subject";
   } else {
+    getAllTeachers();
     return (
       <div className="subject align-center p-10 flex flex-col items-center h-screen ">
         <div className="">
@@ -98,11 +129,54 @@ const NewSubject = () => {
                   }}
                   value={subject.description}
                 ></Textarea>
+                <select
+                  onChange={(e) => {
+                    setSubject({...subject, year: e.target.value})
+                  }}
+                >
+                  <option selected>Select Year</option>
+                  <option value="F.E">F.E</option>
+                  <option value="S.E">S.E</option>
+                  <option value="T.E">T.E</option>
+                  <option value="B.E">B.E</option>
+                </select>
+                <Input
+                  label="Semester"
+                  onChange={(e) => {
+                    setSubject({ ...subject, semester: e.target.value });
+                  }}
+                  type="number"
+                  value={subject.semester}
+                ></Input>
+                <select
+                  onChange={(e) => {
+                    setSubject({...subject, division: e.target.value})
+                  }}
+                >
+                  <option selected>Select Division</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="A/B">A/B</option>
+                </select>
+                <select
+                  onChange={(e) => {
+                    setSubject({...subject, taughtBy: e.target.value})
+                  }}
+                >
+                  <option selected>Select The Teacher</option>
+                  {teachers.map(ele => {
+                    return <option value={ele.name}>{ele.name}</option>
+                  })}
+                </select>
                 <Button
                   className="bg-blue-800 hover:bg-sky-700"
                   disabled={
                     subject.name == "" ||
                     subject.description == "" ||
+                    subject.taughtBy == "" ||
+                    subject.year == "" ||
+                    subject.division == "" ||
+                    subject.semester == "" ||
                     subject.disabled
                   }
                   onClick={() => {

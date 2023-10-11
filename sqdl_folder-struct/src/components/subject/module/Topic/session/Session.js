@@ -356,9 +356,7 @@ const Session = () => {
               );
             })}
             <hr></hr>
-            <NavLink
-              to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}
-            >
+            <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}>
               Join
             </NavLink>
           </div>

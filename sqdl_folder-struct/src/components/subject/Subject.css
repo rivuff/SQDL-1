@@ -4,3 +4,7 @@
     height: auto;
   }
 }
+.image{
+  position: relative;
+  top: 1rem;
+}

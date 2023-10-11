@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import TeacherTable from "./helpers/Admin/TeacherTable";
 import StudentTable from "./helpers/Admin/StudentTable";
+import SubjectTable from "./helpers/Admin/SubjectTable";
 import NavCard from './helpers/NavCard';
 import { Button } from "@material-tailwind/react";
 
@@ -28,21 +29,38 @@ const Admin = () => {
   const [infoClicked, setInfoClicked] = useState({
     back: true,
     studentInfo: false,
-    teacherInfo: false
+    teacherInfo: false,
+    subjectInfo: false,
   })
 
   const handleClick = (info) => {
     if (info === 'StudentInfo') {
-      setInfoClicked(prev => {
-        return {
-          ...prev, studentInfo: true, back: false
-        }
+      setInfoClicked({
+        back: false,
+        studentInfo: true,
+        teacherInfo: false,
+        subjectInfo: false,
       })
     } else if (info === 'TeacherInfo') {
-      setInfoClicked(prev => {
-        return {
-          ...prev, teacherInfo: true, back: false
-        }
+      setInfoClicked({
+        back: false,
+        studentInfo: false,
+        teacherInfo: true,
+        subjectInfo: false,
+      })
+    } else if (info === 'SubjectInfo') {
+      setInfoClicked({
+        back: false,
+        studentInfo: false,
+        teacherInfo: false,
+        subjectInfo: true,
+      })
+    } else if (info === 'Back') {
+      setInfoClicked({
+        back: true,
+        studentInfo: false,
+        teacherInfo: false,
+        subjectInfo: false,
       })
     }
   } 
@@ -84,8 +102,12 @@ const Admin = () => {
 
   return (
     <>
+      <div onClick={() => {handleClick('Back')}} className="cursor-pointer">
+        ⬅️
+      </div>
       {infoClicked.studentInfo && <StudentTable />}
       {infoClicked.teacherInfo && <TeacherTable />}
+      {infoClicked.subjectInfo && <SubjectTable />}
       {infoClicked.back && <div className="flex w-full">
         <NavCard className="py-10 h-screen flex flex-col gap-10 bg-gradient-to-r from-teal-200 to-teal-400">
           <h2 className="text-5xl font-montserratWeight font-montserrat text-center text-white">SQDL</h2>
@@ -117,6 +139,16 @@ const Admin = () => {
               after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]"
               onClick={() => {handleClick('TeacherInfo')}}>
               Teacher Information
+            </div>
+            <div 
+              className="w-1/3 h-48 p-5 bg-green-700 rounded-xl hover:bg-green-800 font-montserratWeight 
+              font-montserrat text-3xl text-white relative shadow-[2px_2px_10px_#737373]
+              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
+              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
+              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
+              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]"
+              onClick={() => {handleClick('SubjectInfo')}}>
+              Subjects Information
             </div>
           </div>
         </div>

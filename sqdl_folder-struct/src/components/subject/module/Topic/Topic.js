@@ -1,98 +1,184 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   Accordion,
   AccordionHeader,
   AccordionBody,
   Button,
+  Breadcrumbs,
 } from "@material-tailwind/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
+import TopicTable from "./TopicTable.js";
+import axios from "axios";
+import { GLOBAL_URL } from "../../../config.js";
+import { NavLink, useParams } from "react-router-dom";
+
 
 const Topic = () => {
-  const [open, setOpen] = React.useState(1);
+
+  const [data, setData] = useState({
+    subjectName: "",
+    moduleName: "",
+    topicData: []
+  });
+  const [open, setOpen] = useState(1);
+
+  const params = useParams();
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
+
+  const getTopics = async () => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    axios
+      .post(
+        GLOBAL_URL + "subject/getByID",
+        { _id: params.subjectid }, res
+      ).then(response => {
+        console.log(response);
+        setData(prev => {
+          return {
+            ...prev, subjectName: response.data.data.name
+          }
+        })
+      }).then(() => {
+        return axios.post(
+          GLOBAL_URL + "module/getID",
+          { _id: params.moduleid }, res
+        )
+      }).then(response => {
+        console.log(response);
+        setData(prev => {
+          return {
+            ...prev, moduleName: response.data.data.name
+          }
+        })
+      }).then(() => {
+        return axios.get(
+          GLOBAL_URL + "topic/getAll", 
+          res
+        )
+      }).then(response => {
+        console.log(response);
+        setData(prev => {
+          return {
+            ...prev, topicData: response.data.data
+          }
+        })
+      }).catch(error => {
+        console.log(error);
+      })
+    // try {
+    //   const response = await axios.post(
+    //     GLOBAL_URL + "subject/getByID",
+    //     { _id: params.subjectid }, res
+    //   )
+    //   console.log(response);
+    //   setData(prev => {
+    //     return {
+    //       ...prev, subjectName: response.data.data.name
+    //     }
+    //   })
+    // } catch (error) {
+    //     console.log(error)
+    // }
+
+    // try {
+    //   const response = await axios.post(
+    //     GLOBAL_URL + "module/getID",
+    //     { _id: params.moduleid }, res
+    //   )
+    //   console.log(response);
+    //   setData(prev => {
+    //     return {
+    //       ...prev, moduleName: response.data.data.name,
+    //     }
+    //   })
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    // try {
+    //   const response = await axios.get(
+    //     GLOBAL_URL + "topic/getAll", res
+    //   )
+    //   console.log(response.data.data);
+    //   setData(prev => {
+    //     return {
+    //       ...prev, topicData: response.data.data
+    //     }
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+
+
+  useEffect(() => {
+    getTopics();
+  }, [])
+  
   return (
-    <div>
+    <div className="p-5 bg-lightesh-gray">
+      <Breadcrumbs
+        separator={
+          <ArrowLongRightIcon
+            className="h-4 w-4 text-white"
+            strokeWidth={2.5}
+          />
+        }
+        className="rounded-full border border-white bg-gradient-to-tr from-blue-600 to-blue-500 p-1 mb-7"
+      >
+        <a
+          href="/course"
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+        >
+          Courses
+        </a>
+        <a
+          href={"/course/" + params.subjectid}
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+        >
+          {data.subjectName}
+        </a>
+        <a
+          href={"/course/" + params.subjectid + "/" + params.moduleid}
+          className="text rounded-full bg-white px-3 py-1 font-medium text-gray-900 hover:text-blue-500"
+        >
+          {data.moduleName}
+        </a>
+      </Breadcrumbs>
+      <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
+        Module: {data.moduleName}
+      </h1>
       <h3 className="text-5xl ml-5 mt-5 text-dark-gray font-montserrat font-extrabold">
         Topics
       </h3>
-      <Accordion className="p-8 mb-2" open={open === 1}>
-        <AccordionHeader className="mb-4" onClick={() => handleOpen(1)}>
-          Topic Name 1
-        </AccordionHeader>
-        <AccordionBody>
-          <div class="mb-4 flex flex-col overflow-x-auto">
-            <div class="sm:-mx-6 lg:-mx-8">
-              <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-x-auto">
-                  <table class="min-w-full text-left text-sm font-light">
-                    <thead class="border-b font-medium dark:border-neutral-500">
-                      <tr>
-                        <th scope="col" class="px-6 py-4">
-                          Session
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Name
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Description
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Status
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Students
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Start Time
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          End Time
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="border-b dark:border-neutral-500">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium">
-                          1
-                        </td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                      </tr>
-                      <tr class="border-b dark:border-neutral-500">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium ">
-                          2
-                        </td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                      </tr>
-                      <tr class="border-b ">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium ">
-                          3
-                        </td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                        <td class="whitespace-nowrap px-6 py-4">Cell</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </AccordionBody>
-        <Button>Add session</Button>
-      </Accordion>
+      {data && data.topicData.map((ele) => {
+        return (<Accordion className="p-8 mb-2" open={open === 1}>
+          <AccordionHeader className="mb-4" onClick={() => handleOpen(1)}>
+            {ele.title}
+          </AccordionHeader>
+          <AccordionBody>
+            <p className="text-xl p-3 border-b-2">{ele.description}</p>
+            <TopicTable sessions={ele.sessions}/>
+            <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}/newSession`}>
+              <Button>
+                Create session
+              </Button>
+            </NavLink>
+          </AccordionBody>
+        </Accordion>
+      )})}
+      <NavLink to={`/course/${params.subjectid}/${params.moduleid}/newTopic`}>
+        <Button variant="gradient" color="blue">
+          Add Topic
+        </Button>
+      </NavLink>
     </div>
   );
 };

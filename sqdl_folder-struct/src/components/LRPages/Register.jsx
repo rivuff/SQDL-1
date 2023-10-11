@@ -13,6 +13,9 @@ const Register = ({ display, handler }) => {
   const cpasswordRef = useRef("");
   const enroRef = useRef("");
   const rnoRef = useRef("");
+  const yearRef = useRef("");
+  const semRef = useRef("");
+  const divRef = useRef("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +34,10 @@ const Register = ({ display, handler }) => {
           name: nameRef.current.value,
           password: passwordRef.current.value,
           enrollment: enroRef.current.value,
-          rollno: rnoRef.current.value
+          rollNumber: rnoRef.current.value,
+          year: yearRef.current.value,
+          semester: semRef.current.value,
+          division: divRef.current.value,
         },
         res
       ).then(response => {
@@ -47,14 +53,23 @@ const Register = ({ display, handler }) => {
 
   return (
     <div className={`flex flex-col h-screen text-center bg-lightesh-gray md-1/2:w-[30%] w-[80%] justify-center ${display}`}>
-      <h1 className='text-5xl text-dark-gray font-montserrat font-extrabold mt-6 mb-10'>Register</h1>
-      <form className='flex flex-col gap-8 mx-auto items-center w-60 '>
+      <h1 className='text-5xl text-dark-gray font-montserrat font-extrabold my-6'>Register</h1>
+      <form className='flex flex-col gap-5 mx-auto items-center w-60 '>
         <Input placeholder="Name" type='text' inputRef={nameRef}/>
         <Input placeholder="Email" type='email' inputRef={emailRef}/>
         <Input placeholder="Password" type='password' inputRef={passwordRef}/>
         <Input placeholder="Confirm Password" type='password' inputRef={cpasswordRef}/>
         <Input placeholder="Enrollment Number" type='text' inputRef={enroRef}/>
-        <Input placeholder="Roll No" type='Number' inputRef={rnoRef}/>
+        <Input placeholder="Roll No (Example: 753)" type='Number' inputRef={rnoRef}/>
+        <select ref={yearRef} className='cursor-pointer w-full'>
+          <option selected>Select Your Year</option>
+          <option value="F.E">F.E</option>
+          <option value="S.E">S.E</option>
+          <option value="T.E">T.E</option>
+          <option value="B.E">B.E</option>
+        </select>
+        <Input placeholder="Semester" type="number" inputRef={semRef} />
+        <Input placeholder="Division" type="text" inputRef={divRef} />
         <button 
           type='submit' 
           onClick={handleSubmit}
