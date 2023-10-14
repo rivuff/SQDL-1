@@ -3,11 +3,8 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./Subject.css";
 import { UserState } from "../../context/contextProvider";
-<<<<<<< HEAD
-import { Button } from "@material-tailwind/react";
 import { GLOBAL_URL } from "../config";
 import { check } from "../Cookies";
-=======
 import {
   Card,
   CardHeader,
@@ -17,7 +14,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import cardImg from "../../images/books.png"
->>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
+
 
 const SubjectCard = ({ name, description, subjectId, createdBy }) => {
   const { user } = UserState();
@@ -172,7 +169,7 @@ const SubjectPage = () => {
       <h2 className=" font-bold text-3xl flex justify-center p-2 pt-5">
         Choose Subjects
       </h2>
-<<<<<<< HEAD
+
       <div className="card-container ml-5 m-2 p-2 flex flex-wrap mx-2 gap-10 justify-center">
           {data && data.map((subject) => {
             console.log(subject[0].name)
@@ -186,8 +183,9 @@ const SubjectPage = () => {
               />
             )
             })}
-=======
-      <div className="flex flex-wrap  gap-10 justify-center">
+            </div>
+
+      {/* <div className="flex flex-wrap  gap-10 justify-center">
         {data &&
           data.map((subject) => (
             <SubjectCard
@@ -198,10 +196,10 @@ const SubjectPage = () => {
               createdBy={subject.createdBy}
             />
           ))}
->>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
-      </div>
+
+      </div> */}
     </div>
   );
-};
+    };
 
 export default SubjectPage;

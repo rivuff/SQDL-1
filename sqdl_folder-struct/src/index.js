@@ -96,22 +96,8 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Profile />,
       },
+  
       {
-<<<<<<< HEAD
-=======
-        path: "/topic",
-        element: <Topic />,
-      },
-      {
-        path: "/teacherassociation",
-        element: <TeacherAssociation />,
-      },
-      {
-        path: "/newtopic",
-        element: <NewTopic />,
-      },
-      {
->>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
         path: "/addStudentSubject",
         element: <AddStudentSubject />,
       },
