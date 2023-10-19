@@ -97,13 +97,11 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-<<<<<<< HEAD
-=======
         path: "/topic",
         element: <Topic />,
       },
       {
-        path: "/teacherassociation",
+        path: "/teacherassociation/:subjectid",
         element: <TeacherAssociation />,
       },
       {
@@ -111,7 +109,6 @@ const router = createBrowserRouter([
         element: <NewTopic />,
       },
       {
->>>>>>> 3690287975f9ffc4d01749ceb840b2f89edb3614
         path: "/addStudentSubject",
         element: <AddStudentSubject />,
       },
