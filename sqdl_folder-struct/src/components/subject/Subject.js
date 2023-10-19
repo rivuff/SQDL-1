@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./Subject.css";
 import { UserState } from "../../context/contextProvider";
+import { GLOBAL_URL } from "../config";
+import { check } from "../Cookies";
 import {
   Card,
   CardHeader,
@@ -167,7 +169,23 @@ const SubjectPage = () => {
       <h2 className=" font-bold text-3xl flex justify-center p-2 pt-5">
         Choose Subjects
       </h2>
-      <div className="flex flex-wrap  gap-10 justify-center">
+
+      <div className="card-container ml-5 m-2 p-2 flex flex-wrap mx-2 gap-10 justify-center">
+          {data && data.map((subject) => {
+            console.log(subject[0].name)
+            return (
+              <SubjectCard
+                key={subject[0]._id}
+                subjectId={subject[0]._id}
+                name={subject[0].name}
+                description={subject[0].description}
+                createdBy={subject[0].createdBy}
+              />
+            )
+            })}
+            </div>
+
+      {/* <div className="flex flex-wrap  gap-10 justify-center">
         {data &&
           data.map((subject) => (
             <SubjectCard
@@ -178,9 +196,10 @@ const SubjectPage = () => {
               createdBy={subject[0].createdBy}
             />
           ))}
-      </div>
+
+      </div> */}
     </div>
   );
-};
+    };
 
 export default SubjectPage;

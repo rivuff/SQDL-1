@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../config";
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import { Typography, Button } from "@material-tailwind/react";
 
 const SubjectTable = () => {
-
-  const [subjects, setSubjects] = useState([])
+  const [subjects, setSubjects] = useState([]);
 
   const getAllSubjects = async () => {
     const res = {
@@ -84,6 +83,13 @@ const SubjectTable = () => {
                 Division
               </Typography>
             </th>
+            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal leading-none opacity-70"
+              ></Typography>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -113,7 +119,7 @@ const SubjectTable = () => {
                   color="blue-gray"
                   className="font-normal"
                 >
-                  {ele.taughtBy ? ele.taughtBy : 'Not Assigned'}
+                  {ele.taughtBy ? ele.taughtBy : "Not Assigned"}
                 </Typography>
               </td>
               <td className="p-4">
@@ -149,12 +155,26 @@ const SubjectTable = () => {
                   {ele.division}
                 </Typography>
               </td>
+              {!ele.taughtBy && (
+                <td className="p-4">
+                  <NavLink
+                    to={`/teacherassociation/${ele._id}/`}
+                    className="mx-4"
+                  >
+                    <Button color="blue" variant="gradient">
+                      Associate Teacher
+                    </Button>
+                  </NavLink>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
       <NavLink to="/course/new">
-        <Button color="blue" variant="gradient">Create Subject</Button>
+        <Button color="blue" variant="gradient">
+          Create Subject
+        </Button>
       </NavLink>
     </div>
   );

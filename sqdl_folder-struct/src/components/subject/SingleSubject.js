@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import axios from "axios";
@@ -89,10 +89,35 @@ const SingleSubject = () => {
     childModule: [], //list of dicitionaries of child sessions
     fetched: false, //variable to indicate whether data has been requested from server
   });
-
+  const [subjectStudents, setSubjectStudents] = useState([]);
   console.log(check());
   console.log(`check()._id = ${check()._id}`);
   console.log(`Created By = ${subject.createdBy}`);
+
+  // useEffect(() => {
+  //   const getStudents = async () => {
+  //     const res = {
+  //       headers: {
+  //         "Content-type": "application/json",
+  //       },
+  //     };
+  
+  //     try {
+  //       const response = await axios.get(GLOBAL_URL + "user/getall", res);
+  //       console.log(response);
+  
+  //       const stus = response.data.data.filter((ele) => {
+  //         return ele.name === subject.name;
+  //       });
+  //       console.log(stus);
+  //       setSubjectStudents(stus);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  
+  //   getStudents();
+  // }, [])
 
   //edit drawer state
   const [open, setOpen] = React.useState(false);
@@ -170,6 +195,17 @@ const SingleSubject = () => {
         newsub.fetched = true;
         setSubject({ ...newsub });
         console.log(subject);
+      }).then(() => {
+        return axios.get(
+          GLOBAL_URL + "user/getall", res
+        )
+      }).then((response) => {
+        console.log(response);
+        const stus = response.data.data.filter(ele => {
+          return ele.subjects.includes(subject._id)
+        })
+        console.log(stus);
+        setSubjectStudents(stus);
       })
       .catch((error) => {
         console.log(error);
@@ -227,7 +263,99 @@ const SingleSubject = () => {
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           Students
         </h3>
-        <Students subId = {params.subjectid}/>
+        <table className="w-full min-w-max table-auto text-left">
+          <thead>
+            <tr>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Name
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Email
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Semester
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Roll No
+                </Typography>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {subjectStudents.map((ele, index) => {
+              const isLast = index === subjectStudents.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
+
+              return (
+                <tr key={ele._id}>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.name}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.email}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.semester}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      as="a"
+                      href="#"
+                      variant="small"
+                      color="blue-gray"
+                      className="font-medium"
+                    >
+                      {ele.rollNumber}
+                    </Typography>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
       <NavLink to={`/course/${params.subjectid}/new`}>
         <Button color="blue" variant="gradient" fullWidth={true}>
