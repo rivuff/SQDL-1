@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
 
-import lrImage from "../../images/lrImage.png";
+import lrImage from "../../images/LrImage.jpg";
 
 const LRPages = ({ toggle }) => {
   const [toggleLogin, setToogleLogin] = useState(toggle);
@@ -31,10 +31,10 @@ const LRPages = ({ toggle }) => {
           toggleLogin ? "visible animate-zoom-in" : "invisible animate-fade-out"
         } hidden md-1/2:block`}
       >
-        <h3 className="xl-3/2:text-5xl -translate-x-6 lg:translate-x-0 text-3xl font-poppins text-white font-semibold">
+        <h3 className="xl-3/2:text-5xl -translate-x-6 lg:translate-x-0 text-3xl font-poppins text-black font-semibold">
           Welcome Back!
         </h3>
-        <p className="text-lg text-white mt-5 m-10 -translate-x-6 lg:translate-x-0">
+        <p className="text-lg text-black mt-5 m-10 -translate-x-6 lg:translate-x-0">
           Enter you login credential here
         </p>
         <button
