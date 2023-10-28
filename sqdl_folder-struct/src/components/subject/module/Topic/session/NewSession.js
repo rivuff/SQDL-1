@@ -164,7 +164,7 @@ const NewSession = () => {
         <div className="inline-block">
           <select
             label="Activity"
-            className="inline-block w-2/3 h-8 mx-2"
+            className="inline-block w-2/3 h-11 mx-2 "
             value={activity}
             onChange={(e) => {
               setSession({
@@ -188,6 +188,7 @@ const NewSession = () => {
           </select>
           <Button
             size="sm"
+            className="mr-2"
             onClick={() => {
               setSession({
                 ...session,

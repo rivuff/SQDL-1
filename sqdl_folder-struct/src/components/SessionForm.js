@@ -22,7 +22,7 @@ const SessionForm = () => {
   const ActivityOrder = () => {
     return activityArray.map((ele, index) => {
       return (
-        <div className="col-span-2 flex gap-5">
+        <div className="col-span-2 flex gap-5 ">
             <Button color="green">Add</Button>
             <select 
                 className="w-full"
