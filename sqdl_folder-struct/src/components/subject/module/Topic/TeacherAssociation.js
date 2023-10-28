@@ -12,9 +12,12 @@ import {
     Select,
     Option
   } from "@material-tailwind/react";
+import { set } from '../../../Cookies';
+
 function TeacherAssociation() {
 
   const { subjectid } = useParams();
+  console.log(subjectid);
   const [teachers, setTeachers] = useState({allteachers: [], selectedteacher: ''});
   const [subject, setSubject] = useState('');
 
@@ -62,23 +65,44 @@ function TeacherAssociation() {
     console.log(name);
 
     try {
-      const response = await Promise.all([
-        axios.post(GLOBAL_URL + "subject/addUserSubject", {
-          userId: teachers.selectedteacher,
-          subjectIds: [subject._id,]
-        }, res),
-        axios.post(GLOBAL_URL + "subject/update", {
-          _id: subject._id,
-          name: subject.name,
-          description: subject.description,
-          taughtBy: name
-        })
-      ])
+      const response = await axios.post(
+        GLOBAL_URL + "user/request",
+        {request: {
+          _id: teachers.selectedteacher,
+          type: 'send',
+          subjectid: subjectid,
+          from: 'admin',
+          name: subject.name, 
+          year: subject.year,
+          division: subject.division,
+          semester: subject.semester
+        }}, res
+      )
       console.log(response);
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     } catch(error) {
       console.log(error);
     }
+
+    // updating subject with teacher
+    // try {
+    //   const response = await Promise.all([
+    //     axios.post(GLOBAL_URL + "subject/addUserSubject", {
+    //       userId: teachers.selectedteacher,
+    //       subjectIds: [subject._id,]
+    //     }, res),
+    //     axios.post(GLOBAL_URL + "subject/update", {
+    //       _id: subject._id,
+    //       name: subject.name,
+    //       description: subject.description,
+    //       taughtBy: name
+    //     })
+    //   ])
+    //   console.log(response);
+    //   window.location.href = '/dashboard';
+    // } catch(error) {
+    //   console.log(error);
+    // }
 
     // try {
     //   const response = await axios.post(

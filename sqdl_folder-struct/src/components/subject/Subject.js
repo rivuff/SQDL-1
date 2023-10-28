@@ -14,12 +14,12 @@ import {
   Button,
 } from "@material-tailwind/react";
 import cardImg from "../../images/books.png"
-import { check } from "../Cookies";
 
 const SubjectCard = ({ name, description, subjectId, createdBy }) => {
   const { user } = UserState();
   console.log(user.subjects);
   console.log(name, description, subjectId);
+  console.log(check());
 
   const isSubjectAdded = user.subjects.includes(subjectId);
 

@@ -9,6 +9,7 @@ import { Select, Option, Button } from "@material-tailwind/react";
 
 const AddStudentSubject = () => {
   const [subjects, setSubjects] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState([null]);
 
   const getSubjects = async () => {
@@ -26,6 +27,24 @@ const AddStudentSubject = () => {
       console.log(error);
     }
   };
+
+  const getTeachers = async () => {
+    try {
+      const res = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const data = await axios.get(GLOBAL_URL + "user/getAll", res);
+      // console.log(data);
+      const tchs = data.data.data.filter(ele => ele.type === 'teacher');
+      // console.log(tchs);
+      setTeachers(tchs);
+    } catch(error) {
+      console.log(error);
+    }
+  }
 
   const updateSubjects = (ele, index) => {
     const x = selectedSubject;
@@ -78,6 +97,7 @@ const AddStudentSubject = () => {
                 key={ele.name}
                 value={ele.name}
                 className="flex items-center gap-2"
+                disabled={ele.taughtBy === undefined}
               >
                 {ele.name}
               </Option>
@@ -104,6 +124,27 @@ const AddStudentSubject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log(selectedSubject);
+    console.log(subjects);
+
+    const selectedSubjectData = selectedSubject.map(ele => {
+      const subsData = subjects.filter(e => {
+        return e.name === ele;
+      })
+      return subsData[0];
+    })
+
+    console.log(selectedSubjectData);
+
+    const selectedSubjectTeacherId = selectedSubjectData.map(ele => {
+      const tchsData = teachers.filter(e => {
+        return e.name === ele.taughtBy
+      })
+      return tchsData[0]._id;
+    })
+
+    console.log(selectedSubjectTeacherId);
+
     const ids = selectedSubject.map((ele) => {
       const subData = subjects.filter((e) => {
         return e.name === ele;
@@ -118,25 +159,61 @@ const AddStudentSubject = () => {
         "Content-type": "application/json",
       },
     };
-    console.log(check()._id);
-    try {
-      const response = await axios.post(
-        GLOBAL_URL + "subject/addUserSubject",
-        {
-          userId: check()._id, 
-          subjectIds: ids,
-        }, res
-      )
-      console.log(response);
-      set(response.data.data);
-      window.location.href = "/profile"
-    } catch(error) {
-      console.log(error);
-    }
+
+    selectedSubject.map(async (ele, ind) => {
+      try {
+        const response = await axios.post(
+          GLOBAL_URL + 'user/request',
+          {request: {
+            _id: selectedSubjectTeacherId[ind],
+            type: 'send',
+            from: 'student',
+            studentInfo: check(),
+            subjectInfo: selectedSubjectData[ind],
+          }}, res
+        )
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    })
+    // console.log(check()._id);
+    // try {
+    //   const response = await axios.post(
+    //     GLOBAL_URL + 'user/request',
+    //     {
+    //       request: {
+    //         _id: check()._id,
+    //         type: 'send',
+    //         subjectids: ids,
+    //         from: 'student',
+    //       }
+    //     }, res
+    //   )
+    //   console.log(response);
+      // window.location.href = '/dashboard'
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // try {
+    //   const response = await axios.post(
+    //     GLOBAL_URL + "subject/addUserSubject",
+    //     {
+    //       userId: check()._id, 
+    //       subjectIds: ids,
+    //     }, res
+    //   )
+    //   console.log(response);
+    //   set(response.data.data);
+    //   window.location.href = "/profile"
+    // } catch(error) {
+    //   console.log(error);
+    // }
   };
 
   useEffect(() => {
     getSubjects();
+    getTeachers();
   }, []);
 
   return (

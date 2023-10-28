@@ -1,49 +1,44 @@
-"use client";
+import React, { useState, useEffect } from "react";
 
-import { Dropdown } from "flowbite-react";
-import React, { useEffect } from "react";
-import { useState } from "react";
+// import { Dropdown } from "flowbite-react";
 import {
   Collapse,
   Typography,
   IconButton,
   Navbar,
-  Popover,
-  PopoverHandler,
-  Input,
-  PopoverContent,
   Menu,
   MenuHandler,
   MenuList,
   MenuItem,
   Avatar,
-  Badge,
   Button,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { UserState } from "../../context/contextProvider";
+// import { UserState } from "../../context/contextProvider";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
-import { type, check } from "./../Cookies";
-function ClockIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="h-3 w-3"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  );
-}
+import { GLOBAL_URL } from "../config";
+import axios from 'axios';
+import { set, check } from "./../Cookies";
+// function ClockIcon() {
+//   return (
+//     <svg
+//       xmlns="http://www.w3.org/2000/svg"
+//       fill="none"
+//       viewBox="0 0 24 24"
+//       strokeWidth={1.5}
+//       stroke="currentColor"
+//       className="h-3 w-3"
+//     >
+//       <path
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//         d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+//       />
+//     </svg>
+//   );
+// }
 function NavList(props) {
   var navList = props.navList;
   const navigate = useNavigate();
@@ -53,6 +48,68 @@ function NavList(props) {
     navigate("/");
   };
   console.log(check());
+
+  const handleSubmit = async (type, req) => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    try {
+      const response = await Promise.all([
+        axios.post(GLOBAL_URL + "user/request", 
+       { request: {
+          _id: check()._id,
+          subjectid: req.subjectid,
+          type: type
+        }}, res),
+        axios.post(GLOBAL_URL + "subject/update", {
+          _id: req.subjectid,
+          name: req.name,
+          description: req.description,
+          taughtBy: check().name
+        }, res),
+        axios.post(GLOBAL_URL + "subject/addUserSubject", {
+          userId: check()._id,
+          subjectIds: [req.subjectid,]
+        })
+      ])
+      console.log(response);
+      set(response[2].data.data);
+      window.location.reload();
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  const handleStudentSubmit = async(type, req) => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    try {
+      const response = await Promise.all([
+        axios.post(GLOBAL_URL + "user/request", 
+        {request: {
+          _id: check()._id,
+          subjectid: req.subjectInfo._id,
+          type: type
+        }}, res),
+        axios.post(GLOBAL_URL + "subject/addUserSubject", {
+          userId: req.studentInfo._id,
+          subjectIds: [req.subjectInfo._id,]
+        })
+      ])
+      console.log(response);
+      set(response[0].data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   if (check() == null) {
     // Render navigation list for non-logged-in users
     return (
@@ -179,25 +236,25 @@ function NavList(props) {
             </Link>
           </Typography>
         </li> */}
-         <Menu>
-      <MenuHandler>
-        <IconButton variant="text">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="h-5 w-5"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </IconButton>
-      </MenuHandler>
-      <MenuList className="flex flex-col gap-2 max-h-72">
-        {/* <MenuItem className="flex items-center gap-4 py-2 pr-8 pl-2">
+        <Menu>
+          <MenuHandler>
+            <IconButton variant="text">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-5 w-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </IconButton>
+          </MenuHandler>
+          <MenuList className="flex flex-col gap-2 max-h-72">
+            {/* <MenuItem className="flex items-center gap-4 py-2 pr-8 pl-2">
           <Avatar
             variant="circular"
             alt="tania andrew"
@@ -255,13 +312,77 @@ function NavList(props) {
             </Typography>
           </div>
         </MenuItem> */}
-        <MenuItem className="flex justify-center"> <h3 className="mr-8 m-auto">Item</h3> <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">✔</Button> <Button className="p-2.5 pb-1.5 pt-1.5" color="red"><b>X</b></Button></MenuItem>
-        <MenuItem className="flex justify-center"> <h3 className="mr-8 m-auto">Item</h3> <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">✔</Button> <Button className="p-2.5 pb-1.5 pt-1.5" color="red"><b>X</b></Button></MenuItem> 
-        <MenuItem className="flex justify-center"> <h3 className="mr-8 m-auto">Item</h3> <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">✔</Button> <Button className="p-2.5 pb-1.5 pt-1.5" color="red"><b>X</b></Button></MenuItem> 
-        <MenuItem className="flex justify-center"> <h3 className="mr-8 m-auto">Item</h3> <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">✔</Button> <Button className="p-2.5 pb-1.5 pt-1.5" color="red"><b>X</b></Button></MenuItem>
-       
-      </MenuList>
-    </Menu>
+            {check().requests && check().requests.map((req => {
+              if (req.from === 'admin') {
+                return (
+                  <MenuItem className="flex justify-center">
+                    {" "}
+                    <h3 className="mr-8 m-auto">{req.name} {req.division} {req.semester}</h3>{" "}
+                    <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green" onClick={() => {handleSubmit('accept', req)}}>
+                      ✔
+                    </Button>{" "}
+                    {/* <Button className="p-2.5 pb-1.5 pt-1.5" color="red" onClick={() => {handleSubmit('reject')}}>
+                      <b>X</b>
+                    </Button> */}
+                  </MenuItem>
+                )
+              } else if(req.from === 'student') {
+                return (
+                  <MenuItem className="flex justify-center">
+                    {" "}
+                    <h3 className="mr-8 m-auto">{req.subjectInfo.name}: {req.studentInfo.name} {req.studentInfo.year} {req.studentInfo.semester} {req.studentInfo.rollNumber}</h3>{" "}
+                    <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green" onClick={() => {handleStudentSubmit('accept', req)}}>
+                      ✔
+                    </Button>{" "}
+                    {/* <Button className="p-2.5 pb-1.5 pt-1.5" color="red" onClick={() => {handleStudentSubmit('reject')}}>
+                      <b>X</b>
+                    </Button> */}
+                  </MenuItem>
+                )
+              }
+            }))}
+            {/* <MenuItem className="flex justify-center">
+              {" "}
+              <h3 className="mr-8 m-auto">Item</h3>{" "}
+              <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">
+                ✔
+              </Button>{" "}
+              <Button className="p-2.5 pb-1.5 pt-1.5" color="red">
+                <b>X</b>
+              </Button>
+            </MenuItem>
+            <MenuItem className="flex justify-center">
+              {" "}
+              <h3 className="mr-8 m-auto">Item</h3>{" "}
+              <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">
+                ✔
+              </Button>{" "}
+              <Button className="p-2.5 pb-1.5 pt-1.5" color="red">
+                <b>X</b>
+              </Button>
+            </MenuItem>
+            <MenuItem className="flex justify-center">
+              {" "}
+              <h3 className="mr-8 m-auto">Item</h3>{" "}
+              <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">
+                ✔
+              </Button>{" "}
+              <Button className="p-2.5 pb-1.5 pt-1.5" color="red">
+                <b>X</b>
+              </Button>
+            </MenuItem>
+            <MenuItem className="flex justify-center">
+              {" "}
+              <h3 className="mr-8 m-auto">Item</h3>{" "}
+              <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green">
+                ✔
+              </Button>{" "}
+              <Button className="p-2.5 pb-1.5 pt-1.5" color="red">
+                <b>X</b>
+              </Button>
+            </MenuItem> */}
+          </MenuList>
+        </Menu>
         <Menu>
           <MenuHandler>
             {/* <Avatar

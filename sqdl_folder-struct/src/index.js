@@ -135,6 +135,10 @@ const router = createBrowserRouter([
       //   element: <StudentLandingPage/>
       // },
       {
+        path: 'teacherassociation/:subjectid',
+        element: <TeacherAssociation/>
+      },
+      {
         path: "/course",
         element: <CourseRouter />,
         children: [

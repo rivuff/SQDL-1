@@ -202,10 +202,13 @@ const SingleSubject = () => {
       }).then((response) => {
         console.log(response);
         const stus = response.data.data.filter(ele => {
+          return ele.type === 'student'
+        });
+        const stusinsubject = stus.filter(ele => {
           return ele.subjects.includes(subject._id)
         })
-        console.log(stus);
-        setSubjectStudents(stus);
+        console.log(stusinsubject);
+        setSubjectStudents(stusinsubject);
       })
       .catch((error) => {
         console.log(error);
