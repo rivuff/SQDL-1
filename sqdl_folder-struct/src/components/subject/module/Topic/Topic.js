@@ -21,6 +21,10 @@ const Topic = () => {
     moduleName: "",
     topicData: []
   });
+
+  const a = new Date();
+  console.log(a);
+
   const [open, setOpen] = useState(1);
 
   const params = useParams();
@@ -122,6 +126,8 @@ const Topic = () => {
     getTopics();
   }, [])
   
+
+
   return (
     <div className="p-5 bg-lightesh-gray">
       <Breadcrumbs

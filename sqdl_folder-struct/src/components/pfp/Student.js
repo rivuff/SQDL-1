@@ -20,6 +20,7 @@ import { NavLink } from "react-router-dom";
 const Student = () => {
 
   const [edit, setEdit] = useState(false);
+  const [codeInput, setCodeInput] = useState(false);
 
   const userData = check();
 
@@ -110,6 +111,10 @@ const Student = () => {
               Add Subject ➡️
             </Button>
           </NavLink>
+          <Button className="mt-4" color="green" onClick={() => {setCodeInput(!codeInput)}}>
+              Join Through Code
+          </Button>
+          {codeInput && <Input className="mt-4" placeholder="Enter Code"/>}
       </div>
     </div>
   );

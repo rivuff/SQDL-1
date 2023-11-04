@@ -44,6 +44,7 @@ const NewSession = () => {
         description: "",
       },
     },
+    startDateTime: {date: "", hours: 0, minutes: 0}, 
     msg: "",
     disabled: false,
   });
@@ -79,69 +80,135 @@ const NewSession = () => {
     return null;
   }
 
+  function generateCode() {
+    const r1 = Math.random().toString(36).substring(2,7);
+    const r2 = Math.random().toString(36).substring(2,7);
+    return r1 + r2;
+  }
+
   async function submissionHandler() {
     const res = {
       headers: {
         "Content-type": "application/json",
       },
     };
-    console.log(session);
-    axios
-      .post(
-        GLOBAL_URL + "session/create",
-        {
-          title: session.title,
-          description: session.description,
-          parentModule: session.parentModule,
-          parentTopic: topicid,
-          conductedBy: session.conductedBy,
-          enrollmentLimit: session.enrollmentLimit,
-          activity_order: session.activity_order,
-          topic: session.topic,
-          createdBy: session.createdBy,
-          subject: session.parentModule.parentSubject._id,
-        },
-        res
-      )
-      .then(async(response) => {
-        console.log(response);
-        setSession({
-          ...module,
-          disabled: true,
-          msg: "Created Session Successfully",
-        });
-        //add too cookie
-        try {
-          const data = await axios.post(
-            GLOBAL_URL + "topic/getById",
-            {_id: topicid}, res
-          )
+    // console.log(session);
+    const currDate = new Date(session.startDateTime.date);
+    currDate.setHours(session.startDateTime.hours)
+    currDate.setMinutes(session.startDateTime.minutes)
+    currDate.setSeconds(0)
 
-          const topicData = data.data.data;
-          topicData.sessions.push(response.data.data);
-          console.log(topicData);
+    console.log(currDate);
 
-          const updata = await axios.post(
-            GLOBAL_URL + "topic/update",
-            topicData, res
-          )
-          console.log(updata);
-          window.location.href =
-          "/course/" +
-          subjectid +
-          "/" +
-          moduleid
-        } catch (error) {
-          console.log(error);
-          setSession({ ...session, msg: error.message, disabled: true});
-        }
+    let response;
+    try {
+      response = await Promise.all([
+        axios.post(
+          GLOBAL_URL + "session/create",
+          {
+            title: session.title,
+            description: session.description,
+            parentModule: session.parentModule,
+            parentTopic: topicid,
+            startDateTime: currDate,
+            conductedBy: session.conductedBy,
+            sessionCode: generateCode(),
+            enrollmentLimit: session.enrollmentLimit,
+            activity_order: session.activity_order,
+            topic: session.topic,
+            createdBy: session.createdBy,
+            subject: session.parentModule.parentSubject._id,
+          }, res
+        ), 
+        axios.post(
+          GLOBAL_URL + "topic/getById",
+          {_id: topicid}, res
+        )
+      ]);
+    } catch(error) {
+      console.log("error while creating seesion or getting topic");
+      console.log(error);
+      setSession({ ...session, msg: error.message, disabled: true});
+    }
+
+
+    try {
+      const update = await axios.post(
+        GLOBAL_URL + "topic/update",{
+          _id: topicid, 
+          session: response[0].data.data
+        }, res
+      );
+  
+      console.log(update);
+    } catch(error) {
+      console.log(error);
+      setSession({ ...session, msg: error.message, disabled: true});
+    }
+
+    window.location.href = `/course/${subjectid}/${moduleid}`;
+
+    // const [sessionResponse, topicResponse] = ...response;
+
+    // axios
+    //   .post(
+    //     GLOBAL_URL + "session/create",
+    //     {
+    //       title: session.title,
+    //       description: session.description,
+    //       parentModule: session.parentModule,
+    //       parentTopic: topicid,
+    //       conductedBy: session.conductedBy,
+    //       enrollmentLimit: session.enrollmentLimit,
+    //       activity_order: session.activity_order,
+    //       topic: session.topic,
+    //       createdBy: session.createdBy,
+    //       subject: session.parentModule.parentSubject._id,
+    //     },
+    //     res
+    //   )
+    //   .then(async(response) => {
+    //     console.log(response);
+    //     setSession({
+    //       ...module,
+    //       disabled: true,
+    //       msg: "Created Session Successfully",
+    //     });
+    //     //add too cookie
+    //     try {
+    //       const data = await axios.post(
+    //         GLOBAL_URL + "topic/getById",
+    //         {_id: topicid}, res
+    //       )
+
+    //       const topicData = data.data.data;
+    //       topicData.sessions.push(response.data.data);
+    //       console.log(topicData);
+
+    //       const updata = await axios.post(
+    //         GLOBAL_URL + "topic/update",
+    //         {
+    //           _id: topicid,
+    //           session: response.data.data
+    //         }, res
+    //       )
+    //       console.log(updata);
+    //       window.location.href =
+    //       "/course/" +
+    //       subjectid +
+    //       "/" +
+    //       moduleid
+    //     } catch (error) {
+    //       console.log(error);
+    //       setSession({ ...session, msg: error.message, disabled: true});
+    //     }
         
         
-      })
-      .catch((error) => {
-        console.log(error);
-        setSession({ ...session, msg: error.message, disabled: true });
-      });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     setSession({ ...session, msg: error.message, disabled: true });
+    //   });
   }
 
   function updateArray(index, val) {
@@ -304,6 +371,25 @@ const NewSession = () => {
                     });
                   }}
                 ></Input>
+                <div className="flex flex-col gap-5">
+                  Enter Date and Time:
+                  <Input type="number" label="Hours" min="1" max="24" onChange={(e) => {
+                    setSession(prev => ({
+                      ...prev, startDateTime: {...prev.startDateTime, hours: +e.target.value}
+                    }))
+                  }}/>
+                  <Input type="number" label="Minutes" min="0" max="59" onChange={(e) => {
+                    console.log(session);
+                    setSession(prev => ({
+                      ...prev, startDateTime: {...prev.startDateTime, minutes: +e.target.value}
+                    }))
+                  }}/>
+                  <Input type="date" label="Date" onChange={(e) => {
+                    setSession(prev => ({
+                      ...prev, startDateTime: {...prev.startDateTime, date: e.target.value}
+                    }))
+                  }}/>
+                </div>
                 <ActivitySelect />
                 <Button
                   disabled={

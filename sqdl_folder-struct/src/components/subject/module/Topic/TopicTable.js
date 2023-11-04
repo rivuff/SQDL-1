@@ -1,5 +1,5 @@
 import React from "react";
-
+import { BiCopy } from 'react-icons/bi'
 import { NavLink, useParams } from "react-router-dom";
 
 const TopicTable = (props) => {
@@ -31,6 +31,9 @@ const TopicTable = (props) => {
                     Students
                   </th>
                   <th scope="col" className="px-6 py-4">
+                    Session Code
+                  </th>
+                  <th scope="col" className="px-6 py-4">
                     Start Time
                   </th>
                   <th scope="col" className="px-6 py-4">
@@ -40,6 +43,7 @@ const TopicTable = (props) => {
               </thead>
               <tbody>
                 {props.sessions && props.sessions.map((ele, ind) => {
+                    console.log(ele.startDateTime);
                     return (
                       <tr className="border-b">
                           <td className="whitespace-nowrap px-6 py-4 font-medium">{ind+1}</td>
@@ -47,7 +51,13 @@ const TopicTable = (props) => {
                           <td className="whitespace-nowrap px-6 py-4">{ele.topic}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.status ? "C/P" : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.startTime ? "stime" : "-"}</td>
+                          <td className="whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
+                          {ele.sessionCode}
+                          <a>
+                            <BiCopy/>
+                          </a>
+                          </> : "-"}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{ele.startDateTime ? ele.startDateTime : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.endTime ? "etime" : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}`}>
