@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Card,
   CardHeader,
@@ -21,6 +21,7 @@ const Student = () => {
 
   const [edit, setEdit] = useState(false);
   const [codeInput, setCodeInput] = useState(false);
+  const codeRef = useRef("");
 
   const userData = check();
 
@@ -79,6 +80,49 @@ const Student = () => {
     setEdit(false);
   }
 
+  const codeSubmission = async() => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "session/getByCode", {sessionCode: codeRef.current.value}, res
+      );
+      console.log(response);
+      const session = response.data.data;
+      session.access_request.push(check()._id);
+      console.log(session);
+      console.log(session.parentModule);
+      
+      const response2 = await axios.post(
+        GLOBAL_URL + "session/update",
+        {
+          _id: session._id,
+          title: session.title,
+          description: session.description,
+          conductedBy: session.conductedBy,
+          createdBy: session.createdBy,
+          parentModule: session.parentModule,
+          parentTopic: session.parentTopic,
+          sessionCode: session.sessionCode,
+          enrollmentLimit: session.enrollmentLimit,
+          access_request: session.access_request,
+          approved_request: session.approved_request,
+          blocked_request: session.blocked_request,
+          activity_order: session.activity_order,
+          iteration: session.iteration,
+          current_activity: session.current_activity,
+          selected_questions: session.selected_questions
+        }, res
+      );
+      console.log(response2);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="bg-gray-200 flex flex-wrap">
       <NavCard className="items-center">
@@ -114,7 +158,10 @@ const Student = () => {
           <Button className="mt-4" color="green" onClick={() => {setCodeInput(!codeInput)}}>
               Join Through Code
           </Button>
-          {codeInput && <Input className="mt-4" placeholder="Enter Code"/>}
+          {codeInput && <>
+            <Input className="mt-4" placeholder="Enter Code" inputRef={codeRef}/>
+            <Button onClick={codeSubmission} className="mt-8">Submit</Button>
+          </>}
       </div>
     </div>
   );

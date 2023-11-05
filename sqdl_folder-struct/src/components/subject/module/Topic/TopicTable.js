@@ -53,9 +53,9 @@ const TopicTable = (props) => {
                           <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
                           <td className="inline-block whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
                           {ele.sessionCode}
-                          <a className="inline-block ml-2">
+                          <div onClick={() => {navigator.clipboard.writeText(ele.sessionCode)}} className="inline-block ml-2">
                             <BiCopy/>
-                          </a>
+                          </div>
                           </> : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.startDateTime ? ele.startDateTime : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.endTime ? "etime" : "-"}</td>

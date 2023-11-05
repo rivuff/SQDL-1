@@ -120,9 +120,13 @@ const SingleSubject = () => {
   // }, [])
 
   //edit drawer state
-  const [open, setOpen] = React.useState(false);
-  const openDrawer = () => setOpen(true);
-  const closeDrawer = () => setOpen(false);
+  const [open1, setOpen1] = React.useState(false);
+  const openDrawer1 = () => setOpen1(true);
+  const closeDrawer1 = () => setOpen1(false);
+
+  const [open2, setOpen2] = React.useState(false);
+  const openDrawer2 = () => setOpen2(true);
+  const closeDrawer2 = () => setOpen2(false);
 
   function handleSub() {
     const name = document.getElementById("name").value;
@@ -140,7 +144,7 @@ const SingleSubject = () => {
           name: response.data.data.name,
           description: response.data.data.description,
         });
-        closeDrawer();
+        closeDrawer2();
       })
       .catch((error) => {
         console.log(error);
@@ -266,8 +270,8 @@ const SingleSubject = () => {
 
 
       <React.Fragment>
-      <Button onClick={openDrawer}>Show Students</Button>
-      <Drawer open={open} onClose={closeDrawer} className="p-4">
+      <Button onClick={openDrawer1}>Show Students</Button>
+      <Drawer open={open1} onClose={closeDrawer1} className="p-4">
       <div>
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           Students
@@ -476,7 +480,7 @@ const SingleSubject = () => {
       <Button
         color="blue"
         variant="gradient"
-        onClick={openDrawer}
+        onClick={openDrawer2}
         className={
           check().subjects.includes(params.subjectid)
             ? "font-semibold"
@@ -485,12 +489,12 @@ const SingleSubject = () => {
       >
         Edit
       </Button>
-      {/* <Drawer open={open} onClose={closeDrawer} className=" p-4">
+      <Drawer open={open2} onClose={closeDrawer2} className=" p-4">
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
             Edit Subject
           </Typography>
-          <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+          <IconButton variant="text" color="blue-gray" onClick={closeDrawer2}>
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
         </div>
@@ -510,7 +514,7 @@ const SingleSubject = () => {
             Update
           </Button>
         </form>
-      </Drawer> */}
+      </Drawer>
     </div>
   );
   // return (
