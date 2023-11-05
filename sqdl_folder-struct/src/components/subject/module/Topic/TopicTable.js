@@ -51,9 +51,9 @@ const TopicTable = (props) => {
                           <td className="whitespace-nowrap px-6 py-4">{ele.topic}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.status ? "C/P" : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
-                          <td className="whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
+                          <td className="inline-block whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
                           {ele.sessionCode}
-                          <a>
+                          <a className="inline-block ml-2">
                             <BiCopy/>
                           </a>
                           </> : "-"}</td>

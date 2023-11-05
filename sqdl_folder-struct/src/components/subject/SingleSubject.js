@@ -262,7 +262,115 @@ const SingleSubject = () => {
           })}
         </div>
       </div>
+      
+
+
+      <React.Fragment>
+      <Button onClick={openDrawer}>Show Students</Button>
+      <Drawer open={open} onClose={closeDrawer} className="p-4">
       <div>
+        <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
+          Students
+        </h3>
+        <table className="w-full min-w-max table-auto text-left">
+          <thead>
+            <tr>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Name
+                </Typography>
+              </th>
+              {/* <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Email
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Semester
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Roll No
+                </Typography>
+              </th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {subjectStudents.map((ele, index) => {
+              const isLast = index === subjectStudents.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
+
+              return (
+                <tr key={ele._id}>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.name}
+                    </Typography>
+                  </td>
+                  {/* <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.email}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {ele.semester}
+                    </Typography>
+                  </td>
+                  <td className={`${classes} bg-blue-gray-50/50`}>
+                    <Typography
+                      as="a"
+                      href="#"
+                      variant="small"
+                      color="blue-gray"
+                      className="font-medium"
+                    >
+                      {ele.rollNumber}
+                    </Typography>
+                  </td> */}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      </Drawer>
+    </React.Fragment>
+
+    
+      {/* <div>
         <h3 className="text-5xl text-dark-gray font-montserrat font-extrabold">
           Students
         </h3>
@@ -359,7 +467,7 @@ const SingleSubject = () => {
             })}
           </tbody>
         </table>
-      </div>
+      </div> */}
       <NavLink to={`/course/${params.subjectid}/new`}>
         <Button color="blue" variant="gradient" fullWidth={true}>
           Add New Module
@@ -377,7 +485,7 @@ const SingleSubject = () => {
       >
         Edit
       </Button>
-      <Drawer open={open} onClose={closeDrawer} className="p-4">
+      {/* <Drawer open={open} onClose={closeDrawer} className=" p-4">
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
             Edit Subject
@@ -402,7 +510,7 @@ const SingleSubject = () => {
             Update
           </Button>
         </form>
-      </Drawer>
+      </Drawer> */}
     </div>
   );
   // return (
