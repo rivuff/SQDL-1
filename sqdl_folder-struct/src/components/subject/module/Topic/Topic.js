@@ -55,22 +55,23 @@ const Topic = () => {
           { _id: params.moduleid }, res
         )
       }).then(response => {
-        console.log(response);
+        console.log(response.data.data);
         setData(prev => {
           return {
             ...prev, moduleName: response.data.data.name
           }
         })
       }).then(() => {
-        return axios.get(
-          GLOBAL_URL + "topic/getAll", 
-          res
+        console.log(data);
+        return axios.post(
+          GLOBAL_URL + "topic/getByModuleId", 
+          {parentModule: params.moduleid}, res
         )
       }).then(response => {
         console.log(response);
         setData(prev => {
           return {
-            ...prev, topicData: response.data.data
+            ...prev, topicData: response.data.data === null ? [] : response.data.data
           }
         })
       }).catch(error => {

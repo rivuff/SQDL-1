@@ -99,6 +99,7 @@ const NewSession = () => {
     currDate.setSeconds(0)
 
     console.log(currDate);
+    // console.log(typeof(currDate));
 
     let response;
     try {
@@ -110,7 +111,7 @@ const NewSession = () => {
             description: session.description,
             parentModule: session.parentModule,
             parentTopic: topicid,
-            startDateTime: currDate,
+            startDateTime: new Date(currDate),
             conductedBy: session.conductedBy,
             sessionCode: generateCode(),
             enrollmentLimit: session.enrollmentLimit,

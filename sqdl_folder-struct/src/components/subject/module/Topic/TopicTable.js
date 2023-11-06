@@ -44,6 +44,7 @@ const TopicTable = (props) => {
               <tbody>
                 {props.sessions && props.sessions.map((ele, ind) => {
                     console.log(ele.startDateTime);
+                    let date = new Date(ele.startDateTime);
                     return (
                       <tr className="border-b">
                           <td className="whitespace-nowrap px-6 py-4 font-medium">{ind+1}</td>
@@ -53,11 +54,11 @@ const TopicTable = (props) => {
                           <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
                           <td className="inline-block whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
                           {ele.sessionCode}
-                          <div onClick={() => {navigator.clipboard.writeText(ele.sessionCode)}} className="inline-block ml-2">
+                          <div onClick={() => {navigator.clipboard.writeText(ele.sessionCode)}} className="inline-block ml-2 cursor-pointer">
                             <BiCopy/>
                           </div>
                           </> : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.startDateTime ? ele.startDateTime : "-"}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{ele.startDateTime ? date.toLocaleString() : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">{ele.endTime ? "etime" : "-"}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}`}>
