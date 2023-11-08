@@ -52,7 +52,7 @@ const Register = ({ display, handler }) => {
 
 
   return (
-    <div className={`flex flex-col h-screen text-center bg-lightesh-gray md-1/2:w-[30%] w-[80%] justify-center ${display}`}>
+    <div className={`flex flex-col h-screen text-center bg-white md-1/2:w-[30%] w-[80%] justify-center ${display}`}>
       <h1 className='text-5xl text-dark-gray font-montserrat font-extrabold my-6'>Register</h1>
       <form className='flex flex-col gap-5 mx-auto items-center w-60 '>
         <Input placeholder="Name" type='text' inputRef={nameRef}/>

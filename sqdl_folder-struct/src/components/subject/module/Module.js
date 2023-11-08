@@ -208,7 +208,7 @@ const Module = () => {
   }
 
   return (
-    <div className="p-10 flex flex-col gap-10 bg-lightesh-gray">
+    <div className="bg-white p-10 flex flex-col gap-10">
       <Breadcrumbs
         separator={
           <ArrowLongRightIcon

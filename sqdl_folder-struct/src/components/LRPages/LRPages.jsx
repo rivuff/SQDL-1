@@ -13,7 +13,7 @@ const LRPages = ({ toggle }) => {
   };
 
   return (
-    <div className="md-1/2:flex md-1/2:justify-center grid place-items-center w-full bg-lightesh-gray">
+    <div className="md-1/2:flex md-1/2:justify-center grid place-items-center w-full bg-white">
       <img
         src={lrImage}
         alt="lr-image"
@@ -39,7 +39,7 @@ const LRPages = ({ toggle }) => {
         </p>
         <button
           onClick={handleClick}
-          className="text-lg text-black py-5 px-12 rounded-full bg-lightesh-gray font-bold 
+          className="text-lg text-black py-5 px-12 rounded-full bg-white font-bold 
             transition-all hover:bg-blue-400 -translate-x-6 lg:translate-x-0"
         >
           Sign Up

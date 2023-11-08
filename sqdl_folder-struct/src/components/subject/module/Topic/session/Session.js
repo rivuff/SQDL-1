@@ -284,7 +284,7 @@ const Session = () => {
   }
   return (
     <>
-      <div className="bgSession align-center p-10 flex flex-col items-center h-screen ">
+      <div className="bgSession bg-white align-center p-10 flex flex-col items-center h-screen ">
         <div className="links bg-white rounded-md">
           <Breadcrumbs className="">
             <a href="/course" className="text opacity-80">

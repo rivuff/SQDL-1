@@ -36,7 +36,7 @@ const Login = ({ display, handler }) => {
 
   return (
     <div
-      className={`flex flex-col gap-8 h-screen text-center bg-lightesh-gray md-1/2:w-[30%] w-[80%] translate-x-20 justify-center ${display}`}
+      className={`flex flex-col gap-8 h-screen text-center bg-white md-1/2:w-[30%] w-[80%] translate-x-20 justify-center ${display}`}
     >
       <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold mx-auto">
         Login

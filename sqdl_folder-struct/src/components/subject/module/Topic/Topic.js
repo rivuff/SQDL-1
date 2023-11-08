@@ -130,7 +130,7 @@ const Topic = () => {
 
 
   return (
-    <div className="p-5 bg-lightesh-gray">
+    <div className="p-5 bg-white">
       <Breadcrumbs
         separator={
           <ArrowLongRightIcon
