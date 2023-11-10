@@ -16,6 +16,8 @@ import { GLOBAL_URL } from "../config";
 import StudentSubjects from "./StudentSubjects";
 import StudentEdit from "./StudentEdit";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Student = () => {
 
@@ -35,6 +37,19 @@ const Student = () => {
     type: userData.type,
     errmsg: "",
   });
+
+  const notify = () => {
+    toast.success('Request Sent', {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  }
 
 
   async function updateHandler() {
@@ -92,7 +107,11 @@ const Student = () => {
       );
       console.log(response);
       const session = response.data.data;
-      session.access_request.push(check()._id);
+      if (check().subjects.includes(session.subject)) {
+        session.approved_request.push(check()._id)
+      } else {
+        session.access_request.push(check()._id);
+      }
       console.log(session);
       console.log(session.parentModule);
       
@@ -118,6 +137,7 @@ const Student = () => {
         }, res
       );
       console.log(response2);
+      notify();
     } catch (error) {
       console.log(error);
     }
@@ -126,12 +146,11 @@ const Student = () => {
   return (
     <div className="bg-gray-200 flex flex-wrap">
       <NavCard className="items-center">
-        <div
-          className="w-[150px] h-[210px] bg-cover rounded-xl"
-          style={{
-            backgroundImage: `url(${require('../../images/download.jpeg')})`
-          }}
-        ></div>
+        <div>
+            <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold mx-auto">
+              {check().name}
+            </h1>
+        </div>
         <ul>
           <li className="w-full cursor-pointer px-20 py-3 font-redHatMonoWeight font-redHatMono text-lg text-center bg-teal-100 border-b-2 hover:bg-teal-200">About</li>
           <li 
@@ -161,6 +180,7 @@ const Student = () => {
           {codeInput && <>
             <Input className="mt-4" placeholder="Enter Code" inputRef={codeRef}/>
             <Button onClick={codeSubmission} className="mt-8">Submit</Button>
+            <ToastContainer />
           </>}
       </div>
     </div>

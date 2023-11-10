@@ -13,6 +13,8 @@ import {
     Option
   } from "@material-tailwind/react";
 import { set } from '../../../Cookies';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TeacherAssociation() {
 
@@ -20,6 +22,28 @@ function TeacherAssociation() {
   console.log(subjectid);
   const [teachers, setTeachers] = useState({allteachers: [], selectedteacher: ''});
   const [subject, setSubject] = useState('');
+
+  const notifySuccess = () => toast.success('Request Sent', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const notifyError = () => toast.error('Something went wrong', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
 
   useEffect(() => {
 
@@ -79,9 +103,11 @@ function TeacherAssociation() {
         }}, res
       )
       console.log(response);
+      notifySuccess()
       window.location.href = "/dashboard";
     } catch(error) {
       console.log(error);
+      notifyError();
     }
 
     // updating subject with teacher
@@ -165,6 +191,7 @@ function TeacherAssociation() {
 
                 <Button type='submit' disabled={teachers.selectedteacher === ''}>Submit</Button>
               </div>
+              <ToastContainer />
             </form>
           </Card>
         </div>

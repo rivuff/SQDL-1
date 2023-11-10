@@ -12,6 +12,7 @@ import {
   MenuItem,
   Avatar,
   Button,
+  Checkbox
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
@@ -108,6 +109,14 @@ function NavList(props) {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const submitAll = async() => {
+    console.log(check());
+    check().requests.map(req => {
+      if (req.from === 'admin') handleSubmit('accept', req)
+      else if (req.from === 'student') handleStudentSubmit('accept', req)
+    })
   }
 
   if (check() == null) {
@@ -236,7 +245,12 @@ function NavList(props) {
             </Link>
           </Typography>
         </li> */}
-        <Menu>
+        <Menu
+          dismiss={{
+            itemPress: false,
+          }}
+        >
+          
           <MenuHandler>
             <IconButton variant="text">
               <svg
@@ -253,6 +267,7 @@ function NavList(props) {
               </svg>
             </IconButton>
           </MenuHandler>
+          
           <MenuList className="flex flex-col gap-2 max-h-72">
             {/* <MenuItem className="flex items-center gap-4 py-2 pr-8 pl-2">
           <Avatar
@@ -312,12 +327,16 @@ function NavList(props) {
             </Typography>
           </div>
         </MenuItem> */}
+        {check().requests && <div>
+            <Checkbox color="green" label="Approve All" ripple={false} onClick={submitAll}/>
+          </div>
+        }
             {check().requests && check().requests.map((req => {
               if (req.from === 'admin') {
                 return (
                   <MenuItem className="flex justify-center">
                     {" "}
-                    <h3 className="mr-8 m-auto">{req.name} {req.division} {req.semester}</h3>{" "}
+                    <h3 className="mr-8 m-auto">Subject Request: {req.name} {req.division} {req.semester}</h3>{" "}
                     <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green" onClick={() => {handleSubmit('accept', req)}}>
                       ✔
                     </Button>{" "}
@@ -330,7 +349,7 @@ function NavList(props) {
                 return (
                   <MenuItem className="flex justify-center">
                     {" "}
-                    <h3 className="mr-8 m-auto">{req.subjectInfo.name}: {req.studentInfo.name} {req.studentInfo.year} {req.studentInfo.semester} {req.studentInfo.rollNumber}</h3>{" "}
+                    <h3 className="mr-8 m-auto">Student Request: {req.subjectInfo.name}: {req.studentInfo.name} {req.studentInfo.year} {req.studentInfo.semester} {req.studentInfo.rollNumber}</h3>{" "}
                     <Button className="mr-2 p-2 pb-1.5 pt-1.5" color="green" onClick={() => {handleStudentSubmit('accept', req)}}>
                       ✔
                     </Button>{" "}
@@ -531,7 +550,7 @@ function NavBar(props) {
   var navList = props.navList; //props to pass into Navlist
 
   return (
-    <div className="navbarDiv ">
+    <div className="navbarDiv">
       <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
         <div className="flex items-center justify-between text-blue-gray-900 ">
           <Typography

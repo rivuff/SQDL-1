@@ -69,7 +69,13 @@ const Register = ({ display, handler }) => {
           <option value="B.E">B.E</option>
         </select>
         <Input placeholder="Semester" type="number" inputRef={semRef} />
-        <Input placeholder="Division" type="text" inputRef={divRef} />
+        <select ref={divRef} className='cursor-pointer w-full'>
+          <option selected>Choose your Division</option>
+          <option>A</option>
+          <option>B</option>
+          <option>N/A</option>
+        </select>
+        {/* <Input placeholder="Division" type="text" inputRef={divRef} /> */}
         <button 
           type='submit' 
           onClick={handleSubmit}

@@ -7,6 +7,9 @@ import { GLOBAL_URL } from "../config";
 
 import { Select, Option, Button } from "@material-tailwind/react";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const AddStudentSubject = () => {
   const [subjects, setSubjects] = useState([]);
   const [teachers, setTeachers] = useState([]);
@@ -121,6 +124,28 @@ const AddStudentSubject = () => {
     });
   };
 
+  const notifySuccess = () => toast.success('Subject Request sent', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const notifyError = () => toast.error('Something went wrong', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -173,8 +198,10 @@ const AddStudentSubject = () => {
           }}, res
         )
         console.log(response);
+        notifySuccess();
       } catch (error) {
         console.log(error);
+        notifyError();
       }
     })
     // console.log(check()._id);
@@ -255,6 +282,7 @@ const AddStudentSubject = () => {
         >
           Add
         </Button>
+        <ToastContainer />
       </div>
     )
     // subjects && subjects.map((ele) => {

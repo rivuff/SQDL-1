@@ -2,9 +2,23 @@ import React from "react";
 import { BiCopy } from 'react-icons/bi'
 import { NavLink, useParams } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const TopicTable = (props) => {
 
   const params = useParams();
+
+  const notify = () => toast.success('Code copied!', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
 
   console.log(props.sessions);
   return (
@@ -54,7 +68,11 @@ const TopicTable = (props) => {
                           <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
                           <td className="inline-block whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
                           {ele.sessionCode}
-                          <div onClick={() => {navigator.clipboard.writeText(ele.sessionCode)}} className="inline-block ml-2 cursor-pointer">
+                          <div onClick={() => {
+                            navigator.clipboard.writeText(ele.sessionCode)
+                            notify()
+                          }
+                          } className="inline-block ml-2 cursor-pointer">
                             <BiCopy/>
                           </div>
                           </> : "-"}</td>
@@ -100,6 +118,7 @@ const TopicTable = (props) => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
