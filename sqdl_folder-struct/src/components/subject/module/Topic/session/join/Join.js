@@ -54,10 +54,10 @@ const Join = () => {
     } else if (user.type == "student") {
       if (session.approved_request.includes(user._id)) {
         //add subject to user profile
-        user = check();
-        user.subjects = user.subjects.concat(subject._id);
-        let payload = await axios.post(GLOBAL_URL + "user/update", user, res);
-        set(payload.data.data);
+        // user = check();
+        // user.subjects = user.subjects.concat(subject._id);
+        // let payload = await axios.post(GLOBAL_URL + "user/update", user, res);
+        // set(payload.data.data);
         setAuth("Allowed");
         //redirect
       } else if (session.access_request.includes(user._id)) {

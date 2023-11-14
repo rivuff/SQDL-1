@@ -23,6 +23,7 @@ const Student = () => {
 
   const [edit, setEdit] = useState(false);
   const [codeInput, setCodeInput] = useState(false);
+  const [isFetched, setIsFetched] = useState(false);
   const codeRef = useRef("");
 
   const userData = check();
@@ -53,6 +54,7 @@ const Student = () => {
 
 
   async function updateHandler() {
+    setIsFetched('not fetched')
     let submissionData = userData;
     submissionData = {
       ...submissionData,
@@ -114,6 +116,8 @@ const Student = () => {
       }
       console.log(session);
       console.log(session.parentModule);
+
+      setIsFetched(`/course/${session.subject}/${session.parentModule}/${session._id}`);
       
       const response2 = await axios.post(
         GLOBAL_URL + "session/update",
@@ -140,11 +144,12 @@ const Student = () => {
       notify();
     } catch (error) {
       console.log(error);
+      setIsFetched('error');
     }
   }
 
   return (
-    <div className="bg-gray-200 flex flex-wrap">
+    <div className="flex flex-wrap">
       <NavCard className="items-center">
         <div>
             <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold mx-auto">
@@ -180,7 +185,13 @@ const Student = () => {
           {codeInput && <>
             <Input className="mt-4" placeholder="Enter Code" inputRef={codeRef}/>
             <Button onClick={codeSubmission} className="mt-8">Submit</Button>
+            
             <ToastContainer />
+            {isFetched === "not fetched" && <p>Fetching Session</p>}
+            {isFetched === 'error' && <p>Session does not exist</p>}
+            {isFetched[1] === 'c' && <NavLink to={isFetched}>
+                <Button color="green">Join Sesssion</Button>
+              </NavLink>}
           </>}
       </div>
     </div>
