@@ -1,11 +1,14 @@
+'use client';
+
+
 import { React, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Button } from 'flowbite-react';
 import {
   Drawer,
   Spinner,
   Typography,
   IconButton,
-  Button,
   Card,
   CardHeader,
   CardBody,
@@ -190,10 +193,10 @@ const Questions = ({ iteration }) => {
   } else {
     return (
       <div className="w-full overflow-auto">
-        <h4> Submitted Questions </h4>
+        <h4 className="text-xl mb-2"> Submitted Questions </h4>
         <table className="w-full min-w-max table-auto text-left overflow-auto">
           <thead>
-            <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+            <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 text-blue-gray-800">
               <th>Question Text</th>
               <th>Type</th>
               <th>Posed By</th>
@@ -359,12 +362,14 @@ const Creator = () => {
       <div>
         <br />
         <div className="flex flex-col items-center justify-center">
-          <Card className="w-3/5 text-center">
+          <Card className="bg-gradient-to-r from-cyan-400 to-blue-500 w-3/5 text-center text-white">
             <CardBody>
               <Typography variant="h4">
                 {sessionData?.title}{" "}
                 <Button
                   size="sm"
+                  color="blue"
+                  className="bg-blue-700 text-white m-auto"
                   onClick={() => {
                     openDrawer();
                     console.log(sessionData);
@@ -384,8 +389,11 @@ const Creator = () => {
               )}
               Current Iteration: {sessionData?.iteration}
               <br />
+              <br />
               <Button
                 size="sm"
+                color="blue"
+                className="bg-blue-700 text-white m-auto"
                 onClick={() => {
                   activityChange();
                 }}
@@ -395,10 +403,10 @@ const Creator = () => {
                   : "Next Activity"}
               </Button>
               <br />
-              <Button size="sm" color="red">
+              <Button size="sm"  gradientMonochrome="failure" className="m-auto">
                 End Session
               </Button>
-              <hr />
+              <hr className="mt-6 mb-0" />
             </CardBody>
             {sessionData?.current_activity == "Question Posing" ||
             sessionData?.current_activity == "Peer Prioritization" ? (
@@ -440,10 +448,10 @@ const Creator = () => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-2/3">
+                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-2/3 ">
                   Name
                 </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-1/3">
+                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 w-1/3 ">
                   Permission
                 </th>
               </tr>
