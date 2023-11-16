@@ -33,3 +33,12 @@ export function set(data) {
   //     return false
   // }
 }
+
+export function getSessionCode() {
+  return JSON.parse(localStorage.getItem("sessionCode"))
+}
+
+export function setSessionCode(code) {
+  localStorage.setItem("sessionCode", JSON.stringify(code));
+  return true;
+}

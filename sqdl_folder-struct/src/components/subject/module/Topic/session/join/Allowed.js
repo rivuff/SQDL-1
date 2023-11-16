@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
@@ -64,6 +64,15 @@ const Allowed = () => {
   }
 
   const [sessionData, setSession] = useState(null);
+  const [teacherRes, setTeacherRes] = useState([]);
+
+  useEffect(() => {
+    socket.on('receive-link', (link) => {
+      setTeacherRes(prev => [...prev, link])
+      console.log("Link received");
+    })
+  }, [socket])
+
 
   async function getSession() {
     let payload = await axios.post(
@@ -93,13 +102,24 @@ const Allowed = () => {
         <Card>
           <CardBody>
             <Typography variant="h4">
-              Current Activity is {sessionData?.current_activity}
+              {sessionData?.current_activity ? `Current Activity is ${sessionData?.current_activity}` : "Session has not started yet"}
             </Typography>
             <hr />
             {sessionData?.current_activity == "Deliver Content" ? (
-              <Typography>
-                Teacher is delivering lecture. Please await further action
-              </Typography>
+              <>
+                <Typography>
+                  Teacher is delivering lecture. Please await further action
+                </Typography>
+                {teacherRes && <h1>Resources provided by the teacher</h1>}
+                <ul>
+                  {teacherRes && teacherRes.map(res => (
+                    <li>
+                      <div dangerouslySetInnerHTML={{__html: res}} />
+                    </li>
+                  ))}
+                </ul>
+              </>
+              
             ) : sessionData?.current_activity == "Question Posing" ? (
               <>
                 <Typography>

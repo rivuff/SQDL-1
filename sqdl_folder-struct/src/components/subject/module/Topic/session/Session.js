@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Outlet, useParams, NavLink } from "react-router-dom";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../../config";
-import { check, set } from "../../../../Cookies";
+import { check, set, setSessionCode } from "../../../../Cookies";
 import {
   Input,
   Typography,
@@ -17,6 +17,8 @@ import {
 } from "@material-tailwind/react";
 import "./Session.css";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "../../../../config";
 
 const Session = () => {
   const params = useParams();
@@ -27,6 +29,8 @@ const Session = () => {
       "Content-type": "application/json",
     },
   };
+
+  const socket = io(SOCKET_URL);
 
   //component state
   const [session, setSession] = useState({
@@ -102,10 +106,10 @@ const Session = () => {
       .post(GLOBAL_URL + "user/getID", { _id: check()._id }, res)
       .then((response) => {
         set(response.data.data);
-        if (!response.data.data.subjects.includes(params.subjectid)) {
-          console.log("not in user subject");
-          window.location.href = "/course"; //redirect user to /course route if current course not enrolled for
-        }
+        // if (!response.data.data.subjects.includes(params.subjectid)) {
+        //   console.log("not in user subject");
+        //   window.location.href = "/course"; //redirect user to /course route if current course not enrolled for
+        // }
       })
       .then(() => {
         //requesting subject data
@@ -148,6 +152,7 @@ const Session = () => {
         newsess.description = response.data.data.description;
         newsess.createdBy = response.data.data.createdBy;
         newsess.conductedBy = response.data.data.conductedBy;
+        newsess.sessionCode = response.data.data.sessionCode;
         newsess.enrollmentLimit = response.data.data.enrollmentLimit;
         newsess.activity_order = response.data.data.activity_order;
         newsess.copy = response.data.data.activity_order; //copy to manage edit form states
@@ -183,6 +188,14 @@ const Session = () => {
 
     return update;
   }
+
+  const joinSession = () => {
+    const {name, type} = check();
+    const code = session.sessionCode;
+    setSessionCode(code);
+    socket.emit('join-session', {name, type, code})
+  }
+
   const ActivitySelect = () => {
     if (session.copy.length == 0) {
       return (
@@ -357,7 +370,9 @@ const Session = () => {
             })}
             <hr></hr>
             <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/join`}>
-              Join
+              <Button onClick={joinSession()}>
+                Join
+              </Button>
             </NavLink>
           </div>
         </Card>

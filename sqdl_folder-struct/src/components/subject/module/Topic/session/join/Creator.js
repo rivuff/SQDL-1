@@ -1,7 +1,7 @@
 'use client';
 
 
-import { React, useState } from "react";
+import { React, useState, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from 'flowbite-react';
 import {
@@ -12,12 +12,15 @@ import {
   Card,
   CardHeader,
   CardBody,
+  Input
 } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { io } from "socket.io-client";
+import { getSessionCode } from "../../../../../Cookies";
+
 
 const res = {
   headers: {
@@ -232,6 +235,18 @@ const Creator = () => {
   const [sessionData, setSession] = useState(null);
   const [students, setStudents] = useState([]);
 
+  const resref = useRef("");
+
+  const boradCastResource = () => {
+    // console.log(getSessionCode())
+    const code = getSessionCode();
+    const link = resref.current.value;
+    socket.emit('send-link', link, code, (response) => {
+      console.log(response);
+    })
+    resref.current.value = "";
+  }
+
   socket.on(params.sessionid + "teacher" + "stateUpdate", (args) => {
     console.log("Reloading page data...");
     getSession();
@@ -408,6 +423,12 @@ const Creator = () => {
               </Button>
               <hr className="mt-6 mb-0" />
             </CardBody>
+            {sessionData?.current_activity == 'Deliver Content' && <>
+                  <Input label="Resources(if any)" type="text" inputRef={resref} color="purple" className="text-white"/>
+                  <Button className="mt-4 bg-green-500" color="green" onClick={boradCastResource}>
+                    Send the Resources to students
+                  </Button>
+            </>}
             {sessionData?.current_activity == "Question Posing" ||
             sessionData?.current_activity == "Peer Prioritization" ? (
               <CardBody>

@@ -39,8 +39,8 @@ const Student = () => {
     errmsg: "",
   });
 
-  const notify = () => {
-    toast.success('Request Sent', {
+  const notify = (msg) => {
+    toast.success(msg, {
       position: "top-right",
       autoClose: 1000,
       hideProgressBar: false,
@@ -110,9 +110,21 @@ const Student = () => {
       console.log(response);
       const session = response.data.data;
       if (check().subjects.includes(session.subject)) {
-        session.approved_request.push(check()._id)
+        if (!(session.approved_request.includes(check()._id)))
+          session.approved_request.push(check()._id)
+        else {
+          setIsFetched(`/course/${session.subject}/${session.parentModule}/${session._id}`);
+          notify("Request already sent")
+          return ;
+        }
       } else {
-        session.access_request.push(check()._id);
+        if (!(session.access_request.includes(check()._id)))
+          session.access_request.push(check()._id);
+        else {
+          setIsFetched(`/course/${session.subject}/${session.parentModule}/${session._id}`);
+          notify("Request already sent")
+          return ;
+        }
       }
       console.log(session);
       console.log(session.parentModule);
@@ -141,7 +153,7 @@ const Student = () => {
         }, res
       );
       console.log(response2);
-      notify();
+      notify('Request Sent');
     } catch (error) {
       console.log(error);
       setIsFetched('error');
@@ -189,7 +201,7 @@ const Student = () => {
             <ToastContainer />
             {isFetched === "not fetched" && <p>Fetching Session</p>}
             {isFetched === 'error' && <p>Session does not exist</p>}
-            {isFetched[1] === 'c' && <NavLink to={isFetched}>
+            {isFetched[1] === 'c' && <NavLink to={isFetched} className="mt-4">
                 <Button color="green">Join Sesssion</Button>
               </NavLink>}
           </>}
