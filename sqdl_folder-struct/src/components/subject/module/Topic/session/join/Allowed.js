@@ -113,7 +113,7 @@ const Allowed = () => {
                 {teacherRes && <h1>Resources provided by the teacher</h1>}
                 <ul>
                   {teacherRes && teacherRes.map(res => (
-                    <li>
+                    <li className="mt-4">
                       <div dangerouslySetInnerHTML={{__html: res}} />
                     </li>
                   ))}

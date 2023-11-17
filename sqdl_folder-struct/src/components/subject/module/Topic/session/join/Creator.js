@@ -12,7 +12,8 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Input
+  Input,
+  Checkbox
 } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { useParams } from "react-router-dom";
@@ -284,45 +285,62 @@ const Creator = () => {
 
   async function statusChangeHandler(e, _id) {
     const status = e.target.value;
-    let approved = sessionData.approved_request;
-    let req = sessionData.access_request;
-    let blocked = sessionData.blocked_request;
-    try {
-      //drop element from approved
-      let index = approved.indexOf(_id);
-      approved.splice(index, 1);
-    } catch (error) {
-      console.log(error);
+    console.log(typeof(_id));
+    if (typeof(_id) == "object") {
+      const stulist = students.map(stu => stu._id);
+      sessionData.approved_request = stulist;
+      console.log(sessionData.approved_request);
+      sessionData.access_request = [];
+      sessionData.blocked_request = [];
+    } else {
+      if (sessionData.approved_request.includes(_id)) {
+        let index = sessionData.approved_request.indexOf(_id);
+        sessionData.approved_request.splice(index, 1);
+      } else if (sessionData.access_request.includes(_id)) {
+        let index = sessionData.access_request.indexOf(_id);
+        sessionData.access_request.splice(index, 1);
+      } else if (sessionData.blocked_request.includes(_id)) {
+        let index = sessionData.blocked_request.indexOf(_id);
+        sessionData.blocked_request.splice(index, 1);
+      }
+
+      if (status == "approved") {
+        sessionData.approved_request.push(_id);
+      } else if (status == "requested") {
+        sessionData.access_request.push(_id);
+      } else if (status == "blocked") {
+        sessionData.blocked_requested.push(_id);
+      }
     }
-    try {
-      //drop element from blocked
-      let index = blocked.indexOf(_id);
-      blocked.splice(index, 1);
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      //drop element from requested
-      let index = req.indexOf(_id);
-      req.splice(index, 1);
-    } catch (error) {
-      console.log(error);
-    }
-    if (status == "approved") {
-      approved.push(_id);
-    } else if (status == "requested") {
-      req.push(_id);
-    } else if (status == "blocked") {
-      blocked.push(_id);
-    }
+    // try {
+    //   //drop element from approved
+    //   let index = approved.indexOf(_id);
+    //   approved.splice(index, 1);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // try {
+    //   //drop element from blocked
+    //   let index = blocked.indexOf(_id);
+    //   blocked.splice(index, 1);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // try {
+    //   //drop element from requested
+    //   let index = req.indexOf(_id);
+    //   req.splice(index, 1);
+    // } catch (error) {
+    //   console.log(error);
+    // }
     //send updated session Data to server
     let payload = await axios.post(
       GLOBAL_URL + "session/update",
       {
         _id: params.sessionid,
-        access_request: req,
-        approved_request: approved,
-        blocked_request: blocked,
+        access_request: sessionData.access_request,
+        approved_request: sessionData.approved_request,
+        blocked_request: sessionData.blocked_requested,
       },
       res
     );
@@ -331,6 +349,13 @@ const Creator = () => {
     console.log("session state modified");
     setSession(payload);
   }
+
+  // function approveAll() {
+  //   students.map(stu => {
+  //     statusChangeHandler({target: {value: "approved"}}, stu._id);
+  //   })
+  // }
+
   async function activityChange() {
     let current = sessionData.current_activity;
     let iteration = sessionData.iteration;
@@ -423,6 +448,9 @@ const Creator = () => {
               </Button>
               <hr className="mt-6 mb-0" />
             </CardBody>
+            {sessionData?.current_activity == "Deliver Content & Question Posing" && <>
+                  <h1>Hello</h1>
+            </>}
             {sessionData?.current_activity == 'Deliver Content' && <>
                   <Input label="Resources(if any)" type="text" inputRef={resref} color="purple" className="text-white"/>
                   <Button className="mt-4 bg-green-500" color="green" onClick={boradCastResource}>
@@ -464,6 +492,11 @@ const Creator = () => {
           <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
+        </div>
+        <div>
+          <Checkbox color="green" label="Approve All" ripple={false} onClick={() => {statusChangeHandler({target: {
+            value: "approved"
+          }}, students)}}/>
         </div>
         <div className="flex flex-row overflow-y-auto w-full">
           <table className="w-full min-w-max table-auto text-left">

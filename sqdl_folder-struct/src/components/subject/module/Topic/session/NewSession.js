@@ -242,8 +242,9 @@ const NewSession = () => {
             }}
           >
             <option label="" value={null}></option>
-            <option label="Deliver Content" value="Deliver Content"></option>
-            <option label="Question Posing" value="Question Posing"></option>
+            <option label="Deliver Content & Question Posing" value="Deliver Content & Question Posing"></option>
+            {/* <option label="Deliver Content" value="Deliver Content"></option>
+            <option label="Question Posing" value="Question Posing"></option> */}
             <option
               label="Own Prioritization"
               value="Personal Prioritization"
