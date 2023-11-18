@@ -1,9 +1,8 @@
-'use client';
-
+"use client";
 
 import { React, useState, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Button } from 'flowbite-react';
+import { Button } from "flowbite-react";
 import {
   Drawer,
   Spinner,
@@ -13,7 +12,7 @@ import {
   CardHeader,
   CardBody,
   Input,
-  Checkbox
+  Checkbox,
 } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { useParams } from "react-router-dom";
@@ -21,7 +20,6 @@ import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { io } from "socket.io-client";
 import { getSessionCode } from "../../../../../Cookies";
-
 
 const res = {
   headers: {
@@ -242,11 +240,11 @@ const Creator = () => {
     // console.log(getSessionCode())
     const code = getSessionCode();
     const link = resref.current.value;
-    socket.emit('send-link', link, code, (response) => {
+    socket.emit("send-link", link, code, (response) => {
       console.log(response);
-    })
+    });
     resref.current.value = "";
-  }
+  };
 
   socket.on(params.sessionid + "teacher" + "stateUpdate", (args) => {
     console.log("Reloading page data...");
@@ -285,9 +283,9 @@ const Creator = () => {
 
   async function statusChangeHandler(e, _id) {
     const status = e.target.value;
-    console.log(typeof(_id));
-    if (typeof(_id) == "object") {
-      const stulist = students.map(stu => stu._id);
+    console.log(typeof _id);
+    if (typeof _id == "object") {
+      const stulist = students.map((stu) => stu._id);
       sessionData.approved_request = stulist;
       console.log(sessionData.approved_request);
       sessionData.access_request = [];
@@ -401,8 +399,8 @@ const Creator = () => {
     <div>
       <div>
         <br />
-        <div className="flex flex-col items-center justify-center">
-          <Card className="bg-gradient-to-r from-cyan-400 to-blue-500 w-3/5 text-center text-white">
+        <div className="flex flex-col items-center justify-center inline-block">
+          <Card className="bg-blue-500 w-3/5 text-center text-white">
             <CardBody>
               <Typography variant="h4">
                 {sessionData?.title}{" "}
@@ -419,6 +417,91 @@ const Creator = () => {
                 </Button>
               </Typography>
               <br />
+              <div className="w-1/5 inline-block">
+                <Typography className="text-left mb-2" variant="h6">
+                  This is a Offline Session
+                </Typography>
+                <Typography className="text-left mb-2" variant="h6">
+                  Enter youtube video link
+                </Typography>
+                <Input
+                  className="mb-4"
+                  color="white"
+                  variant="outlined"
+                  label="youtube link"
+                />
+              </div>
+              <div className="w-3/5 ml-20 inline-block">
+              <div className="flex flex-col overflow-x-auto overflow-y-auto max-h-80">
+                <div className="sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-left text-sm font-light">
+                        <thead className="border-b font-medium dark:border-neutral-500">
+                          <tr>
+                            <th scope="col" className="px-6 py-4">
+                              #
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Student Name
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              List of Questions posed
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              tagging
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Priority
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b dark:border-neutral-500">
+                            <td className="whitespace-nowrap px-6 py-4 font-medium">
+                              1
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                          </tr>
+                          <tr className="border-b dark:border-neutral-500">
+                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
+                              2
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                          </tr>
+                          <tr className="border-b ">
+                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
+                              3
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                          </tr>
+                          <tr className="border-b ">
+                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
+                              4
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <br/>
+              <br/>
               {sessionData?.current_activity == null ? (
                 <>No activity in progress</>
               ) : (
@@ -443,20 +526,36 @@ const Creator = () => {
                   : "Next Activity"}
               </Button>
               <br />
-              <Button size="sm"  gradientMonochrome="failure" className="m-auto">
+              {/* <Button size="sm" gradientMonochrome="failure" className="m-auto">
                 End Session
-              </Button>
+              </Button> */}
               <hr className="mt-6 mb-0" />
+            
             </CardBody>
-            {sessionData?.current_activity == "Deliver Content & Question Posing" && <>
-                  <h1>Hello</h1>
-            </>}
-            {sessionData?.current_activity == 'Deliver Content' && <>
-                  <Input label="Resources(if any)" type="text" inputRef={resref} color="purple" className="text-white"/>
-                  <Button className="mt-4 bg-green-500" color="green" onClick={boradCastResource}>
-                    Send the Resources to students
-                  </Button>
-            </>}
+            {sessionData?.current_activity ==
+              "Deliver Content & Question Posing" && (
+              <>
+                <h1>Hello</h1>
+              </>
+            )}
+            {sessionData?.current_activity == "Deliver Content" && (
+              <>
+                <Input
+                  label="Resources(if any)"
+                  type="text"
+                  inputRef={resref}
+                  color="purple"
+                  className="text-white"
+                />
+                <Button
+                  className="mt-4 bg-green-500"
+                  color="green"
+                  onClick={boradCastResource}
+                >
+                  Send the Resources to students
+                </Button>
+              </>
+            )}
             {sessionData?.current_activity == "Question Posing" ||
             sessionData?.current_activity == "Peer Prioritization" ? (
               <CardBody>
@@ -494,9 +593,21 @@ const Creator = () => {
           </IconButton>
         </div>
         <div>
-          <Checkbox color="green" label="Approve All" ripple={false} onClick={() => {statusChangeHandler({target: {
-            value: "approved"
-          }}, students)}}/>
+          <Checkbox
+            color="green"
+            label="Approve All"
+            ripple={false}
+            onClick={() => {
+              statusChangeHandler(
+                {
+                  target: {
+                    value: "approved",
+                  },
+                },
+                students
+              );
+            }}
+          />
         </div>
         <div className="flex flex-row overflow-y-auto w-full">
           <table className="w-full min-w-max table-auto text-left">
