@@ -13,6 +13,8 @@ import {
   CardBody,
   Input,
   Checkbox,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { useParams } from "react-router-dom";
@@ -57,6 +59,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
   }
 
   async function handleOnDragEnd(result) {
+    console.log(result);
     const items = Array.from(questions);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -116,6 +119,17 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     let session = payload;
     console.log(session);
   }
+
+  function calculatePriority(priorityArray, prioritySelf) {
+    let sum = 0;
+    priorityArray.forEach((p) => {
+      sum += p.priority;
+    });
+    sum += prioritySelf;
+    sum /= priorityArray.length + 1;
+    return sum.toFixed(2);
+  }
+
   async function getQuestions() {
     //fetch questions with current iteration and session
     let payload = await axios.post(GLOBAL_URL + "question/get", {
@@ -135,32 +149,87 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="questionSelect">
             {(provided) => (
-              <ul
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="questionSelect"
-              >
-                {questions.map((q, index) => {
-                  return (
-                    <Draggable key={q._id} draggableId={q._id} index={index}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <QuestionCard
+              // <>
+              //   <div
+              //     className="w-full p-4 flex gap-5 justify-evenly"
+              //     {...provided.droppableId}
+              //     ref={provided.innerRef}
+              //   >
+              //     <h3>Raised By</h3>
+              //     <h3>Question</h3>
+              //     <h3>Overall Priority</h3>
+              //   </div>
+              //   {questions &&
+              //     questions.map((ques, ind) => (
+              //       <Draggable
+              //         key={ques._id}
+              //         draggableId={ques._id}
+              //         index={ind}
+              //         className="w-full p-4 flex gap-5 justify-evenly odd:bg-gray-300 border-2 border-black my-2"
+              //       >
+              //         {(provided) => (
+              //           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+              //               className="w-full p-4 flex gap-5 justify-evenly odd:bg-gray-300 border-2 border-black my-2"
+              //           >
+              //             <div index={ind} dropHandler={dropHandler}>
+              //               <h3>{ques.raisedByName}</h3>
+              //               <h3>{ques.questionText}</h3>
+              //               <h3>
+              //                 {calculatePriority(
+              //                   ques.priorityByPeer,
+              //                   ques.priorityBySelf
+              //                 )}
+              //               </h3>
+              //             </div>
+              //           </div>
+              //         )}
+              //       </Draggable>
+              //     ))}
+              // </>
+              <>
+                <div
+                  className="w-full p-4 flex gap-5 justify-evenly"
+                >
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Raised By</h3>
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Question</h3>
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Overall Priority</h3>
+                </div>
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="questionSelect"
+                >
+                  {questions.map((q, index) => {
+                    return (
+                      <Draggable key={q._id} draggableId={q._id} index={index}>
+                        {(provided) => (
+                          <li
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="w-full p-4 flex gap-5 justify-evenly border-2 border-black my-2"
+                          >
+                            <h3 className="w-1/5 text-center">{q.raisedByName}</h3>
+                            <h3 className="w-1/5 text-center">{q.questionText}</h3>
+                            <h3 className="w-1/5 text-center">
+                              {calculatePriority(
+                                q.priorityByPeer,
+                                q.priorityBySelf
+                              )}
+                            </h3>
+                            {/* <QuestionCard
                             question={q}
                             index={index}
                             dropHandler={dropHandler}
-                          ></QuestionCard>
-                        </li>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </ul>
+                          ></QuestionCard> */}
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </ul>
+              </>
             )}
           </Droppable>
         </DragDropContext>
@@ -182,7 +251,6 @@ const Questions = ({ iteration }) => {
     //needs to be dynamically updated
     payload = payload.data;
     //consider making payload sortable here
-
     setQuestion(payload);
   }
   socket.on(params.sessionid + "teacher" + "stateUpdate", (args) => {
@@ -194,35 +262,203 @@ const Questions = ({ iteration }) => {
     getQuestions();
   } else {
     return (
-      <div className="w-full overflow-auto">
-        <h4 className="text-xl mb-2"> Submitted Questions </h4>
-        <table className="w-full min-w-max table-auto text-left overflow-auto">
+      <Card className="overflow-x-auto overflow-y-auto h-[90%] mt-4">
+        <table className="w-full min-w-max table-auto text-left">
           <thead>
-            <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 text-blue-gray-800">
-              <th>Question Text</th>
-              <th>Type</th>
-              <th>Posed By</th>
-              <th>Self-Priority</th>
-              <th>Peer-Priority</th>
+            <tr>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Student Name
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Question Posed
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Tag
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Priority
+                </Typography>
+              </th>
             </tr>
           </thead>
           <tbody>
-            {questions.map((object) => {
-              return (
-                <tr className="p-4 border-b border-blue-gray-50">
-                  <td className="px-1">{object.questionText}</td>
-                  <td className="px-1">{object.questionTag}</td>
-                  <td className="px-1">{object.raisedBy}</td>
-                  <td className="px-1">{object.priorityBySelf}</td>
-                  <td className="px-1">{object.priorityByPeer}</td>
+            {questions.map(
+              ({ raisedByName, questionText, questionTag, priorityBySelf }) => (
+                <tr key={questionText} className="even:bg-blue-gray-50/50">
+                  <td className="p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {raisedByName}
+                    </Typography>
+                  </td>
+                  <td className="p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {questionText}
+                    </Typography>
+                  </td>
+                  <td className="p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {questionTag}
+                    </Typography>
+                  </td>
+                  <td className="p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {priorityBySelf}
+                    </Typography>
+                  </td>
                 </tr>
-              );
-            })}
+              )
+            )}
           </tbody>
         </table>
-      </div>
+      </Card>
     );
+    // return (
+    //   <div className="w-full overflow-auto">
+    //     <h4 className="text-xl mb-2"> Submitted Questions </h4>
+    //     <table className="w-full min-w-max table-auto text-left overflow-auto">
+    //       <thead>
+    //         <tr className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 text-blue-gray-800">
+    //           <th>Question Text</th>
+    //           <th>Type</th>
+    //           <th>Posed By</th>
+    //           <th>Self-Priority</th>
+    //           <th>Peer-Priority</th>
+    //         </tr>
+    //       </thead>
+    //       <tbody>
+    //         {questions.map((object) => {
+    //           return (
+    //             <tr className="p-4 border-b border-blue-gray-50">
+    //               <td className="px-1">{object.questionText}</td>
+    //               <td className="px-1">{object.questionTag}</td>
+    //               <td className="px-1">{object.raisedBy}</td>
+    //               <td className="px-1">{object.priorityBySelf}</td>
+    //               <td className="px-1">{object.priorityByPeer}</td>
+    //             </tr>
+    //           );
+    //         })}
+    //       </tbody>
+    //     </table>
+    //   </div>
+    // );
   }
+};
+
+const QuestionPriority = ({ iteration, sessionHandler }) => {
+  const dragItem = useRef(0);
+  const dragOverItem = useRef(0);
+  const [questions, setQuestion] = useState(null);
+  const params = useParams();
+
+  async function getQuestions() {
+    //fetch questions with current iteration and session
+    let payload = await axios.post(GLOBAL_URL + "question/get", {
+      index: iteration,
+      session: params.sessionid,
+    });
+    //needs to be dynamically updated
+    payload = payload.data;
+    //consider making payload sortable here
+    setQuestion(payload);
+  }
+
+  function calculatePriority(priorityArray, prioritySelf) {
+    let sum = 0;
+    priorityArray.forEach((p) => {
+      sum += p.priority;
+    });
+    sum += prioritySelf;
+    sum /= priorityArray.length + 1;
+    return sum.toFixed(2);
+  }
+
+  if (questions === null) {
+    getQuestions();
+  }
+
+  function sortQuestions() {
+    const questionsClone = [...questions];
+    const draggedItemContent = questionsClone[dragItem.current];
+    questionsClone.splice(dragItem, 1);
+    questionsClone.splice(dragOverItem, 0, draggedItemContent);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setQuestion(questionsClone);
+  }
+
+  return (
+    <>
+      <div className="w-full p-4 flex gap-5 justify-evenly" draggable>
+        <h3>Raised By</h3>
+        <h3>Question</h3>
+        <h3>Overall Priority</h3>
+      </div>
+      {questions &&
+        questions.map((ques, ind) => (
+          <div
+            className="w-full p-4 flex gap-5 justify-evenly odd:bg-gray-300 border-2 border-black my-2"
+            draggable
+            onDragStart={(e) => {
+              dragItem.current = ind;
+            }}
+            onDragEnter={(e) => {
+              dragOverItem.current = ind;
+            }}
+            onDragEnd={() => {
+              sortQuestions();
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <h3>{ques.raisedByName}</h3>
+            <h3>{ques.questionText}</h3>
+            <h3>
+              {calculatePriority(ques.priorityByPeer, ques.priorityBySelf)}
+            </h3>
+          </div>
+        ))}
+    </>
+  );
 };
 
 const Creator = () => {
@@ -233,8 +469,10 @@ const Creator = () => {
 
   const [sessionData, setSession] = useState(null);
   const [students, setStudents] = useState([]);
+  const [linkState, setLinkState] = useState(false);
 
   const resref = useRef("");
+  const zref = useRef(0);
 
   const boradCastResource = () => {
     // console.log(getSessionCode())
@@ -254,6 +492,7 @@ const Creator = () => {
   function broadcastState(state) {
     socket.emit(params.sessionid + "student" + "stateUpdate", params.sessionid);
   }
+
   async function getSession() {
     let session = await axios.post(
       GLOBAL_URL + "session/get",
@@ -386,6 +625,26 @@ const Creator = () => {
     setSession(response.data.data);
   }
 
+  const getDistributedQuestion = async () => {
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "session/distributedQuestions",
+        {
+          sessionId: params.sessionid,
+          priority: Number(zref.current.value),
+        },
+        res
+      );
+      console.log(response);
+      let students = response.data.studentUpdate;
+      students.map((stu) => {
+        socket.emit(params.sessionid + stu._id + "UpdateQuestions", stu);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //fetch Data in case state hook is null
   if ((students.length == 0) & (sessionData != null)) {
     getStudents();
@@ -395,148 +654,134 @@ const Creator = () => {
     getSession();
   }
 
+  function boradcastSessionMode(e) {
+    if (e === "online") {
+      console.log("online");
+      setLinkState(true);
+    } else if (e === "offline") {
+      console.log("offline");
+      setLinkState(false);
+    }
+    socket.emit(params.sessionid + "session-mode", e);
+  }
+
   return (
     <div>
       <div>
         <br />
-        <div className="flex flex-col items-center justify-center inline-block">
-          <Card className="bg-blue-500 w-3/5 text-center text-white">
-            <CardBody>
-              <Typography variant="h4">
-                {sessionData?.title}{" "}
-                <Button
-                  size="sm"
-                  color="blue"
-                  className="bg-blue-700 text-white m-auto"
-                  onClick={() => {
-                    openDrawer();
-                    console.log(sessionData);
-                  }}
-                >
-                  Students
-                </Button>
-              </Typography>
-              <br />
-              <div className="w-1/5 inline-block">
-                <Typography className="text-left mb-2" variant="h6">
-                  This is a Offline Session
-                </Typography>
-                <Typography className="text-left mb-2" variant="h6">
-                  Enter youtube video link
-                </Typography>
-                <Input
-                  className="mb-4"
-                  color="white"
-                  variant="outlined"
-                  label="youtube link"
-                />
-              </div>
-              <div className="w-3/5 ml-20 inline-block">
-              <div className="flex flex-col overflow-x-auto overflow-y-auto max-h-80">
-                <div className="sm:-mx-6 lg:-mx-8">
-                  <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full text-left text-sm font-light">
-                        <thead className="border-b font-medium dark:border-neutral-500">
-                          <tr>
-                            <th scope="col" className="px-6 py-4">
-                              #
-                            </th>
-                            <th scope="col" className="px-6 py-4">
-                              Student Name
-                            </th>
-                            <th scope="col" className="px-6 py-4">
-                              List of Questions posed
-                            </th>
-                            <th scope="col" className="px-6 py-4">
-                              tagging
-                            </th>
-                            <th scope="col" className="px-6 py-4">
-                              Priority
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b dark:border-neutral-500">
-                            <td className="whitespace-nowrap px-6 py-4 font-medium">
-                              1
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                          </tr>
-                          <tr className="border-b dark:border-neutral-500">
-                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                              2
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                          </tr>
-                          <tr className="border-b ">
-                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                              3
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                          </tr>
-                          <tr className="border-b ">
-                            <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                              4
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                            <td className="whitespace-nowrap px-6 py-4">Cell</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <br/>
-              <br/>
+        <div className="flex flex-col items-center justify-center">
+          <Card className="w-[95%] text-center">
+            <Typography variant="h1">
               {sessionData?.current_activity == null ? (
                 <>No activity in progress</>
               ) : (
-                <>
-                  Current Activity: {sessionData?.current_activity}
-                  <br />
-                </>
+                <>Current Activity: {sessionData?.current_activity}</>
               )}
+            </Typography>
+            <Typography variant="h3" className="my-5">
               Current Iteration: {sessionData?.iteration}
-              <br />
-              <br />
+            </Typography>
+            <Typography variant="h2">
+              {sessionData?.title}{" "}
               <Button
                 size="sm"
                 color="blue"
-                className="bg-blue-700 text-white m-auto"
+                className="bg-blue-600 text-white my-5 mx-auto hover:text-black "
                 onClick={() => {
-                  activityChange();
+                  openDrawer();
+                  console.log(sessionData);
                 }}
               >
-                {sessionData?.current_activity == null
-                  ? "Start Activity"
-                  : "Next Activity"}
+                Students
               </Button>
-              <br />
-              {/* <Button size="sm" gradientMonochrome="failure" className="m-auto">
-                End Session
-              </Button> */}
-              <hr className="mt-6 mb-0" />
-            
-            </CardBody>
+            </Typography>
             {sessionData?.current_activity ==
               "Deliver Content & Question Posing" && (
-              <>
-                <h1>Hello</h1>
-              </>
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                <div className="flex flex-col gap-10 p-4 w-full h-screen">
+                  <div className="h-1/4">
+                    <div className="mb-4">
+                      <Select
+                        label="Session Mode"
+                        onChange={boradcastSessionMode}
+                      >
+                        <Option selected value="online" className="text-black">
+                          This is an Online Session
+                        </Option>
+                        <Option value="offline" className="text-black">
+                          This is an Offline Session
+                        </Option>
+                      </Select>
+                    </div>
+                    {linkState && (
+                      <>
+                        <Input
+                          className=""
+                          color="black"
+                          variant="outlined"
+                          label="youtube link"
+                          inputRef={resref}
+                        />
+                        <Button
+                          className="mt-8 bg-green-500"
+                          color="green"
+                          onClick={boradCastResource}
+                        >
+                          Send the Resources to students
+                        </Button>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="w-full flex flex-col gap-5 mt-4 border-2">
+                    <Typography variant="h4">
+                      Number of questions: {sessionData.questions.length}
+                    </Typography>
+                    <Typography variant="h4">
+                      Number of Student:{" "}
+                      {sessionData.access_request.length +
+                        sessionData.approved_request.length +
+                        sessionData.blocked_request.length}
+                    </Typography>
+                  </div>
+                </div>
+
+                <div className="bg-green-500 text-white sm:w-4/5 md:w-full h-screen">
+                  <Questions iteration={sessionData.iteration} />
+                </div>
+              </div>
+
+              // <>
+              //   <CardBody>
+              //     <div className="w-1/5 inline-block">
+              //       <Typography className="text-left mb-2" variant="h6">
+              //         This is a Offline Session
+              //       </Typography>
+              //       <Typography className="text-left mb-2" variant="h6">
+              //         Enter youtube video link
+              //       </Typography>
+              // <Input
+              //   className="mb-4"
+              //   color="white"
+              //   variant="outlined"
+              //   label="youtube link"
+              //   inputRef={resref}
+              // />
+              // <Button
+              //   className="mt-4 bg-green-500"
+              //   color="green"
+              //   onClick={boradCastResource}
+              // >
+              //   Send the Resources to students
+              // </Button>
+              //     </div>
+              //     <Questions iteration={sessionData.iteration} />
+              //     {/* <Button size="sm" gradientMonochrome="failure" className="m-auto">
+              //   End Session
+              // </Button> */}
+              //     <hr className="mt-6 mb-0" />
+              //   </CardBody>
+              // </>
             )}
             {sessionData?.current_activity == "Deliver Content" && (
               <>
@@ -559,6 +804,30 @@ const Creator = () => {
             {sessionData?.current_activity == "Question Posing" ||
             sessionData?.current_activity == "Peer Prioritization" ? (
               <CardBody>
+                <div className="w-full flex gap-5 py-4 justify-center my-4 border-2">
+                  <Typography variant="h4">
+                    Number of questions: {sessionData.questions.length}
+                  </Typography>
+                  <Typography variant="h4">
+                    Number of Student:{" "}
+                    {sessionData.access_request.length +
+                      sessionData.approved_request.length +
+                      sessionData.blocked_request.length}
+                  </Typography>
+                </div>
+                <Input
+                  type="Number"
+                  min={1}
+                  max={
+                    sessionData.access_request.length +
+                    sessionData.approved_request.length +
+                    sessionData.blocked_request.length -
+                    1
+                  }
+                  inputRef={zref}
+                  label="Number of student to review a single question"
+                />
+                <Button onClick={getDistributedQuestion}>Submit</Button>
                 <Questions iteration={sessionData.iteration} />
               </CardBody>
             ) : sessionData?.current_activity == "Question Answering" ? (
@@ -570,12 +839,31 @@ const Creator = () => {
                   broadcaster={broadcastState}
                 />
               </CardBody>
+            ) : sessionData?.current_activity == "Teacher Priortization" ? (
+              // <QuestionPriority iteration={sessionData.iteration} />
+              <QuestionSelect
+                iteration={sessionData.iteration}
+                sessionHandler={setSession}
+                broadcaster={broadcastState}
+              />
             ) : (
               <div>No ongoing activity to display</div>
             )}
           </Card>
           <br />
         </div>
+        <Button
+          size="sm"
+          color="blue"
+          className="bg-blue-600 text-white my-5 mx-auto hover:text-black"
+          onClick={() => {
+            activityChange();
+          }}
+        >
+          {sessionData?.current_activity == null
+            ? "Start Activity"
+            : "Next Activity"}
+        </Button>
       </div>
 
       <Drawer

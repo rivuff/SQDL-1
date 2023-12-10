@@ -9,26 +9,32 @@ import {
   Card,
   Input,
 } from "@material-tailwind/react";
+import { set } from "../Cookies";
 import { useParams } from "react-router-dom";
 
-const QuestionForm = ({ onSubmit, iteration }) => {
+const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
   const [questionText, setQuestionText] = useState("");
   const [questionPriority, setPriority] = useState(5);
+  const [questionTag, setQuestionTag] = useState("Clarification")
   const params = useParams();
   const { user } = UserState();
-  const name = user?._id;
+  const id = user?._id;
+  const name = user?.name;
   const session = user?.currSession;
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById("Button").disabled = true;
+    console.log(questionTag)
     try {
       const questionData = {
         questionText: questionText,
         session: params.sessionid,
-        questionTag: document.getElementById("questionType").value,
+        questionTag: questionTag,
         iterationIndex: iteration,
         priorityBySelf: questionPriority,
-        raisedBy: name,
+        raisedBy: id,
+        raisedByName: name,
+
         //questionTag: document.getElementById('questionType').value,
       };
       console.log(questionData);
@@ -42,7 +48,7 @@ const QuestionForm = ({ onSubmit, iteration }) => {
       console.log(response?.data?.data);
       const addData = {
         questionId: response?.data?.data?._id,
-        studentId: name,
+        studentId: id,
       };
 
       const addingtoUser = await axios.post(
@@ -50,19 +56,22 @@ const QuestionForm = ({ onSubmit, iteration }) => {
         addData,
       );
 
+      set(addingtoUser.data.data);
+
+      console.log("Response from the backend:", addingtoUser);
+
       const addQuestionToSession = await axios.post(
         "http://localhost:5000/api/v1/session/addQuestion",
         {
           questionId: response?.data?.data?._id,
-          sessionId: session,
+          sessionId: params.sessionid,
         },
       );
 
       onSubmit();
+      userQues();
 
       // Handle the response from the backend (if needed)
-
-      console.log("Response from the backend:", addingtoUser);
 
       document.getElementById("questionPriority").value = "5";
       document.getElementById("Button").disabled = false;
@@ -93,17 +102,18 @@ const QuestionForm = ({ onSubmit, iteration }) => {
             onChange={(e) => setQuestionText(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             rows={4}
+            disabled={questionState}
             required
           />
         </div>
         <div className="inline-block">
           <div className="inline-block py-2">
             Type: &nbsp;{" "}
-            <select label="Type" id="questionType">
-              <option value={"Clarification"} selected>
+            <select label="Type" id="questionType" onChange={(e) => {setQuestionTag(e.target.value)}} disabled={questionState}>
+              <option value="Clarification" selected>
                 Clarification
               </option>
-              <option value={"Exploratory"}>Exploratory</option>
+              <option value="Exploratory">Exploratory</option>
             </select>
           </div>{" "}
           &nbsp;&nbsp;&nbsp;
@@ -118,6 +128,7 @@ const QuestionForm = ({ onSubmit, iteration }) => {
               onChange={(e) => {
                 setPriority(e.target.value);
               }}
+              disabled={questionState}
             ></Input>
           </div>
         </div>
@@ -126,6 +137,7 @@ const QuestionForm = ({ onSubmit, iteration }) => {
           id="Button"
           type="submit"
           className="px-4 py-2 text-white bg-blue-500 rounded"
+          disabled={questionState}
         >
           Submit Question
         </Button>

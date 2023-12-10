@@ -3,8 +3,20 @@ import { useParams } from "react-router-dom";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
 import { useState } from "react";
+import {
+  check,
+  set,
+  getSpecificData,
+  setSpecificData,
+} from "../../../../../Cookies";
 import axios from "axios";
-import { Card, CardBody, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  CardBody,
+  Typography,
+  Checkbox,
+  Button,
+} from "@material-tailwind/react";
 import QuestionForm from "../../../../../questionPosing/questionForm";
 const socket = io(SOCKET_URL);
 const res = {
@@ -58,21 +70,88 @@ const SelectedQuestions = ({ session }) => {
 const Allowed = () => {
   const params = useParams();
 
+  const [sessionMode, setSessionMode] = useState(null);
+  const [dcFinished, setDCFinished] = useState(getSpecificData("DCState"));
+  const [editState, setEditState] = useState(false);
+  const [userPriorityArray, setUserPriorityArray] = useState([]);
+
   function socketBroadcast() {
     console.log("Send update to teacher interface using socket");
     socket.emit(params.sessionid + "teacherstateUpdate", { fetch: true });
   }
 
   const [sessionData, setSession] = useState(null);
-  const [teacherRes, setTeacherRes] = useState([]);
+  const [teacherRes, setTeacherRes] = useState(null);
+  const [userQuestions, setUserQuestions] = useState(null);
+  // false -> not clicked , true -> clicked
+  const [videoState, setVideoState] = useState(false);
+  const [questionState, setQuestionState] = useState(false);
+  const [Z, setZ] = useState(0);
+  const [isDistributed, setIsDistributed] = useState("Delivering");
+
+  const getUserQuestions = (act) => {
+    console.log("Getting question posed by user");
+    console.log(check().questions);
+    setUserQuestions([]);
+    setUserPriorityArray([]);
+    check().questions.map(async (ques) => {
+      const response = await axios.post(
+        GLOBAL_URL + "question/getById",
+        { _id: ques },
+        res
+      );
+      console.log(response);
+      if (act === "Peer Prioritization") {
+        setUserPriorityArray((prev) => [
+          ...prev,
+          {
+            id: response.data.data[0]._id,
+            Priority: 1,
+          },
+        ]);
+        console.log(userPriorityArray);
+      } else if (act === "Not Peer Prioritization") {
+        console.log(sessionData?.current_activity);
+        setUserPriorityArray((prev) => [
+          ...prev,
+          {
+            id: response.data.data[0]._id,
+            Priority: response.data.data[0].priorityBySelf,
+          },
+        ]);
+      }
+      setUserQuestions((prev) => [...prev, response.data.data[0]]);
+    });
+  };
 
   useEffect(() => {
-    socket.on('receive-link', (link) => {
-      setTeacherRes(prev => [...prev, link])
+    socket.on("receive-link", (link) => {
+      setTeacherRes(link);
+      setVideoState(true);
       console.log("Link received");
-    })
-  }, [socket])
+    });
 
+    socket.on(params.sessionid + "session-mode", (arg) => {
+      if (arg === "offline") {
+        setTeacherRes(null);
+      }
+      setSessionMode(arg);
+    });
+
+    socket.on(params.sessionid + "Z", (sessionid, z) => {
+      setZ(z);
+    });
+
+    socket.on(params.sessionid + check()._id + "UpdateQuestions", (student) => {
+      setIsDistributed("Deliverd")
+      set(student);
+      getUserQuestions("Peer Prioritization");
+    });
+
+    if (sessionData !== null) {
+      getUserQuestions("Not Peer Prioritization");
+    }
+  }, [socket]);
 
   async function getSession() {
     let payload = await axios.post(
@@ -88,6 +167,60 @@ const Allowed = () => {
     }
   }
 
+  const updateQuestionPriority = (e, id) => {
+    console.log(e.target.value, id);
+    setUserPriorityArray(
+      userPriorityArray.map((q) => {
+        if (q.id === id) {
+          return { ...q, Priority: Number(e.target.value) };
+        } else {
+          return q;
+        }
+      })
+    );
+  };
+
+  const setPeerPriority = async () => {
+    console.log(userPriorityArray);
+    userPriorityArray.map(async(q) => {
+      try {
+        const response = await axios.post(
+          GLOBAL_URL + "question/priorityByPeer",
+          {rating: q.Priority, questionId: q.id, studentId: check()._id}, res
+        )
+        console.log(response);
+        setIsDistributed("sometext");
+      } catch(error) {
+        console.log(error);
+      }
+    })
+  };
+
+  const updateQuestion = () => {
+    console.log(userPriorityArray);
+    setUserQuestions([]);
+    userPriorityArray.map(async (p) => {
+      try {
+        const response = await axios.post(
+          GLOBAL_URL + "question/update",
+          { _id: p.id, priorityBySelf: p.Priority },
+          res
+        );
+        console.log(response);
+        setUserQuestions((prev) => [...prev, response.data.data]);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
+  const finishActivity = (act) => {
+    if (act === "DCState") {
+      setDCFinished(true);
+    }
+    setSpecificData(act, true);
+  };
+
   if (sessionData == null) {
     getSession();
   }
@@ -99,54 +232,443 @@ const Allowed = () => {
   return (
     <div>
       <div className="flex flex-col items-center justify-center min p-10">
-        <Card>
-          <CardBody>
-            <Typography variant="h4">
-              {sessionData?.current_activity ? `Current Activity is ${sessionData?.current_activity}` : "Session has not started yet"}
-            </Typography>
-            <hr />
-            {sessionData?.current_activity == "Deliver Content" ? (
-              <>
-                <Typography>
-                  Teacher is delivering lecture. Please await further action
-                </Typography>
-                {teacherRes && <h1>Resources provided by the teacher</h1>}
-                <ul>
-                  {teacherRes && teacherRes.map(res => (
-                    <li className="mt-4">
-                      <div dangerouslySetInnerHTML={{__html: res}} />
-                    </li>
-                  ))}
-                </ul>
-              </>
-              
-            ) : sessionData?.current_activity == "Question Posing" ? (
-              <>
+        <Typography variant="h3" className="mb-4">
+          {sessionData?.current_activity
+            ? `Current Activity is ${sessionData?.current_activity}`
+            : "Session has not started yet"}
+        </Typography>
+        <hr />
+        {sessionData?.current_activity == "Deliver Content & Question Posing" &&
+          !dcFinished && (
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 h-screen w-full">
+              {/* For youtube video */}
+              <div class="p-4 h-full flex flex-col items-center row-span-2">
+                {teacherRes ? (
+                  <>
+                    <div
+                      className="embed-responsive aspect-w-4 aspect-h-3 mb-4"
+                      dangerouslySetInnerHTML={{ __html: teacherRes }}
+                    />
+                  </>
+                ) : sessionMode === "offline" ? (
+                  <>
+                    <p>
+                      The Content delivery is offline so teacher will physically
+                      teach you concept
+                    </p>
+                    <Checkbox
+                      color="blue"
+                      label="Submitted All my questions"
+                      onClick={() => {
+                        setQuestionState(true);
+                      }}
+                      disabled={questionState}
+                    />
+                    {questionState && (
+                      <Button
+                        color="green"
+                        onClick={() => {
+                          finishActivity("DCState");
+                        }}
+                      >
+                        Finish Activity
+                      </Button>
+                    )}
+                  </>
+                ) : !videoState && !questionState ? (
+                  <p>The teacher shared resources will be shown here</p>
+                ) : (
+                  <p>
+                    If you are finished please wait, else complete your
+                    remaining work
+                  </p>
+                )}
+                {videoState && (
+                  <>
+                    <Checkbox
+                      color="blue"
+                      label="I have seen the full video"
+                      onClick={() => {
+                        setTeacherRes(null);
+                      }}
+                      disabled={teacherRes === null}
+                    />
+                    <Checkbox
+                      color="blue"
+                      label="Submitted All my questions"
+                      onClick={() => {
+                        setQuestionState(true);
+                      }}
+                      disabled={questionState}
+                    />
+                    {teacherRes === null && questionState && (
+                      <Button
+                        color="green"
+                        onClick={() => {
+                          finishActivity("DCState");
+                        }}
+                      >
+                        Finish Activity
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* For posing question */}
+              <div class="bg-green-500 p-4 text-white h-screen">
                 <Typography>
                   Teacher is accepting questions. Please submit question
                 </Typography>
                 <QuestionForm
                   onSubmit={socketBroadcast}
                   iteration={sessionData.iteration}
+                  userQues={getUserQuestions}
+                  questionState={questionState}
                 ></QuestionForm>
-              </>
-            ) : sessionData?.current_activity == "Prioritization" ? (
+                <Card className="overflow-x-auto overflow-y-auto h-[50%] mt-4">
+                  <table className="w-full min-w-max table-auto text-left">
+                    <thead>
+                      <tr>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Question Posed
+                          </Typography>
+                        </th>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Tag
+                          </Typography>
+                        </th>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Priority
+                          </Typography>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userQuestions &&
+                        userQuestions.map(
+                          ({ questionText, priorityBySelf, questionTag }) => (
+                            <tr
+                              key={questionText}
+                              className="even:bg-blue-gray-50/50"
+                            >
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {questionText}
+                                </Typography>
+                              </td>
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {questionTag}
+                                </Typography>
+                              </td>
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {priorityBySelf}
+                                </Typography>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                    </tbody>
+                  </table>
+                </Card>
+              </div>
+
+              {/* checkboxes */}
+              {/* <div class="bg-yellow-500 p-4 text-white h-full">Item 3</div> */}
+
+              {/* all questions */}
+              {/* <div class="bg-red-500 p-4 text-white h-full">Item 4</div> */}
+            </div>
+          )}
+        {sessionData?.current_activity == "Deliver Content & Question Posing" &&
+          dcFinished && (
+            <>
+              <Typography variant="h2">
+                Teacher has not started next session Yet
+              </Typography>
+              <Typography variant="p">
+                Mean time you can edit the question priority you have posed
+              </Typography>
+              <Card className="overflow-x-auto overflow-y-auto h-[50%] mt-4">
+                <table className="w-full min-w-max table-auto text-left">
+                  <thead>
+                    <tr>
+                      <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          Question Posed
+                        </Typography>
+                      </th>
+                      <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          Tag
+                        </Typography>
+                      </th>
+                      <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          Priority
+                        </Typography>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {console.log(userQuestions)}
+                    {userQuestions &&
+                      userQuestions.map((ques) => (
+                        <tr key={ques._id} className="even:bg-blue-gray-50/50">
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {ques.questionText}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {ques.questionTag}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            {!editState ? (
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {ques.priorityBySelf}
+                              </Typography>
+                            ) : (
+                              <input
+                                type="number"
+                                placeholder={ques.priorityBySelf}
+                                min={1}
+                                max={5}
+                                onChange={(e) => {
+                                  updateQuestionPriority(e, ques._id);
+                                }}
+                              ></input>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </Card>
+              <div class="mt-5">
+                {!editState ? (
+                  <Button
+                    color="blue"
+                    onClick={() => {
+                      setEditState(true);
+                    }}
+                  >
+                    Edit Priority
+                  </Button>
+                ) : (
+                  <Button
+                    color="blue"
+                    onClick={() => {
+                      setEditState(false);
+                      updateQuestion();
+                    }}
+                  >
+                    Done Editing
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+        {sessionData?.current_activity == "Deliver Content" ? (
+          <>
+            <Typography>
+              Teacher is delivering lecture. Please await further action
+            </Typography>
+            {teacherRes && <h1>Resources provided by the teacher</h1>}
+            <ul>
+              {teacherRes &&
+                teacherRes.map((res) => (
+                  <li className="mt-4">
+                    <div dangerouslySetInnerHTML={{ __html: res }} />
+                  </li>
+                ))}
+            </ul>
+          </>
+        ) : sessionData?.current_activity == "Question Posing" ? (
+          <>
+            <Typography>
+              Teacher is accepting questions. Please submit question
+            </Typography>
+            <QuestionForm
+              onSubmit={socketBroadcast}
+              iteration={sessionData.iteration}
+            ></QuestionForm>
+          </>
+        ) : sessionData?.current_activity == "Peer Prioritization" ? (
+          <>
+            <Typography>Please prioritize these other questions</Typography>
+            {isDistributed === "Delivering" ? (
+              <p>Teacher will distribute the question please wait</p>
+            ) : isDistributed === "Deliverd" ? (
               <>
-                <Typography>Please prioritize these other questions</Typography>
-              </>
-            ) : sessionData?.current_activity == "Question Answering" ? (
-              <>
-                <Typography>
-                  Here are the questions teacher is answering
-                </Typography>
-                <SelectedQuestions session={sessionData} />
+                <Card className="overflow-x-auto overflow-y-auto h-[50%] mt-4">
+                  <table className="w-full min-w-max table-auto text-left">
+                    <thead>
+                      <tr>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Question Posed
+                          </Typography>
+                        </th>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Tag
+                          </Typography>
+                        </th>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Priority By Onwer
+                          </Typography>
+                        </th>
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >
+                            Your Priority
+                          </Typography>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userQuestions &&
+                        userQuestions.map((ques, ind) => (
+                          <tr key={ind} className="even:bg-blue-gray-50/50">
+                            <td className="p-4">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {ques.questionText}
+                              </Typography>
+                            </td>
+                            <td className="p-4">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {ques.questionTag}
+                              </Typography>
+                            </td>
+                            <td className="p-4">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {ques.priorityBySelf}
+                              </Typography>
+                            </td>
+                            <td className="p-4">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                <input
+                                  type="Number"
+                                  placeholder={userPriorityArray[ind].Priority}
+                                  min={1}
+                                  max={5}
+                                  onChange={(e) => {
+                                    updateQuestionPriority(e, ques._id);
+                                  }}
+                                ></input>
+                              </Typography>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </Card>
+                <Button color="blue" onClick={setPeerPriority}>
+                  Done with Assigning priority
+                </Button>
               </>
             ) : (
-              ""
+              <p>Please wait until next session starts</p>
             )}
-          </CardBody>
-        </Card>
+          </>
+        ) : sessionData?.current_activity == "Question Answering" ? (
+          <>
+            <Typography>Here are the questions teacher is answering</Typography>
+            <SelectedQuestions session={sessionData} />
+          </>
+        ) : (
+          ""
+        )}
       </div>
+      {/* <button onClick={() => {console.log(JSON.parse(localStorage.getItem("DCState")))}}>Click</button> */}
     </div>
   );
 };

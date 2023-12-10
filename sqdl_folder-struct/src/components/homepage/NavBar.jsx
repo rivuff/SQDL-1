@@ -246,9 +246,10 @@ function NavList(props) {
           </Typography>
         </li> */}
         <Menu
-          dismiss={{
-            itemPress: false,
-          }}
+          // dismiss={{
+          //   itemPress: false,
+          //   isRequired: true
+          // }}
         >
           
           <MenuHandler>

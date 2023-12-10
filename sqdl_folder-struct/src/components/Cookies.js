@@ -42,3 +42,12 @@ export function setSessionCode(code) {
   localStorage.setItem("sessionCode", JSON.stringify(code));
   return true;
 }
+
+export function getSpecificData(data) {
+  return JSON.parse(localStorage.getItem(data))
+}
+
+export function setSpecificData(name, data) {
+  localStorage.setItem(name, JSON.stringify(data))
+  return true;
+}

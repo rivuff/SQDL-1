@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Outlet, useParams, NavLink } from "react-router-dom";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../../config";
-import { check, set, setSessionCode } from "../../../../Cookies";
+import { check, set, setSessionCode, setSpecificData } from "../../../../Cookies";
 import {
   Input,
   Typography,
@@ -193,6 +193,7 @@ const Session = () => {
     const {name, type} = check();
     const code = session.sessionCode;
     setSessionCode(code);
+    setSpecificData("DCState", false)
     socket.emit('join-session', {name, type, code})
   }
 

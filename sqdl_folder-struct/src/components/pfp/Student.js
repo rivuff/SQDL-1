@@ -109,7 +109,12 @@ const Student = () => {
       );
       console.log(response);
       const session = response.data.data;
-      if (check().subjects.includes(session.subject)) {
+      if (session.approved_request.includes(check()._id)) {
+        setIsFetched(`/course/${session.subject}/${session.parentModule}/${session._id}`);
+        notify("Join The session")
+        return ;
+      }
+      else if (check().subjects.includes(session.subject)) {
         if (!(session.approved_request.includes(check()._id)))
           session.approved_request.push(check()._id)
         else {
