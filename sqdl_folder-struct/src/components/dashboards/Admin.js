@@ -6,7 +6,7 @@ import StudentTable from "./helpers/Admin/StudentTable";
 import SubjectTable from "./helpers/Admin/SubjectTable";
 import NavCard from './helpers/NavCard';
 import { Button } from "@material-tailwind/react";
-
+import "./Admin.css"
 // const Admin = () => {
 //   //Query user data from database
 //   let users = [];
@@ -109,7 +109,7 @@ const Admin = () => {
       {infoClicked.teacherInfo && <TeacherTable />}
       {infoClicked.subjectInfo && <SubjectTable />}
       {infoClicked.back && <div className="flex w-full">
-        <NavCard className="py-10 h-screen flex flex-col gap-10 bg-gradient-to-r from-teal-200 to-teal-400">
+        {/* <NavCard className="py-10 h-screen flex flex-col gap-10 bg-gradient-to-r from-teal-200 to-teal-400">
           <h2 className="text-5xl font-montserratWeight font-montserrat text-center text-white">SQDL</h2>
           <ul>
             <li className="w-full cursor-pointer px-20 py-3 font-redHatMonoWeight font-redHatMono text-lg text-center bg-teal-100 border-b-2 hover:bg-teal-200">About</li>
@@ -117,36 +117,25 @@ const Admin = () => {
             <li className="w-full cursor-pointer px-20 py-3 font-redHatMonoWeight font-redHatMono text-lg text-center bg-teal-100 border-b-2 hover:bg-teal-200">Dashboard</li>
             <li className="w-full cursor-pointer px-20 py-3 font-redHatMonoWeight font-redHatMono text-lg text-center bg-teal-100 hover:bg-teal-200">Logout</li>
           </ul>
-        </NavCard>
-        <div className="p-4 w-full xl:bg-gray-200">
-          <div className="flex gap-6">
+        </NavCard> */}
+        <div className=" p-8 pb-20 w-full xl:bg-gray-200 ">
+          <div className=" flex gap-6 responsive">
             <div 
-              className="w-1/3 h-48 p-5 bg-orange-500 rounded-xl hover:bg-orange-600 font-montserratWeight 
-              font-montserrat text-3xl text-white relative shadow-[2px_2px_10px_#737373]
-              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
-              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
-              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
-              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]"
+              className="mobile w-1/3 h-48 p-5 bg-orange-500 rounded-xl hover:bg-orange-600 font-montserratWeight 
+              font-montserrat text-3xl text-white "
               onClick={() => {handleClick('StudentInfo')}}>
               Student Information
             </div>
+            
             <div 
-              className="w-1/3 h-48 p-5 bg-blue-700 rounded-xl hover:bg-blue-800 font-montserratWeight 
-              font-montserrat text-3xl text-white relative shadow-[2px_2px_10px_#737373]
-              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
-              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
-              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
-              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]"
+              className="mobile w-1/3 h-48 p-5 bg-blue-700 rounded-xl hover:bg-blue-800 font-montserratWeight 
+              font-montserrat text-3xl text-white "
               onClick={() => {handleClick('TeacherInfo')}}>
               Teacher Information
             </div>
             <div 
-              className="w-1/3 h-48 p-5 bg-green-700 rounded-xl hover:bg-green-800 font-montserratWeight 
-              font-montserrat text-3xl text-white relative shadow-[2px_2px_10px_#737373]
-              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
-              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
-              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
-              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]"
+              className="mobile w-1/3 h-48 p-5 bg-green-700 rounded-xl hover:bg-green-800 font-montserratWeight 
+              font-montserrat text-3xl text-white "
               onClick={() => {handleClick('SubjectInfo')}}>
               Subjects Information
             </div>

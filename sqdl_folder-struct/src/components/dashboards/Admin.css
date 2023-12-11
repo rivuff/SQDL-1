@@ -1,0 +1,30 @@
+              /* relative shadow-[2px_2px_10px_#737373]
+              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
+              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
+              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
+              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]
+
+              relative shadow-[2px_2px_10px_#737373]
+              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
+              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
+              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
+              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px]
+
+              relative shadow-[2px_2px_10px_#737373]
+              before:content=[''] before:absolute before:w-[150px] before:h-[150px] before:bg-gray-200 
+              before:rounded-full before:opacity-60 before:left-[-15px] before:bottom-[-60px]
+              after:content=[''] after:absolute after:w-[150px] after:h-[150px] after:bg-gray-200 
+              after:rounded-full after:opacity-60 after:right-[-25px] after:top-[-18px] */
+@media only screen and (max-width: 768px) {
+.mobile{
+    width: 18rem;
+    margin: auto;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+.responsive{
+    display: block;
+}
+
+
+}

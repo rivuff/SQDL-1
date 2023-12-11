@@ -13,12 +13,29 @@
   } */
   .heading {
     color: black;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 800;
     text-align: left;
   }
   .heroButton {
     margin-top: 2rem;
     margin-left: 1rem;
+  }
+  .ring1 {
+    display: none;
+  }
+  .message1 {
+    display: none;
+  }
+  .message2{
+  display: none;
+  }
+  .white{
+    margin: auto;
+    font-size: large;
+    text-align: justify;
+  }
+  .headingpara{
+   text-align: center;
   }
 }

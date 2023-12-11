@@ -69,7 +69,7 @@ function Provide() {
         <Fade right>
           <div className="right-content">
             <div className="left-text-container">
-              <h1>Student Query Driven Learning</h1>
+              <h1 className="headingpara">Student Query Driven Learning</h1>
               <p className="white">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
                 molestiae minus dicta ipsum atque est qui vel illo magni
