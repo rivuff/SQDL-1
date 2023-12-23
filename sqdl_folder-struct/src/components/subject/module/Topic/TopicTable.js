@@ -1,24 +1,49 @@
-import React from "react";
-import { BiCopy } from 'react-icons/bi'
+import React, {useState, useEffect} from "react";
+import { BiCopy } from "react-icons/bi";
 import { NavLink, useParams } from "react-router-dom";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { GLOBAL_URL } from "../../../config";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import axios from "axios";
 
 const TopicTable = (props) => {
-
   const params = useParams();
 
-  const notify = () => toast.success('Code copied!', {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
+  const [session, setSession] = useState([]);
+
+  const getSessionData = async(id) => {
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    try {
+      const response = await axios.post(GLOBAL_URL + "session/get", {_id: id}, res)
+      console.log(response);
+      setSession(prev => [...prev, response.data.data]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    props.sessions.map(session => getSessionData(session._id))
+  }, [])
+
+  const notify = () =>
+    toast.success("Code copied!", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
 
   console.log(props.sessions);
   return (
@@ -34,9 +59,6 @@ const TopicTable = (props) => {
                   </th>
                   <th scope="col" className="px-6 py-4">
                     Session
-                  </th>
-                  <th scope="col" className="px-6 py-4">
-                    Topic
                   </th>
                   <th scope="col" className="px-6 py-4">
                     Status
@@ -56,36 +78,62 @@ const TopicTable = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {props.sessions && props.sessions.map((ele, ind) => {
+                {console.log(session)}
+                {session &&
+                  session.map((ele, ind) => {
                     console.log(ele.startDateTime);
-                    let date = new Date(ele.startDateTime);
+                    let startDate = new Date(ele.startDateTime);
+                    let endDate = new Date(ele.endDateTime);
                     return (
                       <tr className="border-b">
-                          <td className="whitespace-nowrap px-6 py-4 font-medium">{ind+1}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.title}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.topic}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.status ? "C/P" : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.students ? "no." : "-"}</td>
-                          <td className="inline-block whitespace-nowrap px-3 py-4">{ele.sessionCode ? <>
-                          {ele.sessionCode}
-                          <div onClick={() => {
-                            navigator.clipboard.writeText(ele.sessionCode)
-                            notify()
-                          }
-                          } className="inline-block ml-2 cursor-pointer">
-                            <BiCopy/>
-                          </div>
-                          </> : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.startDateTime ? date.toLocaleString() : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{ele.endTime ? "etime" : "-"}</td>
-                          <td className="whitespace-nowrap px-6 py-4">
-                            <NavLink to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}`}>
-                              Click to go to session
-                            </NavLink>
-                          </td>
+                        <td className="whitespace-nowrap px-6 py-4 font-medium">
+                          {ind + 1}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {ele.title}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {ele.endDateTime ? "Completed" : "Not Yet Completed"}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {ele.endDateTime ? ele.approved_request.length : "Will be show after session completion"}
+                        </td>
+                        <td className="inline-block whitespace-nowrap px-3 py-4">
+                          {ele.sessionCode ? (
+                            <>
+                              {ele.sessionCode}
+                              <div
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    ele.sessionCode
+                                  );
+                                  notify();
+                                }}
+                                className="inline-block ml-2 cursor-pointer"
+                              >
+                                <BiCopy />
+                              </div>
+                            </>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {ele.startDateTime ? startDate.toLocaleString() : "-"}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {ele.endDateTime ? endDate.toLocaleString() : "Is shown after session completion"}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <NavLink
+                            to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}`}
+                          >
+                            Click to go to session
+                          </NavLink>
+                        </td>
                       </tr>
-                    )
-                })}
+                    );
+                  })}
                 {/* <tr class="border-b dark:border-neutral-500">
                   <td class="whitespace-nowrap px-6 py-4 font-medium">1</td>
                   <td class="whitespace-nowrap px-6 py-4">Cell</td>

@@ -126,6 +126,7 @@ const NewSession = () => {
           {_id: topicid}, res
         )
       ]);
+      console.log(response);
     } catch(error) {
       console.log("error while creating seesion or getting topic");
       console.log(error);
@@ -246,12 +247,12 @@ const NewSession = () => {
             {/* <option label="Deliver Content" value="Deliver Content"></option>
             <option label="Question Posing" value="Question Posing"></option> */}
             <option
-              label="Own Prioritization"
-              value="Personal Prioritization"
+              label="Peer Prioritization"
+              value="Peer Prioritization"
             ></option>
-            <option label="Peer Priortization" value="Priortization"></option>
+            <option label="Teacher Priortization" value="Teacher Priortization"></option>
             <option
-              label="Answer Summarization"
+              label="Question Answering"
               value="Question Answering"
             ></option>
           </select>

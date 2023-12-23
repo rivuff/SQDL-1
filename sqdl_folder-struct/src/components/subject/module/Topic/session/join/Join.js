@@ -39,6 +39,7 @@ const Join = () => {
       { _id: params.sessionid },
       res
     );
+    console.log(subject);
     //removing HTTP headers from response
     subject = subject.data.data;
     session = session.data.data;

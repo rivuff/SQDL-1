@@ -43,6 +43,7 @@ import SessionForm from "./components/SessionForm";
 import { QuestionForm } from "./components/questionPosing/questions";
 
 import Join from "./components/subject/module/Topic/session/join/Join";
+import EndActivity from "./components/subject/module/Topic/session/join/EndActivity.js"
 import TeacherInterface from "./components/dashboards/Teacher";
 import TeacherAssociation from "./components/subject/module/Topic/TeacherAssociation";
 
@@ -194,6 +195,10 @@ const router = createBrowserRouter([
                       {
                         path: "join",
                         element: <Join />,
+                      },
+                      {
+                        path: "end",
+                        element: <EndActivity />,
                       },
                     ],
                   },

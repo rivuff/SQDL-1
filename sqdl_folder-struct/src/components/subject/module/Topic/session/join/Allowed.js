@@ -67,6 +67,55 @@ const SelectedQuestions = ({ session }) => {
   }
 };
 
+const PriorityQuestion = () => {
+  const [priorityQuestions, setPriorityQuestion] = useState([]);
+  const params = useParams();
+
+  useEffect(async () => {
+    try {
+      let sessionInfo = await axios.post(
+        GLOBAL_URL + "session/get",
+        { _id: params.sessionid },
+        res
+      );
+
+      let sessionIteration = sessionInfo.data.data.iteration - 1;
+      let priorityQuestionIds =
+        sessionInfo.data.data.selected_questions[sessionIteration].questions;
+
+      priorityQuestionIds.map(async (ques) => {
+        const quesData = await axios.post(
+          GLOBAL_URL + "question/getById",
+          { _id: ques },
+          res
+        );
+        setPriorityQuestion((prev) => [
+          ...prev,
+          quesData.data.data[0].questionText,
+        ]);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  return (
+    priorityQuestions &&
+    priorityQuestions.map((ques) => (
+      <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+          {ques}
+        </h1>
+      </div>
+    ))
+    // <div className="w-full p-5 bg-blue-gray-200 text-orange-500 grid place-items-center">
+    //   {priorityQuestions && priorityQuestions.map(ques => (
+    //     <h1 className="font-3xl font-redHatMono font-redHatMonoWeight underline">{ques}</h1>
+    //   ))}
+    // </div>
+  );
+};
+
 const Allowed = () => {
   const params = useParams();
 
@@ -101,26 +150,32 @@ const Allowed = () => {
         res
       );
       console.log(response);
-      if (act === "Peer Prioritization") {
-        setUserPriorityArray((prev) => [
-          ...prev,
-          {
-            id: response.data.data[0]._id,
-            Priority: 1,
-          },
-        ]);
-        console.log(userPriorityArray);
-      } else if (act === "Not Peer Prioritization") {
-        console.log(sessionData?.current_activity);
-        setUserPriorityArray((prev) => [
-          ...prev,
-          {
-            id: response.data.data[0]._id,
-            Priority: response.data.data[0].priorityBySelf,
-          },
-        ]);
+      let session = await axios.post(
+        GLOBAL_URL + "session/get", {_id: params.sessionid}, res
+      );
+      session = session.data.data;
+      if (response.data.data[0].iteration === session.iteration) {
+        if (act === "Peer Prioritization") {
+          setUserPriorityArray((prev) => [
+            ...prev,
+            {
+              id: response.data.data[0]._id,
+              Priority: 1,
+            },
+          ]);
+          console.log(userPriorityArray);
+        } else if (act === "Not Peer Prioritization") {
+          console.log(sessionData?.current_activity);
+          setUserPriorityArray((prev) => [
+            ...prev,
+            {
+              id: response.data.data[0]._id,
+              Priority: response.data.data[0].priorityBySelf,
+            },
+          ]);
+        }
+        setUserQuestions((prev) => [...prev, response.data.data[0]]);
       }
-      setUserQuestions((prev) => [...prev, response.data.data[0]]);
     });
   };
 
@@ -148,6 +203,10 @@ const Allowed = () => {
       getUserQuestions("Peer Prioritization");
     });
 
+    socket.on(params.sessionid + "EndActivity", (arg) => {
+      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`
+    })
+
     if (sessionData !== null) {
       getUserQuestions("Not Peer Prioritization");
     }
@@ -162,6 +221,9 @@ const Allowed = () => {
     try {
       payload = payload.data.data;
       setSession(payload);
+      console.log("----------------------------------------------")
+      console.log("From allowed get session", payload)
+      console.log("----------------------------------------------")
     } catch (e) {
       console.log("Error fetching data");
     }
@@ -661,8 +723,9 @@ const Allowed = () => {
           </>
         ) : sessionData?.current_activity == "Question Answering" ? (
           <>
-            <Typography>Here are the questions teacher is answering</Typography>
-            <SelectedQuestions session={sessionData} />
+            <Typography>Please Listen to teacher as she answers the questions</Typography>
+            {/* <Typography>Here are the questions teacher is answering</Typography>
+            <PriorityQuestion /> */}
           </>
         ) : (
           ""

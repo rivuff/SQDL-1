@@ -1,6 +1,6 @@
 "use client";
 
-import { React, useState, useRef } from "react";
+import { React, useState, useRef, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "flowbite-react";
 import {
@@ -22,6 +22,7 @@ import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { io } from "socket.io-client";
 import { getSessionCode } from "../../../../../Cookies";
+import Carousel from "react-elastic-carousel";
 
 const res = {
   headers: {
@@ -187,12 +188,16 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
               //     ))}
               // </>
               <>
-                <div
-                  className="w-full p-4 flex gap-5 justify-evenly"
-                >
-                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Raised By</h3>
-                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Question</h3>
-                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">Overall Priority</h3>
+                <div className="w-full p-4 flex gap-5 justify-evenly">
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">
+                    Raised By
+                  </h3>
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">
+                    Question
+                  </h3>
+                  <h3 className="w-1/5 text-center font-montserrat font-montserratWeight text-xl">
+                    Overall Priority
+                  </h3>
                 </div>
                 <ul
                   {...provided.droppableProps}
@@ -209,8 +214,12 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
                             {...provided.dragHandleProps}
                             className="w-full p-4 flex gap-5 justify-evenly border-2 border-black my-2"
                           >
-                            <h3 className="w-1/5 text-center">{q.raisedByName}</h3>
-                            <h3 className="w-1/5 text-center">{q.questionText}</h3>
+                            <h3 className="w-1/5 text-center">
+                              {q.raisedByName}
+                            </h3>
+                            <h3 className="w-1/5 text-center">
+                              {q.questionText}
+                            </h3>
                             <h3 className="w-1/5 text-center">
                               {calculatePriority(
                                 q.priorityByPeer,
@@ -236,6 +245,57 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
       </div>
     );
   }
+};
+
+const PriorityQuestion = () => {
+  const [priorityQuestions, setPriorityQuestion] = useState([]);
+  const params = useParams();
+
+  useEffect(async () => {
+    try {
+      let sessionInfo = await axios.post(
+        GLOBAL_URL + "session/get",
+        { _id: params.sessionid },
+        res
+      );
+
+      let sessionIteration = sessionInfo.data.data.iteration - 1;
+      let priorityQuestionIds =
+        sessionInfo.data.data.selected_questions[sessionIteration].questions;
+
+      priorityQuestionIds.map(async (ques) => {
+        const quesData = await axios.post(
+          GLOBAL_URL + "question/getById",
+          { _id: ques },
+          res
+        );
+        setPriorityQuestion((prev) => [
+          ...prev,
+          quesData.data.data[0].questionText,
+        ]);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    return () => {}
+  }, []);
+
+  return (
+
+      priorityQuestions &&
+        priorityQuestions.map((ques) => (
+            <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+              <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+                {ques}
+              </h1>
+            </div>
+        ))
+    // <div className="w-full p-5 bg-blue-gray-200 text-orange-500 grid place-items-center">
+    //   {priorityQuestions && priorityQuestions.map(ques => (
+    //     <h1 className="font-3xl font-redHatMono font-redHatMonoWeight underline">{ques}</h1>
+    //   ))}
+    // </div>
+  );
 };
 
 const Questions = ({ iteration }) => {
@@ -593,6 +653,19 @@ const Creator = () => {
   //   })
   // }
 
+  const getQuestionText = async (id) => {
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "question/getById",
+        { _id: id },
+        res
+      );
+      return response.data.data[0].questionText;
+    } catch (error) {
+      return error;
+    }
+  };
+
   async function activityChange() {
     let current = sessionData.current_activity;
     let iteration = sessionData.iteration;
@@ -621,8 +694,25 @@ const Creator = () => {
       res
     );
     broadcastState(response.data.data);
+    console.log("--------------------------------------------")
     console.log("Session Modified");
+    console.log("--------------------------------------------")
     setSession(response.data.data);
+  }
+
+  const endActivity = async () => {
+    const currDate = new Date();
+
+    try {
+      const response = await axios.post(
+        GLOBAL_URL + "session/update", {_id: params.sessionid, endDateTime: new Date(currDate)}, res
+      )
+      console.log(response);
+      socket.emit(params.sessionid + "EndActivity", params.sessionid)
+      window.location.href = `/course`;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const getDistributedQuestion = async () => {
@@ -632,6 +722,7 @@ const Creator = () => {
         {
           sessionId: params.sessionid,
           priority: Number(zref.current.value),
+          iteration: sessionData.iteration
         },
         res
       );
@@ -815,6 +906,8 @@ const Creator = () => {
                       sessionData.blocked_request.length}
                   </Typography>
                 </div>
+                <p>Maximum Value: {sessionData.approved_request.length - 1}</p>
+                <p>Minimum Value: 1</p>
                 <Input
                   type="Number"
                   min={1}
@@ -832,20 +925,23 @@ const Creator = () => {
               </CardBody>
             ) : sessionData?.current_activity == "Question Answering" ? (
               <CardBody>
-                Select Questions to be answered
+                  <PriorityQuestion />
+                {/* <QuestionSelect
+                  iteration={sessionData.iteration}
+                  sessionHandler={setSession}
+                  broadcaster={broadcastState}
+                /> */}
+              </CardBody>
+            ) : sessionData?.current_activity == "Teacher Priortization" ? (
+              // <QuestionPriority iteration={sessionData.iteration} />
+              <>
+                <p>Select Questions to be answered</p>
                 <QuestionSelect
                   iteration={sessionData.iteration}
                   sessionHandler={setSession}
                   broadcaster={broadcastState}
                 />
-              </CardBody>
-            ) : sessionData?.current_activity == "Teacher Priortization" ? (
-              // <QuestionPriority iteration={sessionData.iteration} />
-              <QuestionSelect
-                iteration={sessionData.iteration}
-                sessionHandler={setSession}
-                broadcaster={broadcastState}
-              />
+              </>
             ) : (
               <div>No ongoing activity to display</div>
             )}
@@ -864,6 +960,16 @@ const Creator = () => {
             ? "Start Activity"
             : "Next Activity"}
         </Button>
+        {sessionData?.iteration > 1 && (
+          <Button
+            size="sm"
+            color="blue"
+            className="bg-blue-600 text-white my-5 mx-auto hover:text-black"
+            onClick={endActivity}
+          >
+            End Activity
+          </Button>
+        )}
       </div>
 
       <Drawer

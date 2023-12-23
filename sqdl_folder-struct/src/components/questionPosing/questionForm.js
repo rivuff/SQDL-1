@@ -31,6 +31,7 @@ const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
         session: params.sessionid,
         questionTag: questionTag,
         iterationIndex: iteration,
+        iteration: iteration,
         priorityBySelf: questionPriority,
         raisedBy: id,
         raisedByName: name,
