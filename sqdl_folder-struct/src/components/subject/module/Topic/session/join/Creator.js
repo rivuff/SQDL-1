@@ -22,7 +22,7 @@ import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { io } from "socket.io-client";
 import { getSessionCode } from "../../../../../Cookies";
-import Carousel from "react-elastic-carousel";
+// import Carousel from "react-elastic-carousel";
 
 const res = {
   headers: {
