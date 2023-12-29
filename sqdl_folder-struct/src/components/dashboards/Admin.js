@@ -118,7 +118,7 @@ const Admin = () => {
             <li className="w-full cursor-pointer px-20 py-3 font-redHatMonoWeight font-redHatMono text-lg text-center bg-teal-100 hover:bg-teal-200">Logout</li>
           </ul>
         </NavCard> */}
-        <div className=" p-8 pb-20 w-full xl:bg-gray-200 ">
+        <div className=" p-8 pb-20 w-full ">
           <div className=" flex gap-6 responsive">
             <div 
               className="mobile w-1/3 h-48 p-5 bg-orange-500 rounded-xl hover:bg-orange-600 font-montserratWeight 

@@ -708,8 +708,8 @@ const Creator = () => {
         GLOBAL_URL + "session/update", {_id: params.sessionid, endDateTime: new Date(currDate)}, res
       )
       console.log(response);
-      socket.emit(params.sessionid + "EndActivity", params.sessionid)
-      window.location.href = `/course`;
+      socket.emit(params.sessionid + "EndActivity-Student", params.sessionid);
+      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`
     } catch (error) {
       console.log(error);
     }

@@ -203,7 +203,7 @@ const Allowed = () => {
       getUserQuestions("Peer Prioritization");
     });
 
-    socket.on(params.sessionid + "EndActivity", (arg) => {
+    socket.on(params.sessionid + "EndActivity-Student", (arg) => {
       window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`
     })
 

@@ -155,7 +155,7 @@ const SubjectTable = () => {
                   {ele.division}
                 </Typography>
               </td>
-              {!ele.taughtBy && (
+              {!ele.taughtBy ? (
                 <td className="p-4">
                   <NavLink
                     to={`/teacherassociation/${ele._id}/`}
@@ -166,6 +166,8 @@ const SubjectTable = () => {
                     </Button>
                   </NavLink>
                 </td>
+              ) : (
+                <Button color="green">Already Assigned</Button>
               )}
             </tr>
           ))}
