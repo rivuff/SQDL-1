@@ -137,6 +137,7 @@ const Allowed = () => {
   const [questionState, setQuestionState] = useState(false);
   const [Z, setZ] = useState(0);
   const [isDistributed, setIsDistributed] = useState("Delivering");
+  const [priorityQuestions, setPriorityQuestion] = useState([]);
 
   const getUserQuestions = (act) => {
     console.log("Getting question posed by user");
@@ -151,7 +152,9 @@ const Allowed = () => {
       );
       console.log(response);
       let session = await axios.post(
-        GLOBAL_URL + "session/get", {_id: params.sessionid}, res
+        GLOBAL_URL + "session/get",
+        { _id: params.sessionid },
+        res
       );
       session = session.data.data;
       if (response.data.data[0].iteration === session.iteration) {
@@ -198,19 +201,77 @@ const Allowed = () => {
     });
 
     socket.on(params.sessionid + check()._id + "UpdateQuestions", (student) => {
-      setIsDistributed("Deliverd")
+      setIsDistributed("Deliverd");
       set(student);
       getUserQuestions("Peer Prioritization");
     });
 
     socket.on(params.sessionid + "EndActivity-Student", (arg) => {
-      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`
-    })
+      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`;
+    });
+
+    socket.on(params.sessionid + "PriorityQuestions", (questions) => {
+      setPriorityQuestion(questions);
+    });
+
+    socket.on(params.sessionid + "PriorityQuestionChange", (questions) => {
+      setSpecificData("TeacherPriorityQuestions", questions);
+    });
 
     if (sessionData !== null) {
       getUserQuestions("Not Peer Prioritization");
     }
   }, [socket]);
+
+  const PriorityQuestion = () => {
+    const [priorityQuestions, setPriorityQuestion] = useState([]);
+    const params = useParams();
+
+    useEffect(async () => {
+      try {
+        let sessionInfo = await axios.post(
+          GLOBAL_URL + "session/get",
+          { _id: params.sessionid },
+          res
+        );
+
+        let sessionIteration = sessionInfo.data.data.iteration - 1;
+        let priorityQuestionIds =
+          sessionInfo.data.data.selected_questions[sessionIteration].questions;
+
+        priorityQuestionIds.map(async (ques) => {
+          const quesData = await axios.post(
+            GLOBAL_URL + "question/getById",
+            { _id: ques },
+            res
+          );
+          setPriorityQuestion((prev) => [
+            ...prev,
+            quesData.data.data[0].questionText,
+          ]);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      return () => {};
+    }, []);
+
+    return (
+      priorityQuestions &&
+      priorityQuestions.map((ques) => (
+        <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+            {ques}
+          </h1>
+        </div>
+      ))
+      // <div className="w-full p-5 bg-blue-gray-200 text-orange-500 grid place-items-center">
+      //   {priorityQuestions && priorityQuestions.map(ques => (
+      //     <h1 className="font-3xl font-redHatMono font-redHatMonoWeight underline">{ques}</h1>
+      //   ))}
+      // </div>
+    );
+  };
 
   async function getSession() {
     let payload = await axios.post(
@@ -221,9 +282,9 @@ const Allowed = () => {
     try {
       payload = payload.data.data;
       setSession(payload);
-      console.log("----------------------------------------------")
-      console.log("From allowed get session", payload)
-      console.log("----------------------------------------------")
+      console.log("----------------------------------------------");
+      console.log("From allowed get session", payload);
+      console.log("----------------------------------------------");
     } catch (e) {
       console.log("Error fetching data");
     }
@@ -244,18 +305,19 @@ const Allowed = () => {
 
   const setPeerPriority = async () => {
     console.log(userPriorityArray);
-    userPriorityArray.map(async(q) => {
+    userPriorityArray.map(async (q) => {
       try {
         const response = await axios.post(
           GLOBAL_URL + "question/priorityByPeer",
-          {rating: q.Priority, questionId: q.id, studentId: check()._id}, res
-        )
+          { rating: q.Priority, questionId: q.id, studentId: check()._id },
+          res
+        );
         console.log(response);
         setIsDistributed("sometext");
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
-    })
+    });
   };
 
   const updateQuestion = () => {
@@ -294,6 +356,9 @@ const Allowed = () => {
   return (
     <div>
       <div className="flex flex-col items-center justify-center min p-10">
+        <Typography variant="h2" className="mb-4">
+          Hello {check().name}
+        </Typography>
         <Typography variant="h3" className="mb-4">
           {sessionData?.current_activity
             ? `Current Activity is ${sessionData?.current_activity}`
@@ -474,6 +539,7 @@ const Allowed = () => {
         {sessionData?.current_activity == "Deliver Content & Question Posing" &&
           dcFinished && (
             <>
+              {check().name}
               <Typography variant="h2">
                 Teacher has not started next session Yet
               </Typography>
@@ -723,7 +789,18 @@ const Allowed = () => {
           </>
         ) : sessionData?.current_activity == "Question Answering" ? (
           <>
-            <Typography>Please Listen to teacher as she answers the questions</Typography>
+            <Typography>
+              Please Listen to teacher as she answers the questions
+            </Typography>
+            <div>
+              {getSpecificData("TeacherPriorityQuestions").map((ques) => (
+                <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+                  <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+                    {ques.questionText}
+                  </h1>
+                </div>
+              ))}
+            </div>
             {/* <Typography>Here are the questions teacher is answering</Typography>
             <PriorityQuestion /> */}
           </>

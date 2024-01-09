@@ -48,6 +48,7 @@ export function getSpecificData(data) {
 }
 
 export function setSpecificData(name, data) {
+  console.log(`from setSpecificData function: ${name} ${data}`);
   localStorage.setItem(name, JSON.stringify(data))
   return true;
 }

@@ -21,7 +21,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { io } from "socket.io-client";
-import { getSessionCode } from "../../../../../Cookies";
+import {
+  getSessionCode,
+  getSpecificData,
+  setSpecificData,
+} from "../../../../../Cookies";
 // import Carousel from "react-elastic-carousel";
 
 const res = {
@@ -62,6 +66,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
   async function handleOnDragEnd(result) {
     console.log(result);
     const items = Array.from(questions);
+    console.log(items);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     //adding to selected questions
@@ -101,14 +106,18 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
 
       session.selected_questions[found] = obj;
     }
-
+    console.log("Before Updation of the session");
     //update session send broadcast and rerender page
-    let payload = await axios.post(GLOBAL_URL + "session/update", session, res);
-    payload = payload.data.data;
-    session = payload;
-    broadcaster();
-    sessionHandler(session);
-    setQuestion(items);
+      let payload = await axios.post(GLOBAL_URL + "session/update", session, res);
+      payload = payload.data.data;
+      session = payload;
+      broadcaster();
+      sessionHandler(session);
+      setSpecificData("PriorityQuestions", items);
+      socket.emit(params.sessionid + "PriorityQuestionChange", items);
+      setQuestion(items);
+      console.log("After Updation of the session")
+    
   }
   async function getSession() {
     let payload = await axios.post(
@@ -140,6 +149,8 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     //needs to be dynamically updated
     payload = payload.data;
     //consider making payload sortable here
+    setSpecificData("PriorityQuestions", payload);
+    socket.emit(params.sessionid + "PriorityQuestionChange", payload);
     setQuestion(payload);
   }
   if (questions == null) {
@@ -248,7 +259,10 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
 };
 
 const PriorityQuestion = () => {
-  const [priorityQuestions, setPriorityQuestion] = useState([]);
+  const [priorityQuestions, setPriorityQuestion] = useState(
+    []
+  );
+  console.log(getSpecificData("PriorityQuestions"));
   const params = useParams();
 
   useEffect(async () => {
@@ -274,22 +288,22 @@ const PriorityQuestion = () => {
           quesData.data.data[0].questionText,
         ]);
       });
+      socket.emit(params.sessionid + "PriorityQuestions", priorityQuestions);
     } catch (error) {
       console.log(error);
     }
-    return () => {}
+    return () => {};
   }, []);
 
   return (
-
-      priorityQuestions &&
-        priorityQuestions.map((ques) => (
-            <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
-              <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
-                {ques}
-              </h1>
-            </div>
-        ))
+    priorityQuestions &&
+    priorityQuestions.map((ques) => (
+      <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+          {ques}
+        </h1>
+      </div>
+    ))
     // <div className="w-full p-5 bg-blue-gray-200 text-orange-500 grid place-items-center">
     //   {priorityQuestions && priorityQuestions.map(ques => (
     //     <h1 className="font-3xl font-redHatMono font-redHatMonoWeight underline">{ques}</h1>
@@ -694,9 +708,9 @@ const Creator = () => {
       res
     );
     broadcastState(response.data.data);
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
     console.log("Session Modified");
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
     setSession(response.data.data);
   }
 
@@ -705,15 +719,17 @@ const Creator = () => {
 
     try {
       const response = await axios.post(
-        GLOBAL_URL + "session/update", {_id: params.sessionid, endDateTime: new Date(currDate)}, res
-      )
+        GLOBAL_URL + "session/update",
+        { _id: params.sessionid, endDateTime: new Date(currDate) },
+        res
+      );
       console.log(response);
       socket.emit(params.sessionid + "EndActivity-Student", params.sessionid);
-      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`
+      window.location.href = `/course/${params.subjectid}/${params.moduleid}/${params.sessionid}/end`;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getDistributedQuestion = async () => {
     try {
@@ -722,7 +738,7 @@ const Creator = () => {
         {
           sessionId: params.sessionid,
           priority: Number(zref.current.value),
-          iteration: sessionData.iteration
+          iteration: sessionData.iteration,
         },
         res
       );
@@ -925,7 +941,16 @@ const Creator = () => {
               </CardBody>
             ) : sessionData?.current_activity == "Question Answering" ? (
               <CardBody>
-                  <PriorityQuestion />
+                {/* <PriorityQuestion /> */}
+                <div>
+                  {getSpecificData("PriorityQuestions").map((ques) => (
+                    <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+                      <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+                        {ques.questionText}
+                      </h1>
+                    </div>
+                  ))}
+                </div>
                 {/* <QuestionSelect
                   iteration={sessionData.iteration}
                   sessionHandler={setSession}
