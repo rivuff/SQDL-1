@@ -111,7 +111,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
       let payload = await axios.post(GLOBAL_URL + "session/update", session, res);
       payload = payload.data.data;
       session = payload;
-      broadcaster();
+      broadcaster(session);
       sessionHandler(session);
       setSpecificData("PriorityQuestions", items);
       socket.emit(params.sessionid + "PriorityQuestionChange", items);
@@ -564,7 +564,8 @@ const Creator = () => {
   });
 
   function broadcastState(state) {
-    socket.emit(params.sessionid + "student" + "stateUpdate", params.sessionid);
+    // socket.emit(params.sessionid + "student" + "stateUpdate", params.sessionid);
+    socket.emit(params.sessionid + "student" + "stateUpdate", state);
   }
 
   async function getSession() {
@@ -666,6 +667,15 @@ const Creator = () => {
   //     statusChangeHandler({target: {value: "approved"}}, stu._id);
   //   })
   // }
+
+  function getIterationQuestion(questions) {
+    let ctr = 0;
+    questions.map(ques => {
+      console.log(ques.iteration, sessionData.iteration);
+      ctr += (ques.iteration === sessionData.iteration ? 1 : 0);
+    })
+    return ctr;
+  }
 
   const getQuestionText = async (id) => {
     try {
@@ -913,7 +923,7 @@ const Creator = () => {
               <CardBody>
                 <div className="w-full flex gap-5 py-4 justify-center my-4 border-2">
                   <Typography variant="h4">
-                    Number of questions: {sessionData.questions.length}
+                    Number of questions: {(sessionData.questions.map(ques => ques.iteration == sessionData.iteration)).length}
                   </Typography>
                   <Typography variant="h4">
                     Number of Student:{" "}
@@ -1047,7 +1057,7 @@ const Creator = () => {
                     return null;
                   }
                   return (
-                    <tr>
+                    <tr key={Math.random()}>
                       <td>{student.name}</td>
                       <td>
                         <select

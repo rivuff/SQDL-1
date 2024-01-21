@@ -157,7 +157,7 @@ const Allowed = () => {
         res
       );
       session = session.data.data;
-      if (response.data.data[0].iteration === session.iteration) {
+      if ((response.data.data[0].iteration === session.iteration) && (response.data.data[0].session === session._id)) {
         if (act === "Peer Prioritization") {
           setUserPriorityArray((prev) => [
             ...prev,
@@ -290,18 +290,7 @@ const Allowed = () => {
     }
   }
 
-  const updateQuestionPriority = (e, id) => {
-    console.log(e.target.value, id);
-    setUserPriorityArray(
-      userPriorityArray.map((q) => {
-        if (q.id === id) {
-          return { ...q, Priority: Number(e.target.value) };
-        } else {
-          return q;
-        }
-      })
-    );
-  };
+  
 
   const setPeerPriority = async () => {
     console.log(userPriorityArray);
@@ -320,9 +309,25 @@ const Allowed = () => {
     });
   };
 
+  const updateQuestionPriority = (e, id) => {
+    console.log(e.target.value, id);
+    console.log(userQuestions);
+    const x = userPriorityArray.map((q) => {
+        if (q.id === id) {
+          return { ...q, Priority: Number(e.target.value) };
+        } else {
+          return q;
+        }
+      })
+      console.log(x);
+    // setUserPriorityArray(
+      
+    // );
+  };
+
   const updateQuestion = () => {
     console.log(userPriorityArray);
-    setUserQuestions([]);
+    // setUserQuestions([]);
     userPriorityArray.map(async (p) => {
       try {
         const response = await axios.post(
@@ -350,7 +355,14 @@ const Allowed = () => {
   }
   socket.on(params.sessionid + "student" + "stateUpdate", (args) => {
     console.log("Reloading Session Data");
-    getSession(); //perform request everytime socket broadcast is received
+    if (args.current_activity === "Deliver Content & Question Posing") {
+      setDCFinished(false);
+      setEditState(false);
+      setVideoState(false);
+      setQuestionState(false);
+    }
+    setSession(args);
+    // getSession(); //perform request everytime socket broadcast is received
   });
 
   return (
@@ -619,6 +631,7 @@ const Allowed = () => {
                                 max={5}
                                 onChange={(e) => {
                                   updateQuestionPriority(e, ques._id);
+                                  console.log(userPriorityArray);
                                 }}
                               ></input>
                             )}
