@@ -149,6 +149,14 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     //needs to be dynamically updated
     payload = payload.data;
     //consider making payload sortable here
+    payload = payload.map((p, ind) => {
+      const quesPriority = calculatePriority(p.priorityByPeer,p.priorityBySelf);
+      p['overallPriority'] = quesPriority;
+      return p;
+    })
+    console.log(payload);
+    payload = payload.sort((a, b) => {return b.overallPriority - a.overallPriority})
+    console.log(payload);
     setSpecificData("PriorityQuestions", payload);
     socket.emit(params.sessionid + "PriorityQuestionChange", payload);
     setQuestion(payload);
