@@ -139,6 +139,8 @@ const Allowed = () => {
   const [isDistributed, setIsDistributed] = useState("Delivering");
   const [priorityQuestions, setPriorityQuestion] = useState([]);
 
+  const [teacherQuestions, setTeacherQuestions] = useState([]);
+
   const getUserQuestions = (act) => {
     console.log("Getting question posed by user");
     console.log(check().questions);
@@ -217,6 +219,21 @@ const Allowed = () => {
     socket.on(params.sessionid + "PriorityQuestionChange", (questions) => {
       setSpecificData("TeacherPriorityQuestions", questions);
     });
+
+    socket.on(params.sessionid + 'sendQuestionToStudent', (questions) => {
+      console.log("received", questions.questionText);
+      // console.log(teacherQuestions.indexOf(questions))
+      const ind = teacherQuestions.findIndex((ques) => ques === questions);
+      console.log(ind);
+      if (ind === -1) {
+        setTeacherQuestions(prev => [...prev, questions]);
+      } else {
+        // let x = teacherQuestions;
+        // x.splice(ind, 1);
+        setTeacherQuestions(prev => teacherQuestions.filter(ques => ques !== questions));
+      }
+      console.log(teacherQuestions);
+    })
 
     if (sessionData !== null) {
       getUserQuestions("Not Peer Prioritization");
@@ -806,13 +823,20 @@ const Allowed = () => {
               Please Listen to teacher as she answers the questions
             </Typography>
             <div>
-              {getSpecificData("TeacherPriorityQuestions").map((ques) => (
+              {
+                teacherQuestions && teacherQuestions.map((ques) => (
+                  <div key={Math.random()} className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
+                    <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">{ques.questionText}</h1>
+                  </div>
+                ))
+              }
+              {/* {getSpecificData("TeacherPriorityQuestions").map((ques) => (
                 <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
                   <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
                     {ques.questionText}
                   </h1>
                 </div>
-              ))}
+              ))} */}
             </div>
             {/* <Typography>Here are the questions teacher is answering</Typography>
             <PriorityQuestion /> */}

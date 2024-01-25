@@ -108,16 +108,15 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     }
     console.log("Before Updation of the session");
     //update session send broadcast and rerender page
-      let payload = await axios.post(GLOBAL_URL + "session/update", session, res);
-      payload = payload.data.data;
-      session = payload;
-      broadcaster(session);
-      sessionHandler(session);
-      setSpecificData("PriorityQuestions", items);
-      socket.emit(params.sessionid + "PriorityQuestionChange", items);
-      setQuestion(items);
-      console.log("After Updation of the session")
-    
+    let payload = await axios.post(GLOBAL_URL + "session/update", session, res);
+    payload = payload.data.data;
+    session = payload;
+    broadcaster(session);
+    sessionHandler(session);
+    setSpecificData("PriorityQuestions", items);
+    socket.emit(params.sessionid + "PriorityQuestionChange", items);
+    setQuestion(items);
+    console.log("After Updation of the session");
   }
   async function getSession() {
     let payload = await axios.post(
@@ -150,12 +149,17 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
     payload = payload.data;
     //consider making payload sortable here
     payload = payload.map((p, ind) => {
-      const quesPriority = calculatePriority(p.priorityByPeer,p.priorityBySelf);
-      p['overallPriority'] = quesPriority;
+      const quesPriority = calculatePriority(
+        p.priorityByPeer,
+        p.priorityBySelf
+      );
+      p["overallPriority"] = quesPriority;
       return p;
-    })
+    });
     console.log(payload);
-    payload = payload.sort((a, b) => {return b.overallPriority - a.overallPriority})
+    payload = payload.sort((a, b) => {
+      return b.overallPriority - a.overallPriority;
+    });
     console.log(payload);
     setSpecificData("PriorityQuestions", payload);
     socket.emit(params.sessionid + "PriorityQuestionChange", payload);
@@ -267,9 +271,7 @@ const QuestionSelect = ({ iteration, sessionHandler, broadcaster }) => {
 };
 
 const PriorityQuestion = () => {
-  const [priorityQuestions, setPriorityQuestion] = useState(
-    []
-  );
+  const [priorityQuestions, setPriorityQuestion] = useState([]);
   console.log(getSpecificData("PriorityQuestions"));
   const params = useParams();
 
@@ -552,6 +554,7 @@ const Creator = () => {
   const [sessionData, setSession] = useState(null);
   const [students, setStudents] = useState([]);
   const [linkState, setLinkState] = useState(false);
+  const [teacherQuestions, setTeacherQuestions] = useState([]);
 
   const resref = useRef("");
   const zref = useRef(0);
@@ -678,10 +681,10 @@ const Creator = () => {
 
   function getIterationQuestion(questions) {
     let ctr = 0;
-    questions.map(ques => {
+    questions.map((ques) => {
       console.log(ques.iteration, sessionData.iteration);
-      ctr += (ques.iteration === sessionData.iteration ? 1 : 0);
-    })
+      ctr += ques.iteration === sessionData.iteration ? 1 : 0;
+    });
     return ctr;
   }
 
@@ -788,6 +791,13 @@ const Creator = () => {
       setLinkState(false);
     }
     socket.emit(params.sessionid + "session-mode", e);
+  }
+
+  function sendToStudents(e, ques) {
+    e.preventDefault();
+    console.log(ques);
+    console.log(teacherQuestions);
+    socket.emit(params.sessionid + "sendQuestionToStudent", ques);
   }
 
   return (
@@ -931,7 +941,12 @@ const Creator = () => {
               <CardBody>
                 <div className="w-full flex gap-5 py-4 justify-center my-4 border-2">
                   <Typography variant="h4">
-                    Number of questions: {(sessionData.questions.map(ques => ques.iteration == sessionData.iteration)).length}
+                    Number of questions:{" "}
+                    {
+                      sessionData.questions.map(
+                        (ques) => ques.iteration == sessionData.iteration
+                      ).length
+                    }
                   </Typography>
                   <Typography variant="h4">
                     Number of Student:{" "}
@@ -960,10 +975,13 @@ const Creator = () => {
             ) : sessionData?.current_activity == "Question Answering" ? (
               <CardBody>
                 {/* <PriorityQuestion /> */}
-                <div>
+                <div className="w-full">
                   {getSpecificData("PriorityQuestions").map((ques) => (
-                    <div className="w-full p-5 my-5 bg-blue-gray-200 text-orange-500 flex flex-col items-center justify-center">
-                      <h1 className="text-3xl font-redHatMono font-redHatMonoWeight underline">
+                    <div className="p-5 my-5 bg-blue-gray-200 text-orange-500 flex items-center gap-10">
+                      <h1 
+                        className="cursor-pointer mx-auto text-3xl font-redHatMono font-redHatMonoWeight underline"
+                        onClick={(e) => {sendToStudents(e, ques)}}
+                      >
                         {ques.questionText}
                       </h1>
                     </div>
