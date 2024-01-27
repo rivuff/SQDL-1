@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
+import { SOCKET_URL } from '../config';
 
 const TeacherInterface = () => {
-  const ENDPOINT = "ws://localhost:5000";
+  const ENDPOINT = SOCKET_URL;
   const socket = io(ENDPOINT); // Replace with your Socket.io server URL
 
   console.log(socket);
