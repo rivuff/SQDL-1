@@ -11,6 +11,7 @@ import {
 } from "@material-tailwind/react";
 import { set } from "../Cookies";
 import { useParams } from "react-router-dom";
+import { GLOBAL_URL } from "../config";
 
 const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
   const [questionText, setQuestionText] = useState("");
@@ -40,7 +41,7 @@ const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
       };
       console.log(questionData);
       const response = await axios.post(
-        "http://localhost:5000/api/v1/question/create",
+        GLOBAL_URL + "question/create",
         questionData,
       );
 
@@ -53,7 +54,7 @@ const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
       };
 
       const addingtoUser = await axios.post(
-        "http://localhost:5000/api/v1/user/addquestion",
+        GLOBAL_URL + "user/addquestion",
         addData,
       );
 
@@ -62,7 +63,7 @@ const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
       console.log("Response from the backend:", addingtoUser);
 
       const addQuestionToSession = await axios.post(
-        "http://localhost:5000/api/v1/session/addQuestion",
+        GLOBAL_URL + "session/addQuestion",
         {
           questionId: response?.data?.data?._id,
           sessionId: params.sessionid,

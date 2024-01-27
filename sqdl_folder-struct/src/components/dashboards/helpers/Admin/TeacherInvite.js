@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { Button } from "flowbite-react";
 import { useState } from "react";
+import { GLOBAL_URL } from "../../../config";
 
 export default function TeacherInvite({ handler }) {
   const [msg, setMsg] = useState("");
@@ -24,7 +25,7 @@ export default function TeacherInvite({ handler }) {
     console.log("posted");
     axios
       .post(
-        "http://localhost:5000/api/v1/admin/invite",
+        GLOBAL_URL + "admin/invite",
         {
           email: document.getElementById("invitationEmail").value,
           name: document.getElementById("invitationName").value,
@@ -50,7 +51,7 @@ export default function TeacherInvite({ handler }) {
       });
   }
   async function getSubjects() {
-    const data = await axios.get("http://localhost:5000/api/v1/subject/getAll");
+    const data = await axios.get(GLOBAL_URL + "subject/getAll");
     setSub(data.data.data);
   }
   if (subjects.length == 0) {

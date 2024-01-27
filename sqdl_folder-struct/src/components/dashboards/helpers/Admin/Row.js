@@ -13,6 +13,7 @@ import "./StudentTable.css";
 import react from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { GLOBAL_URL } from "../../../config";
 
 const Row = ({ _id, handler }) => {
   const [formData, editForm] = useState({
@@ -34,7 +35,7 @@ const Row = ({ _id, handler }) => {
       },
     };
     axios
-      .post(`http://localhost:5000/api/v1/user/getID`, { _id: _id }, res)
+      .post(`${GLOBAL_URL}user/getID`, { _id: _id }, res)
       .then((response) => {
         let data = response.data.data;
         editForm({ ...data, isFetched: true });
@@ -52,7 +53,7 @@ const Row = ({ _id, handler }) => {
     if (window.confirm("Delete user?")) {
       try {
         const response = await axios.delete(
-          "http://localhost:5000/api/v1/user/delete",
+          `${GLOBAL_URL}user/delete`,
           { data: { email: email } },
           res
         );
@@ -60,7 +61,7 @@ const Row = ({ _id, handler }) => {
       } catch (error) {}
 
       axios
-        .post("http://localhost:5000/api/v1/user/delete", { email: email }, res)
+        .post(GLOBAL_URL + "user/delete", { email: email }, res)
         .then((response) => {
           editForm({ ...formData, isFetched: false, deleted: true }); //update other fields with returned response data
           handler();
@@ -105,7 +106,7 @@ const Row = ({ _id, handler }) => {
     //posting data to the server
     axios
       .post(
-        `http://localhost:5000/api/v1/user/update`,
+        `${GLOBAL_URL}user/update`,
         JSON.stringify(info),
         res
       )

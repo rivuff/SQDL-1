@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import registerImg from "../../images/register2.png";
 import background from "../../images/register3.png";
 import "./Register.css";
+import { GLOBAL_URL } from "../config";
 // function registerhandler(formData){
 
 // }
@@ -49,7 +50,7 @@ export default function Register() {
 
     axios
       .post(
-        `http://localhost:5000/api/v1/user/signup`,
+        `${GLOBAL_URL}user/signup`,
         { email, name, password, enrollment, rollno },
         res
       )

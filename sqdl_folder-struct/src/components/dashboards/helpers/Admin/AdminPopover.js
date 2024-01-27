@@ -12,6 +12,7 @@ import react from "react";
 import { useState, useEffect } from "react";
 import EditForm from "./EditForm";
 import axios from "axios";
+import { GLOBAL_URL } from "../../../config";
 
 export default function AdminPopover({ id }) {
   //query data
@@ -36,7 +37,7 @@ export default function AdminPopover({ id }) {
         },
       };
       const data = await axios.post(
-        `http://localhost:5000/api/v1/user/update`,
+        `${GLOBAL_URL}user/update`,
         formData,
         res
       );

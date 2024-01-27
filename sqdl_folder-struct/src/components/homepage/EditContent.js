@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import axios from "axios";
+import { GLOBAL_URL } from "../config";
 
 const EditContent = () => {
   //fetch user data from cookies
@@ -39,7 +40,7 @@ const EditContent = () => {
     //posting data to the server
     axios
       .post(
-        `http://localhost:5000/api/v1/user/update`,
+        `${GLOBAL_URL}user/update`,
         JSON.stringify(submissionData),
         res,
       )

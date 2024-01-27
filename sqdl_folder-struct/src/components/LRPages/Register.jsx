@@ -4,6 +4,7 @@ import Input from '../Helper/Input';
 
 import { set, check } from '../Cookies';
 import axios from 'axios';
+import { GLOBAL_URL } from '../config';
 
 const Register = ({ display, handler }) => {
 
@@ -28,7 +29,7 @@ const Register = ({ display, handler }) => {
 
     axios
       .post(
-        `http://localhost:5000/api/v1/user/signup`,
+        `${GLOBAL_URL}user/signup`,
         { 
           email: emailRef.current.value,
           name: nameRef.current.value,

@@ -6,6 +6,7 @@ import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
 import LoadingRow from "./LoadingRow";
 import Row from "./Row";
+import { GLOBAL_URL } from "../../../config";
 
 const TeacherTable = () => {
   const [state, setState] = useState({
@@ -21,7 +22,7 @@ const TeacherTable = () => {
       },
     };
     axios
-      .get(`http://localhost:5000/api/v1/user/getall`, res)
+      .get(`${GLOBAL_URL}user/getall`, res)
       .then((response) => {
         let allusers = response.data.data;
         let allteachers = [];

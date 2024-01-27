@@ -31,7 +31,7 @@ const SubjectCard = ({ name, description, subjectId, createdBy }) => {
       };
 
       const response = await axios
-        .post("http://localhost:5000/api/v1/subject/addUserSubject", data)
+        .post(GLOBAL_URL + "subject/addUserSubject", data)
         .then((response) => {
           console.log(response);
         });
@@ -147,7 +147,7 @@ const SubjectPage = () => {
     const fetchData = async() => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/subject/getAll"
+          GLOBAL_URL + "subject/getAll"
         );
         const fetchedSubjects = response.data.data;
         const subjects = check().subjects.map(subId => {
