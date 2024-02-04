@@ -12,6 +12,7 @@ import { check, set } from "../Cookies";
 import axios from "axios";
 import { GLOBAL_URL } from "../config";
 import { useState } from "react";
+import { Global } from "@emotion/react";
 
 const NewSubject = () => {
   const [subject, setSubject] = useState({
@@ -20,6 +21,7 @@ const NewSubject = () => {
     year: "",
     semester: 0,
     taughtBy: '',
+    taughtById: '',
     division: '',
     createdBy: check()._id,
     msg: "",
@@ -49,11 +51,13 @@ const NewSubject = () => {
   }
 
   async function submissionHandler() {
+    console.log(subject);
     const res = {
       headers: {
         "Content-type": "application/json",
       },
     };
+    var subjectId;
     axios
       .post(
         GLOBAL_URL + "subject/create",
@@ -76,14 +80,31 @@ const NewSubject = () => {
         });
         //add too cookie
         const user = check();
+        console.log(response);
+        console.log(response.data.data._id)
         user.subjects.push(response.data.data._id);
+        subjectId = response.data.data._id;
         set(user);
+        let teacher = teachers.filter(tch => tch.name === subject.taughtBy)[0]
+        console.log(teacher);
+        axios.post(
+          GLOBAL_URL + "subject/addUserSubject",
+          {
+            userId: teacher._id,
+            subjectIds: response.data.data._id,
+          }, res
+        ).then((response) => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        })
         window.location.href = "/dashboard";
       })
       .catch((error) => {
         console.log(error);
         setSubject({ ...subject, msg: error.message });
       });
+      console.log(subjectId);
   }
 
   if (check() == null) {
@@ -110,9 +131,9 @@ const NewSubject = () => {
             <Typography variant="h4" className="text-center text-blue-800">
               New Subject
             </Typography>
-            <Typography className="text-center text-red-500">
+            {/* <Typography className="text-center text-red-500">
               {subject.msg}
-            </Typography>
+            </Typography> */}
             <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
               <div className="mb-4 flex flex-col gap-6">
                 <Input
