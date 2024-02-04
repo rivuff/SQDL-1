@@ -71,10 +71,10 @@ function Provide() {
             <div className="left-text-container">
               <h1 className="headingpara">Student Query Driven Learning</h1>
               <p className="white">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
+                {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
                 molestiae minus dicta ipsum atque est qui vel illo magni
                 voluptates esse, e x commodi corporis quos odio libero
-                temporibus, eveniet nisi.
+                temporibus, eveniet nisi. */}
               </p>
             </div>
           </div>

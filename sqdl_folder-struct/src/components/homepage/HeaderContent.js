@@ -21,10 +21,10 @@ function HeaderContent() {
           <div className="left-text-container">
             <h1 className="heading">Student Query Driven Learning</h1>
             <p className="white">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
+              {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
               molestiae minus dicta ipsum atque est qui vel illo magni
               voluptates esse, e x commodi corporis quos odio libero temporibus,
-              eveniet nisi.
+              eveniet nisi. */}
             </p>
             <Button
               gradientDuoTone="purpleToBlue"
