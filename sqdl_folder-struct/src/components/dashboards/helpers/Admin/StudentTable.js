@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Typography, Button } from "@material-tailwind/react";
 import axios from "axios";
 import "./StudentTable.css";
+import FileDownload from "js-file-download";
 import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
 import LoadingRow from "./LoadingRow";
@@ -39,6 +40,26 @@ const TeacherTable = () => {
         }
       });
   }
+
+  async function getStudentCSV(e) {
+    e.preventDefault();
+    const res = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    axios({
+      url: `${GLOBAL_URL}user/getCSV`,
+      method: "GET",
+      responseType: "blob"
+    }).then((res) => {
+      FileDownload(res.data, "student.csv");
+    }).catch(error => {
+      console.log(error);
+    })
+
+  }
+
   if (state.isLoading) {
     fetchTeacherData();
   }
@@ -119,6 +140,9 @@ const TeacherTable = () => {
         </tbody>
       </table>
       {/* </Card> */}
+      <Button color="blue" onClick={getStudentCSV}>
+        Get Student CSV
+      </Button>
     </div>
   );
 };
