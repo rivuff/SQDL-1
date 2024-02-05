@@ -125,11 +125,20 @@ const TopicTable = (props) => {
                           {ele.endDateTime ? endDate.toLocaleString() : "Is shown after session completion"}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          <NavLink
+                          {!ele.endDateTime ? (
+                            <NavLink
                             to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}`}
                           >
                             Click to go to session
                           </NavLink>
+                          ) : (
+                            <NavLink
+                            to={`/course/${params.subjectid}/${params.moduleid}/${ele._id}/end`}
+                          >
+                            show Report
+                          </NavLink>
+                          )}
+                          
                         </td>
                       </tr>
                     );

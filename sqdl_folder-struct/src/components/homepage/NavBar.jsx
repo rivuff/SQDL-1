@@ -175,7 +175,7 @@ function NavList(props) {
               to={"/profile"}
               className=" text-black flex items-center hover:text-blue-500 transition-colors text-lg"
             >
-              Profile
+              Profile5
             </Link>
           </Typography>
         </li>

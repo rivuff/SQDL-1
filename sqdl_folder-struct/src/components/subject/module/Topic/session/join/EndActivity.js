@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
-import { Typography, Button } from "@material-tailwind/react";
+import { Typography, Button, Card } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -90,6 +90,9 @@ const StudentEnd = () => {
 
 const TeacherEnd = () => {
   const [rating, setRating] = useState(0);
+  const [sessionData, setSessionData] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const params = useParams();
 
   useEffect(() => {
@@ -101,16 +104,192 @@ const TeacherEnd = () => {
         res
       );
       session.data.data.rating.map((r) => (sum += r));
-      setRating(sum / (session.data.data.rating.length*5));
+      setRating(sum / (session.data.data.rating.length * 5));
     });
+
+    async function getSession() {
+      const sessionId = params.sessionid;
+      var stus = null;
+      var ques = null;
+      try {
+        const response = await axios.post(
+          GLOBAL_URL + "session/get",
+          { _id: sessionId },
+          res
+        );
+        console.log(response);
+        stus = response.data.data.approved_request;
+        ques = response.data.data.questions;
+        setSessionData(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response2 = await axios.post(
+          GLOBAL_URL + "user/getIDs",
+          { _ids: stus },
+          res
+        );
+        console.log(response2);
+        setStudents(response2.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response3 = await axios.post(
+          GLOBAL_URL + "question/getByIds",
+          { _ids: ques },
+          res
+        );
+        console.log(response3);
+        setQuestions(response3.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getSession();
   }, [socket]);
+
+  function calculatePriority(priority_list) {
+    let sum = 0;
+    priority_list.map((p) => {
+      sum += +p.priority;
+    });
+    return sum/priority_list.length;
+  }
 
   return (
     <div className="w-full h-screen bg-blue-gray-100 grid place-items-center">
+      {sessionData && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
+            Session: {sessionData.title}
+          </h1>
+          <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
+            Session Code: {sessionData.sessionCode}
+          </h2>
+          <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
+            Iterations: {sessionData.iteration}
+          </h2>
+          <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
+            Student:
+          </h2>
+          <div className="flex gap-8">
+            {students.map((stu) => (
+              <p className="text-xl text-dark-gray font-poppins">{stu.name}</p>
+            ))}
+          </div>
+          <h4 className="text-2xl text-dark-gray font-montserrat font-extrabold">
+            Total Student: {sessionData.approved_request.length}
+          </h4>
+          <h4 className="text-2xl text-dark-gray font-montserrat font-extrabold">
+            Total Question: {sessionData.questions.length}
+          </h4>
+          <Card className="h-full w-full overflow-scroll">
+            <table className="w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Name
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Question
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Priority By Student
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Priority By Peers
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Question Tag
+                    </Typography>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {questions.map((ques) => (
+                  <tr className="even:bg-blue-gray-50/50">
+                    <td className="p-4">
+                      <Typography
+                        variant="small" color="blue-gray" className="font-normal"
+                      >
+                        {ques.raisedByName}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small" color="blue-gray" className="font-normal"
+                      >
+                        {ques.questionText}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small" color="blue-gray" className="font-normal"
+                      >
+                        {ques.priorityBySelf}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small" color="blue-gray" className="font-normal"
+                      >
+                        {calculatePriority(ques.priorityByPeer)}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small" color="blue-gray" className="font-normal"
+                      >
+                        {ques.questionTag}
+                      </Typography>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
       <div className="w-4/5 flex flex-col gap-10 justify-center items-center">
         <p>You will see here to overall success rate of your lecture</p>
         {rating === 0 ? (
-          <Typography variant="lead">Student are giving the rating please wait</Typography>
+          <Typography variant="lead">
+            Student are giving the rating please wait
+          </Typography>
         ) : (
           <Typography variant="h1">SuccessRate: {rating * 100}%</Typography>
         )}
