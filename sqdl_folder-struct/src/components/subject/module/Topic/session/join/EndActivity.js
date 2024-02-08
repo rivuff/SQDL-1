@@ -4,6 +4,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { Typography, Button, Card } from "@material-tailwind/react";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
+import FileDownload from "js-file-download";
+import { CSVLink } from "react-csv";
 import axios from "axios";
 import { check } from "../../../../../Cookies";
 import { useParams } from "react-router-dom";
@@ -93,6 +95,7 @@ const TeacherEnd = () => {
   const [sessionData, setSessionData] = useState(null);
   const [students, setStudents] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [sessionCSVData, setSessionCSVData] = useState([]);
   const params = useParams();
 
   useEffect(() => {
@@ -150,7 +153,37 @@ const TeacherEnd = () => {
       }
     }
 
+    async function getSessionCSVData(){
+      const sessionId = params.sessionid;
+      try {
+        const response = await axios.post(
+          GLOBAL_URL + "session/sessionCSV", {_id: sessionId}, res
+        )
+        console.log(response);
+        const sessioncsvData = [
+          ['ID', "Session Title", 'Description', "Start Data and Time", "End Date and Time", 'Teacher for Session', 'Session Code', 'Total Questions', 'Question Posed in Session', 'Total Students', "Students in Session", 'Activity in Session'],
+          response.data.data,
+        ]
+        setSessionCSVData(sessioncsvData)
+      } catch (error) {
+        console.log(error);
+      }
+      // let session = {...sessionData, approved_request: students, questions: questions};
+      // session.totalStudents = sessionData.approved_request.length;
+      // session.totalQuestions = sessionData.questions.length;
+      // sessionCSVData = [
+      //   ['ID', 'Description', "Start Data and Time", "End Date and Time", 'Teacher for Session', 'Session Code', 'Total Questions', 'Question Posed in Session', 'Total Students', "Students in Session", 'Activity in Session'],
+      //   ...session.map(({_id, title, description, startDateTime, endDateTime, conductedBy, sessionCode, totalQuestions, questions, totalStudents, approved_request, activity_order}) => [
+      //     _id, title, description, startDateTime, endDateTime, conductedBy, sessionCode, totalQuestions, 
+      //     questions, totalStudents, approved_request, activity_order 
+      //   ])
+      // ]
+    }
+
     getSession();
+    // if (sessionData != null){
+    getSessionCSVData();
+    // }
   }, [socket]);
 
   function calculatePriority(priority_list) {
@@ -294,6 +327,14 @@ const TeacherEnd = () => {
           <Typography variant="h1">SuccessRate: {rating * 100}%</Typography>
         )}
       </div>
+      {/* <Button color="Blue">
+        Get Session CSV
+      </Button> */}
+      <CSVLink filename="session.csv" data={sessionCSVData}>
+        <Button color="Blue">
+          Export to CSV
+        </Button>
+      </CSVLink>
     </div>
   );
 };

@@ -28,6 +28,7 @@
     "react-accessible-accordion": "^5.0.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-countup": "^6.4.2",
+    "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-elastic-carousel": "^0.11.5",
     "react-icons": "^4.11.0",
