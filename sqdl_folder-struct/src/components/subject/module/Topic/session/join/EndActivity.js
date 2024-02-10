@@ -237,7 +237,7 @@ const TeacherEnd = () => {
   }
 
   return (
-    <div className="w-full h-screen bg-blue-gray-100 grid place-items-center">
+    <div className="w-full h-full bg-blue-gray-100 grid place-items-center">
       {sessionData && (
         <div className="flex flex-col gap-4">
           <h1 className="text-5xl text-dark-gray font-montserrat font-extrabold">
@@ -359,7 +359,7 @@ const TeacherEnd = () => {
           </Card>
         </div>
       )}
-      <div className="w-4/5 flex flex-col gap-10 justify-center items-center">
+      <div className="w-4/5 my-5 flex flex-col gap-10 justify-center items-center">
         <p>You will see here to overall success rate of your lecture</p>
         {rating === 0 ? (
           <Typography variant="lead">
@@ -372,16 +372,18 @@ const TeacherEnd = () => {
       {/* <Button color="Blue">
         Get Session CSV
       </Button> */}
-      <CSVLink filename="session.csv" data={sessionCSVData}>
-        <Button color="Blue">
-          Get Session CSV
-        </Button>
-      </CSVLink>
-      <CSVLink filename="question.csv" data={questionCSVData}>
-        <Button color="Green">
-          Get Question CSV
-        </Button>
-      </CSVLink>
+      <div className="flex gap-10">
+        <CSVLink filename="session.csv" data={sessionCSVData}>
+          <Button color="Blue">
+            Get Session CSV
+          </Button>
+        </CSVLink>
+        <CSVLink filename="question.csv" data={questionCSVData}>
+          <Button color="Green">
+            Get Question CSV
+          </Button>
+        </CSVLink>
+      </div>
     </div>
   );
 };
