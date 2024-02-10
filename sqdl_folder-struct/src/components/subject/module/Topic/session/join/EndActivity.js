@@ -96,6 +96,7 @@ const TeacherEnd = () => {
   const [students, setStudents] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [sessionCSVData, setSessionCSVData] = useState([]);
+  const [questionCSVData, setQuestionCSVData] = useState([]);
   const params = useParams();
 
   useEffect(() => {
@@ -168,25 +169,66 @@ const TeacherEnd = () => {
       } catch (error) {
         console.log(error);
       }
-      // let session = {...sessionData, approved_request: students, questions: questions};
-      // session.totalStudents = sessionData.approved_request.length;
-      // session.totalQuestions = sessionData.questions.length;
-      // sessionCSVData = [
-      //   ['ID', 'Description', "Start Data and Time", "End Date and Time", 'Teacher for Session', 'Session Code', 'Total Questions', 'Question Posed in Session', 'Total Students', "Students in Session", 'Activity in Session'],
-      //   ...session.map(({_id, title, description, startDateTime, endDateTime, conductedBy, sessionCode, totalQuestions, questions, totalStudents, approved_request, activity_order}) => [
-      //     _id, title, description, startDateTime, endDateTime, conductedBy, sessionCode, totalQuestions, 
-      //     questions, totalStudents, approved_request, activity_order 
-      //   ])
-      // ]
+    }
+
+    async function getQuestionCSVData() {
+      const sessionId = params.sessionid;
+      let response;
+      let ques;
+      try {
+        response = await axios.post(
+          GLOBAL_URL + "session/get",
+          { _id: sessionId },
+          res
+        );
+        console.log(response)
+        ques = response.data.data.questions;
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response2 = await axios.post(
+          GLOBAL_URL + "question/getQuestionCSV",
+          // GLOBAL_URL + "question/getByIds",
+          { _ids : ques }, res
+        )
+        console.log(response2);
+        const questioncsvData = [
+          ['ID', 'Question Text', 'Question Tag', "Question Posed By", "Priority by Student", "Peers Names Who Prioritized", "Priority By Peers"],
+          ...response2.data.data
+        ]
+        setQuestionCSVData(questioncsvData);
+      } catch (error) {
+        console.log(error);
+      }
+
+      // try {
+      //   const response2 = await axios.post(
+      //     GLOBAL_URL + "question/getByIds",
+      //     { _ids: ques },
+      //     res
+      //   );
+      //   console.log(response2);
+      //   const questioncsvData = [
+      //     ['ID', 'Question Text', 'Question Tag', "Question Posed By", "Priority by Student", "Peers Names Who Prioritized", "Priority By Peers"],
+      //     response2.data.data.map(ques => {
+      //       let names = [];
+      //       let priorities = [];
+      //       for (let ele of ques[])
+      //     })
+      //   ]
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
     getSession();
-    // if (sessionData != null){
     getSessionCSVData();
-    // }
+    getQuestionCSVData();
   }, [socket]);
 
-  function calculatePriority(priority_list) {
+  function calculatePriority(priority_list = []) {
     let sum = 0;
     priority_list.map((p) => {
       sum += +p.priority;
@@ -279,35 +321,35 @@ const TeacherEnd = () => {
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {ques.raisedByName}
+                        {ques[0].raisedByName}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {ques.questionText}
+                        {ques[0].questionText}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {ques.priorityBySelf}
+                        {ques[0].priorityBySelf}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {calculatePriority(ques.priorityByPeer)}
+                        {calculatePriority(ques[0].priorityByPeer)}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {ques.questionTag}
+                        {ques[0].questionTag}
                       </Typography>
                     </td>
                   </tr>
@@ -332,7 +374,12 @@ const TeacherEnd = () => {
       </Button> */}
       <CSVLink filename="session.csv" data={sessionCSVData}>
         <Button color="Blue">
-          Export to CSV
+          Get Session CSV
+        </Button>
+      </CSVLink>
+      <CSVLink filename="question.csv" data={questionCSVData}>
+        <Button color="Green">
+          Get Question CSV
         </Button>
       </CSVLink>
     </div>
