@@ -247,7 +247,7 @@ const TeacherEnd = () => {
             Session Code: {sessionData.sessionCode}
           </h2>
           <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
-            Iterations: {sessionData.iteration}
+            Iterations Done: {sessionData.iteration}
           </h2>
           <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
             Student:

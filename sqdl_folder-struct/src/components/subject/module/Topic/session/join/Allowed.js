@@ -377,6 +377,9 @@ const Allowed = () => {
       setEditState(false);
       setVideoState(false);
       setQuestionState(false);
+      setUserQuestions([]);
+    } else if (args.current_activity === "Question Answering") {
+      setTeacherQuestions([]);
     }
     setSession(args);
     // getSession(); //perform request everytime socket broadcast is received
