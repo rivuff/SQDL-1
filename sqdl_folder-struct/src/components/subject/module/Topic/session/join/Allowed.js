@@ -337,9 +337,7 @@ const Allowed = () => {
         }
       })
       console.log(x);
-    // setUserPriorityArray(
-      
-    // );
+    setUserPriorityArray(prev => x);
   };
 
   const updateQuestion = () => {
