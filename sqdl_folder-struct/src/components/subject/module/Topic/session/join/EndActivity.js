@@ -195,7 +195,7 @@ const TeacherEnd = () => {
         )
         console.log(response2);
         const questioncsvData = [
-          ['ID', 'Question Text', 'Question Tag', "Question Posed By", "Priority by Student", "Peers Names Who Prioritized", "Priority By Peers"],
+          ['ID', 'Question Text', 'Question Tag', "Question Posed By", "Priority by Student", "Peers Names Who Prioritized", "Priority By Peers", "Iteration"],
           ...response2.data.data
         ]
         setQuestionCSVData(questioncsvData);
@@ -342,7 +342,7 @@ const TeacherEnd = () => {
                       <Typography
                         variant="small" color="blue-gray" className="font-normal"
                       >
-                        {calculatePriority(ques[0].priorityByPeer)}
+                        {calculatePriority(ques[0].priorityByPeer).toFixed(2)}
                       </Typography>
                     </td>
                     <td className="p-4">
