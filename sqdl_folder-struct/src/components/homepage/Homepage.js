@@ -4,13 +4,14 @@ import Provide from "./Provide";
 
 import Carousel from "./Carousel";
 import Header from "./Header";
+import Rules from "./Rules";
 
 function Homepage() {
   return (
     <div>
       <Header />
       {/* <Carousel /> */}
-
+      {/* <Rules/> */}
       <Provide />
 
       {/* <Counter /> */}

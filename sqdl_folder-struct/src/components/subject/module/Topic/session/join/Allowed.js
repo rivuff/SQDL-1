@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { GLOBAL_URL, SOCKET_URL } from "../../../../../config";
 import { io } from "socket.io-client";
 import { useState } from "react";
+import Rules from "./Rules2.js"
 import {
   check,
   set,
@@ -385,11 +386,12 @@ const Allowed = () => {
 
   return (
     <div>
+      <Rules/>
       <div className="flex flex-col items-center justify-center min p-10">
-        <Typography variant="h2" className="mb-4">
+        <Typography variant="h2" className="mb-4 mt-10">
           Hello {check().name}
         </Typography>
-        <Typography variant="h3" className="mb-4">
+        <Typography variant="h3" className="mb-4 mt-6">
           {sessionData?.current_activity
             ? `Current Activity is ${sessionData?.current_activity}`
             : "Session has not started yet"}

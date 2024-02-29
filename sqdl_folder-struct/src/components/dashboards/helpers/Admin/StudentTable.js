@@ -5,6 +5,7 @@ import "./StudentTable.css";
 import FileDownload from "js-file-download";
 import TeacherInvite from "./TeacherInvite";
 import AdminPopover from "./AdminPopover";
+
 import LoadingRow from "./LoadingRow";
 import Row from "./Row";
 import { GLOBAL_URL } from "../../../config";
@@ -65,6 +66,7 @@ const TeacherTable = () => {
   }
   return (
     <div>
+   
       {/* <Card className="h-full w-full items-center overflow-x-auto shadow-none"> */}
       <table className="w-full min-w-max table-auto text-center border-1 border-spacing-6 border-blue-700 p-8 rounded-none shadow-none">
         <thead className="header rounded-none	shadow-none">

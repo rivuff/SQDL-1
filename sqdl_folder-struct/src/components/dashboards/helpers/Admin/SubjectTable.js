@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { GLOBAL_URL } from "../../../config";
 import { NavLink } from "react-router-dom";
+import Rules from "../../../homepage/Rules"
 import { Typography, Button } from "@material-tailwind/react";
 
 const SubjectTable = () => {
@@ -26,7 +27,8 @@ const SubjectTable = () => {
 
   return (
     <div className="p-5">
-      <table className="w-full min-w-max table-auto mb-7 text-left">
+         <Rules/>
+      <table className="w-full min-w-max table-auto mb-7 mt-24 text-left">
         <thead>
           <tr>
             <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
