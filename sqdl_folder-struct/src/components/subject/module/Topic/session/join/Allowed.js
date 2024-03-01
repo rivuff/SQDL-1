@@ -18,6 +18,7 @@ import {
   Checkbox,
   Button,
 } from "@material-tailwind/react";
+import GeneralRules from "./GeneralRules.js";
 import QuestionForm from "../../../../../questionPosing/questionForm";
 const socket = io(SOCKET_URL);
 const res = {
@@ -386,7 +387,7 @@ const Allowed = () => {
 
   return (
     <div>
-      <Rules/>
+      
       <div className="flex flex-col items-center justify-center min p-10">
         <Typography variant="h2" className="mb-4 mt-10">
           Hello {check().name}
@@ -401,6 +402,7 @@ const Allowed = () => {
           !dcFinished && (
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 h-screen w-full">
               {/* For youtube video */}
+              <Rules/>
               <div class="p-4 h-full flex flex-col items-center row-span-2">
                 {teacherRes ? (
                   <>
@@ -571,7 +573,7 @@ const Allowed = () => {
         {sessionData?.current_activity == "Deliver Content & Question Posing" &&
           dcFinished && (
             <>
-              {check().name}
+              <GeneralRules className="w-2/5 h-1/5" rules={["5 is Highest priority and 1 is lowest priority."]} />
               <Typography variant="h2">
                 Teacher has not started next session Yet
               </Typography>
@@ -713,6 +715,7 @@ const Allowed = () => {
         ) : sessionData?.current_activity == "Peer Prioritization" ? (
           <>
             <Typography>Please prioritize these other questions</Typography>
+            <GeneralRules className="w-2/5 h-1/5" rules={["Read your peer questions carefully.","You must assign priority to every question assigned to you.","5 is Highest priority and 1 is lowest priority."]}/>
             {isDistributed === "Delivering" ? (
               <p>Teacher will distribute the question please wait</p>
             ) : isDistributed === "Deliverd" ? (

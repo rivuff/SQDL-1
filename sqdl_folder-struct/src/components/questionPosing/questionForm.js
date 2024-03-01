@@ -125,7 +125,7 @@ const QuestionForm = ({ onSubmit, iteration, userQues, questionState }) => {
               label="Priority"
               id="questionPriority"
               min="1"
-              max="10"
+              max="5"
               defaultValue={5}
               onChange={(e) => {
                 setPriority(e.target.value);

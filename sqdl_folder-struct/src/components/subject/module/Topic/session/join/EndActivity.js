@@ -107,6 +107,7 @@ const TeacherEnd = () => {
         { _id: params.sessionid },
         res
       );
+      console.log(session);
       session.data.data.rating.map((r) => (sum += r));
       setRating(sum / (session.data.data.rating.length * 5));
     });
@@ -154,18 +155,33 @@ const TeacherEnd = () => {
       }
     }
 
-    async function getSessionCSVData(){
+    async function getSessionCSVData() {
       const sessionId = params.sessionid;
       try {
         const response = await axios.post(
-          GLOBAL_URL + "session/sessionCSV", {_id: sessionId}, res
-        )
+          GLOBAL_URL + "session/sessionCSV",
+          { _id: sessionId },
+          res
+        );
         console.log(response);
         const sessioncsvData = [
-          ['ID', "Session Title", 'Description', "Start Data and Time", "End Date and Time", 'Teacher for Session', 'Session Code', 'Total Questions', 'Question Posed in Session', 'Total Students', "Students in Session", 'Activity in Session'],
+          [
+            "ID",
+            "Session Title",
+            "Description",
+            "Start Data and Time",
+            "End Date and Time",
+            "Teacher for Session",
+            "Session Code",
+            "Total Questions",
+            "Question Posed in Session",
+            "Total Students",
+            "Students in Session",
+            "Activity in Session",
+          ],
           response.data.data,
-        ]
-        setSessionCSVData(sessioncsvData)
+        ];
+        setSessionCSVData(sessioncsvData);
       } catch (error) {
         console.log(error);
       }
@@ -181,7 +197,7 @@ const TeacherEnd = () => {
           { _id: sessionId },
           res
         );
-        console.log(response)
+        console.log(response);
         ques = response.data.data.questions;
       } catch (error) {
         console.log(error);
@@ -191,17 +207,38 @@ const TeacherEnd = () => {
         const response2 = await axios.post(
           GLOBAL_URL + "question/getQuestionCSV",
           // GLOBAL_URL + "question/getByIds",
-          { _ids : ques }, res
-        )
+          { _ids: ques },
+          res
+        );
         console.log(response2);
         const questioncsvData = [
-          ['ID', 'Question Text', 'Question Tag', "Question Posed By", "Priority by Student", "Peers Names Who Prioritized", "Priority By Peers", "Iteration"],
-          ...response2.data.data
-        ]
+          [
+            "ID",
+            "Question Text",
+            "Question Tag",
+            "Question Posed By",
+            "Priority by Student",
+            "Peers Names Who Prioritized",
+            "Priority By Peers",
+            "Iteration",
+          ],
+          ...response2.data.data,
+        ];
         setQuestionCSVData(questioncsvData);
       } catch (error) {
         console.log(error);
       }
+
+      function getRatings() {
+        let sum = 0;
+        if (!sessionData?.rating) {
+          sessionData?.rating.map(rating => sum += Number(rating));
+          setRating(sum /( sessionData?.rating.length * 5));
+        }
+        setRating(sum);
+      }
+
+      getRatings();
 
       // try {
       //   const response2 = await axios.post(
@@ -228,12 +265,36 @@ const TeacherEnd = () => {
     getQuestionCSVData();
   }, [socket]);
 
+  // async function endSession() {
+  //   console.log(sessionData?.rating)
+    // try {
+    //   const response = await axios.post(
+    //     GLOBAL_URL + "session/update",
+    //     { id: params.sessionid, rating: rating },
+    //     res
+    //   );
+    //   console.log(response);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  // }
+
+  function calculateRating(ratings) {
+    let sum = 0;
+    console.log(ratings);
+    if (!ratings) {
+      ratings = [];
+    }
+    ratings.map(rating => sum += Number(rating));
+    return sum /( ratings.length * 5);
+  }
+
   function calculatePriority(priority_list = []) {
     let sum = 0;
     priority_list.map((p) => {
       sum += +p.priority;
     });
-    return sum/priority_list.length;
+    return sum / priority_list.length;
   }
 
   return (
@@ -247,7 +308,7 @@ const TeacherEnd = () => {
             Session Code: {sessionData.sessionCode}
           </h2>
           <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
-            Iterations Done: {sessionData.iteration}
+            Iterations Done: {sessionData.iteration - 1}
           </h2>
           <h2 className="text-3xl text-dark-gray font-montserrat font-extrabold">
             Student:
@@ -319,35 +380,45 @@ const TeacherEnd = () => {
                   <tr className="even:bg-blue-gray-50/50">
                     <td className="p-4">
                       <Typography
-                        variant="small" color="blue-gray" className="font-normal"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
                       >
                         {ques[0].raisedByName}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
-                        variant="small" color="blue-gray" className="font-normal"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
                       >
                         {ques[0].questionText}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
-                        variant="small" color="blue-gray" className="font-normal"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
                       >
                         {ques[0].priorityBySelf}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
-                        variant="small" color="blue-gray" className="font-normal"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
                       >
                         {calculatePriority(ques[0].priorityByPeer).toFixed(2)}
                       </Typography>
                     </td>
                     <td className="p-4">
                       <Typography
-                        variant="small" color="blue-gray" className="font-normal"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
                       >
                         {ques[0].questionTag}
                       </Typography>
@@ -361,28 +432,31 @@ const TeacherEnd = () => {
       )}
       <div className="w-4/5 my-5 flex flex-col gap-10 justify-center items-center">
         <p>You will see here to overall success rate of your lecture</p>
-        {rating === 0 ? (
-          <Typography variant="lead">
-            Student are giving the rating please wait
-          </Typography>
+        {console.log('Rating', sessionData?.rating)}
+        <Typography variant='h1'>
+          SuccessRate: {sessionData?.rating.length === sessionData?.approved_request.length ?
+          (calculateRating(sessionData?.rating)*100).toFixed(2) + '%' :
+          (rating * 100).toFixed(2) + '%'}
+        </Typography>
+        {/* {sessionData?.rating ? (
+          <Typography variant="h1">SuccessRafdfte:{sessionData.rating ? (calculateRating(sessionData.rating)*100).toFixed(2)+'%' : '0%'}</Typography>
         ) : (
           <Typography variant="h1">SuccessRate: {rating * 100}%</Typography>
-        )}
+        )} */}
       </div>
       {/* <Button color="Blue">
         Get Session CSV
       </Button> */}
       <div className="flex gap-10">
         <CSVLink filename="session.csv" data={sessionCSVData}>
-          <Button color="Blue">
-            Get Session CSV
-          </Button>
+          <Button color="Blue">Get Session CSV</Button>
         </CSVLink>
         <CSVLink filename="question.csv" data={questionCSVData}>
-          <Button color="Green">
-            Get Question CSV
-          </Button>
+          <Button color="Green">Get Question CSV</Button>
         </CSVLink>
+        <Button color="Green" onClick={() => {window.location.href = "/course"}}>
+          Return to home page
+        </Button>
       </div>
     </div>
   );
