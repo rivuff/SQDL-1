@@ -555,6 +555,7 @@ const Creator = () => {
   const [students, setStudents] = useState([]);
   const [linkState, setLinkState] = useState(false);
   const [teacherQuestions, setTeacherQuestions] = useState([]);
+  const [enableCheckbox,setEnableCheckbox] = useState(true);
 
   const resref = useRef("");
   const zref = useRef(0);
@@ -800,6 +801,11 @@ const Creator = () => {
     socket.emit(params.sessionid + "sendQuestionToStudent", ques);
   }
 
+  function sendEnablePermission() {
+    socket.emit(params.sessionid + "checkbox-Permission", params.sessionid);
+    setEnableCheckbox(false);
+  }
+
   return (
     <div>
       <div>
@@ -865,6 +871,11 @@ const Creator = () => {
                           Send the Resources to students
                         </Button>
                       </>
+                    )}
+                    {enableCheckbox && (
+                      <Button color="blue" onClick={sendEnablePermission}>
+                        Enable Submit Checkbox
+                      </Button>
                     )}
                   </div>
 

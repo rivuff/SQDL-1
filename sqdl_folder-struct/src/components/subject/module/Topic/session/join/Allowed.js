@@ -140,6 +140,7 @@ const Allowed = () => {
   const [Z, setZ] = useState(0);
   const [isDistributed, setIsDistributed] = useState("Delivering");
   const [priorityQuestions, setPriorityQuestion] = useState([]);
+  const [questionCheckbox, setQuestionCheckbox] = useState(false);
 
   const [teacherQuestions, setTeacherQuestions] = useState([]);
 
@@ -237,6 +238,10 @@ const Allowed = () => {
       console.log(teacherQuestions);
     })
 
+    socket.on(params.sessionid + "checkbox-Permission", () => {
+      setQuestionCheckbox(true);
+    })
+
     if (sessionData !== null) {
       getUserQuestions("Not Peer Prioritization");
     }
@@ -330,7 +335,7 @@ const Allowed = () => {
 
   const updateQuestionPriority = (e, id) => {
     console.log(e.target.value, id);
-    console.log(userQuestions);
+    // console.log(userQuestions);
     const x = userPriorityArray.map((q) => {
         if (q.id === id) {
           return { ...q, Priority: Number(e.target.value) };
@@ -342,9 +347,24 @@ const Allowed = () => {
     setUserPriorityArray(prev => x);
   };
 
+  const updateUserPriorty = (e, id) => {
+    console.log(e.target.value, id);
+    const x = userPriorityArray.map(q => {
+      console.log(q);
+      if (q.id === id) {
+        console.log("hi");
+        return {...q, Priority: Number(e.target.value)}
+      } else {
+        return q;
+      }
+    })
+    console.log(x);
+    setUserPriorityArray(prev => x);
+  }
+
   const updateQuestion = () => {
     console.log(userPriorityArray);
-    // setUserQuestions([]);
+    setUserQuestions([]);
     userPriorityArray.map(async (p) => {
       try {
         const response = await axios.post(
@@ -417,14 +437,16 @@ const Allowed = () => {
                       The Content delivery is offline so teacher will physically
                       teach you concept
                     </p>
-                    <Checkbox
-                      color="blue"
-                      label="Submitted All my questions"
-                      onClick={() => {
-                        setQuestionState(true);
-                      }}
-                      disabled={questionState}
-                    />
+                    <div className={`${questionCheckbox ? 'block' : 'hidden'}`}>
+                      <Checkbox
+                        color="blue"
+                        label="Submitted All my questions"
+                        onClick={() => {
+                          setQuestionState(true);
+                        }}
+                        disabled={questionState}
+                      />
+                    </div>
                     {questionState && (
                       <Button
                         color="green"
@@ -446,22 +468,26 @@ const Allowed = () => {
                 )}
                 {videoState && (
                   <>
-                    <Checkbox
-                      color="blue"
-                      label="I have seen the full video"
-                      onClick={() => {
-                        setTeacherRes(null);
-                      }}
-                      disabled={teacherRes === null}
-                    />
-                    <Checkbox
-                      color="blue"
-                      label="Submitted All my questions"
-                      onClick={() => {
-                        setQuestionState(true);
-                      }}
-                      disabled={questionState}
-                    />
+                    <div className={`${questionCheckbox ? 'block' : 'hidden'}`}>
+                      <Checkbox
+                        color="blue"
+                        label="I have seen the full video"
+                        onClick={() => {
+                          setTeacherRes(null);
+                        }}
+                        disabled={teacherRes === null}
+                      />
+                    </div>
+                    <div className={`${questionCheckbox ? 'block' : 'hidden'}`}>
+                      <Checkbox
+                        color="blue"
+                        label="Submitted All my questions"
+                        onClick={() => {
+                          setQuestionState(true);
+                        }}
+                        disabled={questionState}
+                      />
+                    </div>
                     {teacherRes === null && questionState && (
                       <Button
                         color="green"
@@ -652,7 +678,7 @@ const Allowed = () => {
                                 min={1}
                                 max={5}
                                 onChange={(e) => {
-                                  updateQuestionPriority(e, ques._id);
+                                  updateUserPriorty(e, ques._id);
                                   console.log(userPriorityArray);
                                 }}
                               ></input>
